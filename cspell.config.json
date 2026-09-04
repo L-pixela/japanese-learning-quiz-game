@@ -1,0 +1,28 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "SvelteKit",
+    "Turso",
+    "sveltekit",
+    "vite",
+    "vitejs",
+    "libsql",
+    "esbuild",
+    "rollup",
+    "tailwindcss",
+    "pnpm",
+    "drizzle",
+    "autoincrement",
+    "jpquizgame",
+    "workerd"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".svelte-kit/**",
+    "pnpm-lock.yaml",
+    "*.min.js"
+  ]
+}
