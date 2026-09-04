@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "japanse-learning-quiz-game",
+
+	// Built by @sveltejs/adapter-cloudflare — do not point these elsewhere.
+	"main": ".svelte-kit/cloudflare/_worker.js",
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".svelte-kit/cloudflare",
+	},
+
+	"compatibility_date": "2026-08-28",
+	"compatibility_flags": ["nodejs_compat"],
+
+	"observability": { "enabled": true },
+
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "jpquizgame-db",
+			// Run `npx wrangler d1 create jpquizgame-db` and paste the id it prints.
+			"database_id": "05eda590-a61c-4fa9-8158-b6ca4ab609f7",
+			// drizzle-kit generates SQL here; `wrangler d1 migrations apply` reads it.
+			"migrations_dir": "drizzle",
+		},
+	],
+}

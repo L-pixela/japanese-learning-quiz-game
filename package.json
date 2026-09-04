@@ -15,9 +15,11 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
-		"db:push": "drizzle-kit push",
+		"gen": "wrangler types",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate",
+		"db:migrate": "wrangler d1 migrations apply jpquizgame-db --local",
+		"db:migrate:remote": "wrangler d1 migrations apply jpquizgame-db --remote",
+		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
@@ -46,6 +48,7 @@
 		"typescript-eslint": "^8.60.1",
 		"vite": "^8.0.16",
 		"vitest": "^4.1.8",
-		"vitest-browser-svelte": "^2.1.1"
+		"vitest-browser-svelte": "^2.1.1",
+		"wrangler": "^4.128.0"
 	}
 }
