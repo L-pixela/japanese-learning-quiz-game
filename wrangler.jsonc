@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "japanse-learning-quiz-game",
+	"name": "japanese-learning-quiz-game",
 
 	// Built by @sveltejs/adapter-cloudflare — do not point these elsewhere.
 	"main": ".svelte-kit/cloudflare/_worker.js",
