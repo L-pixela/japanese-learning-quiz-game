@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { resolve } from '$app/paths'
+	import { resolveRoute } from '$app/paths'
 </script>
 
-<a href={resolve('/demo/playwright')}>playwright</a>
+<a href={resolveRoute('/demo/playwright')}>playwright</a>
