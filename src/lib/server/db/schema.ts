@@ -10,5 +10,5 @@ export const user = sqliteTable('user', {
 	streak: integer('streak').notNull().default(0),
 	lastQuizAt: integer('last_quiz_at', { mode: 'timestamp' }),
 	rank: text('rank').notNull().default('shiragohan'),
-	createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+	createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 })
