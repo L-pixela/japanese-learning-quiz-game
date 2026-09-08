@@ -11,7 +11,7 @@ const scryptAsync = promisify(scrypt)
 async function verifyPassword(password: string, hash: string): Promise<boolean> {
 	const [salt, key] = hash.split(':')
 	if (!salt || !key) return false
-	
+
 	const derivedKey = (await scryptAsync(password, salt, 64)) as Buffer
 	return derivedKey.toString('hex') === key
 }
@@ -46,7 +46,7 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
 	await db.insert(session).values({
 		id: sessionId,
 		userId: existing[0].id,
-		expiresAt
+		expiresAt,
 	})
 
 	// Set cookie
@@ -55,7 +55,7 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
 		httpOnly: true,
 		sameSite: 'lax',
 		expires: expiresAt,
-		secure: !import.meta.env.DEV
+		secure: !import.meta.env.DEV,
 	})
 
 	return json({ user: { id: existing[0].id, username: existing[0].username } }, { status: 200 })

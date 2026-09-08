@@ -20,7 +20,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			user: {
 				id: user.id,
 				username: user.username,
-			}
+			},
 		})
 		.from(session)
 		.innerJoin(user, eq(session.userId, user.id))
