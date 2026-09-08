@@ -4,9 +4,13 @@ import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
 
-export const PUT: RequestHandler = async ({ request, params, platform }) => {
-	const { title, userId } = (await request.json()) as { title: string; userId: string }
-	// TODO: once login API (#12) exists, get userId from the session instead of request body
+export const PUT: RequestHandler = async ({ request, params, platform, locals }) => {
+	const { title } = (await request.json()) as { title: string }
+	const userId = locals.user?.id
+
+	if (!userId) {
+		return json({ error: 'unauthorized' }, { status: 401 })
+	}
 
 	if (!title || typeof title !== 'string' || title.trim().length === 0) {
 		return json({ error: 'title is required' }, { status: 400 })
@@ -29,9 +33,12 @@ export const PUT: RequestHandler = async ({ request, params, platform }) => {
 	return json({ deck: updated })
 }
 
-export const DELETE: RequestHandler = async ({ request, params, platform }) => {
-	const { userId } = (await request.json()) as { userId: string }
-	// TODO: once login API (#12) exists, get userId from the session instead of request body
+export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
+	const userId = locals.user?.id
+
+	if (!userId) {
+		return json({ error: 'unauthorized' }, { status: 401 })
+	}
 
 	const db = getDb(platform!.env.DB)
 
