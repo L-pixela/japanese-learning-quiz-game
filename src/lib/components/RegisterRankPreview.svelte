@@ -1,3 +1,11 @@
+<script lang="ts">
+	type Props = {
+		titleId?: string
+	}
+
+	let { titleId }: Props = $props()
+</script>
+
 <div class="preview">
 	<div class="starter-rank">
 		<div class="rank-emblem" style:--rank-color="#b7ac86" aria-hidden="true">
@@ -5,7 +13,7 @@
 		</div>
 		<div>
 			<p class="caption">今日の始まり</p>
-			<h1>Create your study account</h1>
+			<h1 id={titleId}>Create your study account</h1>
 			<p class="intro">
 				Build Anki-style vocab decks, review every day, and let your food rank grow with your
 				streak.
