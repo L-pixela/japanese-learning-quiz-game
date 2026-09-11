@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
-import { card, deck } from '$lib/server/db/schema'
+import { findCardWithDeckOwner } from '$lib/server/db/queries'
+import { card } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
 
@@ -22,18 +23,7 @@ export const PUT: RequestHandler = async ({ request, params, platform, locals })
 
 	const db = getDb(platform!.env.DB)
 
-	const [existing] = await db
-		.select({
-			id: card.id,
-			deckId: card.deckId,
-			front: card.front,
-			back: card.back,
-			deckUserId: deck.userId,
-		})
-		.from(card)
-		.innerJoin(deck, eq(card.deckId, deck.id))
-		.where(eq(card.id, params.id))
-		.limit(1)
+	const existing = await findCardWithDeckOwner(db, params.id)
 
 	if (!existing) {
 		return json({ error: 'card not found' }, { status: 404 })
@@ -61,18 +51,7 @@ export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
 
 	const db = getDb(platform!.env.DB)
 
-	const [existing] = await db
-		.select({
-			id: card.id,
-			deckId: card.deckId,
-			front: card.front,
-			back: card.back,
-			deckUserId: deck.userId,
-		})
-		.from(card)
-		.innerJoin(deck, eq(card.deckId, deck.id))
-		.where(eq(card.id, params.id))
-		.limit(1)
+	const existing = await findCardWithDeckOwner(db, params.id)
 
 	if (!existing) {
 		return json({ error: 'card not found' }, { status: 404 })

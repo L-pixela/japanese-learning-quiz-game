@@ -2,6 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { POST } from './+server'
 import { getDb } from '$lib/server/db'
+import { mockSelect } from '$lib/server/db/mock-db'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
@@ -42,16 +43,7 @@ describe('/api/decks/[id]/cards', () => {
 		})
 
 		it('returns 404 if deck does not exist', async () => {
-			const mockDb = {
-				select: vi.fn().mockReturnValue({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockResolvedValue([]),
-						}),
-					}),
-				}),
-			}
-			vi.mocked(getDb).mockReturnValue(mockDb as any)
+			vi.mocked(getDb).mockReturnValue(mockSelect([]) as any)
 
 			const request = {
 				json: vi.fn().mockResolvedValue({ front: 'こんにちは', back: 'hello' }),
@@ -67,16 +59,9 @@ describe('/api/decks/[id]/cards', () => {
 		})
 
 		it('returns 403 if deck belongs to another user', async () => {
-			const mockDb = {
-				select: vi.fn().mockReturnValue({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockResolvedValue([{ id: 'd1', userId: 'u2', title: 'Deck' }]),
-						}),
-					}),
-				}),
-			}
-			vi.mocked(getDb).mockReturnValue(mockDb as any)
+			vi.mocked(getDb).mockReturnValue(
+				mockSelect([{ id: 'd1', userId: 'u2', title: 'Deck' }]) as any,
+			)
 
 			const request = {
 				json: vi.fn().mockResolvedValue({ front: 'こんにちは', back: 'hello' }),
@@ -94,13 +79,7 @@ describe('/api/decks/[id]/cards', () => {
 		it('returns 201 with created card when request is valid', async () => {
 			const newCard = { id: 'c1', deckId: 'd1', front: 'こんにちは', back: 'hello' }
 			const mockDb = {
-				select: vi.fn().mockReturnValue({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockResolvedValue([{ id: 'd1', userId: 'u1', title: 'Deck' }]),
-						}),
-					}),
-				}),
+				...mockSelect([{ id: 'd1', userId: 'u1', title: 'Deck' }]),
 				insert: vi.fn().mockReturnValue({
 					values: vi.fn().mockReturnValue({
 						returning: vi.fn().mockResolvedValue([newCard]),

@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
-import { card, deck } from '$lib/server/db/schema'
-import { eq } from 'drizzle-orm'
+import { findDeckById } from '$lib/server/db/queries'
+import { card } from '$lib/server/db/schema'
 import type { RequestHandler } from './$types'
 
 export const POST: RequestHandler = async ({ request, params, platform, locals }) => {
@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ request, params, platform, locals }
 
 	const db = getDb(platform!.env.DB)
 
-	const [existing] = await db.select().from(deck).where(eq(deck.id, params.id)).limit(1)
+	const existing = await findDeckById(db, params.id)
 
 	if (!existing) {
 		return json({ error: 'deck not found' }, { status: 404 })

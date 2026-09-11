@@ -2,24 +2,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { PUT, DELETE } from './+server'
 import { getDb } from '$lib/server/db'
+import { mockJoinedSelect } from '$lib/server/db/mock-db'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
 }))
-
-function mockJoinedSelect(rows: any[]) {
-	return {
-		select: vi.fn().mockReturnValue({
-			from: vi.fn().mockReturnValue({
-				innerJoin: vi.fn().mockReturnValue({
-					where: vi.fn().mockReturnValue({
-						limit: vi.fn().mockResolvedValue(rows),
-					}),
-				}),
-			}),
-		}),
-	}
-}
 
 describe('/api/cards/[id]', () => {
 	describe('PUT', () => {

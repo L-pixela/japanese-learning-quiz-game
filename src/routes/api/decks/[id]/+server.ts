@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
+import { findDeckById } from '$lib/server/db/queries'
 import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
@@ -18,7 +19,7 @@ export const PUT: RequestHandler = async ({ request, params, platform, locals })
 
 	const db = getDb(platform!.env.DB)
 
-	const [existing] = await db.select().from(deck).where(eq(deck.id, params.id)).limit(1)
+	const existing = await findDeckById(db, params.id)
 
 	if (!existing) {
 		return json({ error: 'deck not found' }, { status: 404 })
@@ -42,7 +43,7 @@ export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
 
 	const db = getDb(platform!.env.DB)
 
-	const [existing] = await db.select().from(deck).where(eq(deck.id, params.id)).limit(1)
+	const existing = await findDeckById(db, params.id)
 
 	if (!existing) {
 		return json({ error: 'deck not found' }, { status: 404 })
