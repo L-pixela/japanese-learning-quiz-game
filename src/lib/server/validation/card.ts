@@ -1,8 +1,6 @@
 import { json } from '@sveltejs/kit'
 
-type ParsedCardFields =
-	| { ok: false; error: Response }
-	| { ok: true; front: string; back: string }
+type ParsedCardFields = { ok: false; error: Response } | { ok: true; front: string; back: string }
 
 export async function parseCardFields(
 	request: Request,
