@@ -35,6 +35,7 @@ export default defineConfig({
 				'src/**/*.e2e.ts',
 				'src/routes/**/+*.svelte',
 				'src/**/*.d.ts',
+				'src/lib/server/db/mock-db.ts',
 			],
 		},
 		projects: [
