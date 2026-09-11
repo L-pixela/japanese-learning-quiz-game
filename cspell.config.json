@@ -15,7 +15,10 @@
 		"drizzle",
 		"autoincrement",
 		"jpquizgame",
-		"workerd"
+		"workerd",
+		"Anki",
+		"Tamagoyaki",
+		"Tsukimi"
 	],
 	"ignorePaths": [
 		"node_modules/**",
