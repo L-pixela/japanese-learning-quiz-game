@@ -2,23 +2,18 @@ import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
 import { findDeckById } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
+import { parseCardFields } from '$lib/server/validation/card'
 import type { RequestHandler } from './$types'
 
 export const POST: RequestHandler = async ({ request, params, platform, locals }) => {
-	const { front, back } = (await request.json()) as { front: string; back: string }
 	const userId = locals.user?.id
+	const parsed = await parseCardFields(request, userId)
 
-	if (!userId) {
-		return json({ error: 'unauthorized' }, { status: 401 })
+	if (!parsed.ok) {
+		return parsed.error
 	}
 
-	if (!front || typeof front !== 'string' || front.trim().length === 0) {
-		return json({ error: 'front is required' }, { status: 400 })
-	}
-
-	if (!back || typeof back !== 'string' || back.trim().length === 0) {
-		return json({ error: 'back is required' }, { status: 400 })
-	}
+	const { front, back } = parsed
 
 	const db = getDb(platform!.env.DB)
 
