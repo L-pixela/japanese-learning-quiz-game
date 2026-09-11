@@ -2,11 +2,9 @@ import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
 import { findDeckById } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
+import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE } from '$lib/server/quiz'
 import { eq, sql } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
-
-export const DEFAULT_QUIZ_SIZE = 10
-export const MAX_QUIZ_SIZE = 50
 
 /**
  * GET /api/decks/:id/quiz

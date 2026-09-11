@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest'
-import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE, GET } from './+server'
+import { GET } from './+server'
 import { getDb } from '$lib/server/db'
 import { mockSelect, mockSelectSequence } from '$lib/server/db/mock-db'
+import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE } from '$lib/server/quiz'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
