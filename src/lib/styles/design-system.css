@@ -1,6 +1,6 @@
 :root {
 	/* Brand colors */
---color-background: #f8f7f3;
+	--color-background: #f8f7f3;
 	--color-surface: #ffffff;
 	--color-surface-raised: #ffffff;
 	--color-text: #292522;
@@ -9,7 +9,7 @@
 	--color-border-subtle: #e5e1d8;
 	--color-input-border: #e5e1d8;
 	--color-primary: #2f6f63;
-		--color-primary-hover: #34404d;
+	--color-primary-hover: #34404d;
 	--color-primary-active: #2a343f;
 	--color-accent: #9c3d4f;
 	--color-accent-strong: #b43b3b;
