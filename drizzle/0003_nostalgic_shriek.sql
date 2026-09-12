@@ -1,0 +1,1 @@
+CREATE INDEX `user_points_streak_idx` ON `user` ("points" desc,"streak" desc);
