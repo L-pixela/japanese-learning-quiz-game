@@ -257,12 +257,6 @@
 		color: var(--color-text-secondary);
 	}
 
-	.section-description {
-		margin-top: calc(var(--spacing-sm) * -1);
-		margin-bottom: var(--spacing-lg);
-		color: var(--color-text-secondary);
-	}
-
 	/* Global Colors */
 
 	.color-grid {

@@ -16,6 +16,9 @@
 	let front = $state('')
 	let back = $state('')
 	let message = $state('')
+	let editingCardId = $state<number | null>(null)
+	let editingFront = $state('')
+	let editingBack = $state('')
 
 	const isNewDeck = $derived(page.params.id === 'new')
 	const canAddCard = $derived(front.trim().length > 0 && back.trim().length > 0)
@@ -38,6 +41,31 @@
 		cards = cards.filter((item) => item.id !== card.id)
 		message = 'Card removed from this preview.'
 	}
+
+	function startEditing(card: Card) {
+		editingCardId = card.id
+		editingFront = card.front
+		editingBack = card.back
+		message = ''
+	}
+
+	function cancelEditing() {
+		editingCardId = null
+		editingFront = ''
+		editingBack = ''
+	}
+
+	function saveCard(card: Card) {
+		if (!editingFront.trim() || !editingBack.trim()) return
+
+		cards = cards.map((item) =>
+			item.id === card.id
+				? { ...item, front: editingFront.trim(), back: editingBack.trim() }
+				: item,
+		)
+		cancelEditing()
+		message = 'Card updated for this preview.'
+	}
 </script>
 
 <svelte:head>
@@ -51,19 +79,25 @@
 				<span class="brand-seal">単</span>
 				<span>TanTore</span>
 			</a>
-			<a class="back-link" href={resolve('/', {})}>Back to library</a>
+			<a class="back-link" href={resolve('/', {})}>Back to library / ライブラリへ</a>
 		</header>
 
 		<div class="deck-content">
 			<header class="page-heading">
 				<div>
 					<p class="caption">デッキ編集</p>
-					<h1 id="deck-title">{isNewDeck ? 'Create a deck' : 'Edit deck'}</h1>
-					<p class="intro">Build a small stack of cards, one clear idea at a time.</p>
+					<h1 id="deck-title">
+						{isNewDeck ? 'Create a deck' : 'Edit deck'}
+						<span class="japanese-label">{isNewDeck ? 'デッキを作成' : 'デッキを編集'}</span>
+					</h1>
+					<p class="intro">
+						Build a small stack of cards, one clear idea at a time. /
+						一つずつ覚えやすいカードを作りましょう。
+					</p>
 				</div>
 				<div class="card-count" aria-label={`${cards.length} cards`}>
 					<strong>{String(cards.length).padStart(2, '0')}</strong>
-					<span>cards</span>
+					<span>cards / 枚</span>
 				</div>
 			</header>
 
@@ -74,10 +108,10 @@
 					saveDeck()
 				}}
 			>
-				<label for="deck-title-input">Deck name</label>
+				<label for="deck-title-input">Deck name / デッキ名</label>
 				<div class="title-row">
 					<input id="deck-title-input" bind:value={title} placeholder="e.g. Everyday Japanese" />
-					<button class="save-button" type="submit" disabled={!title.trim()}>Save deck</button>
+					<button class="save-button" type="submit" disabled={!title.trim()}>Save / 保存</button>
 				</div>
 			</form>
 
@@ -86,18 +120,20 @@
 					<div class="section-heading">
 						<div>
 							<p class="caption">カード追加</p>
-							<h2 id="add-card-title">Add a card</h2>
+							<h2 id="add-card-title">
+								Add a card <span class="japanese-label">カードを追加</span>
+							</h2>
 						</div>
 						<span class="step-mark">01</span>
 					</div>
 					<div class="field-grid">
-						<label for="front">Front <span>Japanese</span></label>
-						<textarea id="front" bind:value={front} rows="4" placeholder="こんにちは"></textarea>
-						<label for="back">Back <span>Meaning or note</span></label>
-						<textarea id="back" bind:value={back} rows="4" placeholder="Hello"></textarea>
+						<label for="front">Front / フロント</label>
+						<input type="text" id="front" bind:value={front} />
+						<label for="back">Back / バック</label>
+						<input type="text" id="back" bind:value={back} />
 					</div>
-					<button class="add-button" type="button" onclick={addCard} disabled={!canAddCard}
-						>＋ Add card</button
+					<button class="add-button" type="button" onclick={addCard} disabled={!canAddCard}>
+						+ Add card / カードを追加</button
 					>
 				</section>
 
@@ -105,7 +141,9 @@
 					<div class="section-heading">
 						<div>
 							<p class="caption">カード一覧</p>
-							<h2 id="card-list-title">Your cards</h2>
+							<h2 id="card-list-title">
+								Your cards <span class="japanese-label">カード一覧</span>
+							</h2>
 						</div>
 						<span class="step-mark">02</span>
 					</div>
@@ -119,14 +157,43 @@
 							{#each cards as card, index (card.id)}
 								<li>
 									<span class="index">{String(index + 1).padStart(2, '0')}</span>
-									<div class="card-copy"><strong>{card.front}</strong><span>{card.back}</span></div>
-									<button
-										class="delete-button"
-										type="button"
-										aria-label={`Delete ${card.front}`}
-										title="Delete card"
-										onclick={() => deleteCard(card)}>×</button
-									>
+									{#if editingCardId === card.id}
+										<div class="card-edit-fields">
+											<input aria-label="Card front" bind:value={editingFront} />
+											<input aria-label="Card back" bind:value={editingBack} />
+										</div>
+										<div class="card-actions">
+											<button
+												class="edit-save-button"
+												type="button"
+												disabled={!editingFront.trim() || !editingBack.trim()}
+												onclick={() => saveCard(card)}>Save</button
+											>
+											<button class="cancel-button" type="button" onclick={cancelEditing}
+												>Cancel</button
+											>
+										</div>
+									{:else}
+										<div class="card-copy">
+											<strong>{card.front}</strong><span>{card.back}</span>
+										</div>
+										<div class="card-actions">
+											<button
+												class="edit-button"
+												type="button"
+												aria-label={`Edit ${card.front}`}
+												title="Edit card"
+												onclick={() => startEditing(card)}>Edit</button
+											>
+											<button
+												class="delete-button"
+												type="button"
+												aria-label={`Delete ${card.front}`}
+												title="Delete card"
+												onclick={() => deleteCard(card)}>×</button
+											>
+										</div>
+									{/if}
 								</li>
 							{/each}
 						</ul>
@@ -139,21 +206,6 @@
 </main>
 
 <style>
-	:global(body) {
-		margin: 0;
-		background:
-			linear-gradient(90deg, rgba(91, 74, 48, 0.035) 1px, transparent 1px),
-			linear-gradient(rgba(91, 74, 48, 0.035) 1px, transparent 1px), #f6f0e3;
-		background-size: 34px 34px;
-		color: #29231c;
-		font-family:
-			ui-sans-serif,
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			sans-serif;
-	}
 	.deck-page {
 		min-height: 100vh;
 		padding: clamp(0.85rem, 3vw, 2rem);
@@ -162,51 +214,24 @@
 		width: min(100%, 74rem);
 		margin: 0 auto;
 		overflow: hidden;
-		border: 1px solid #d7c8ad;
-		border-radius: 8px;
-		background: #fffaf0;
-		box-shadow: 0 18px 42px rgba(68, 47, 25, 0.12);
-	}
-	.site-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 1rem;
-		padding: 0.9rem 1rem;
-		border-bottom: 1px solid #e2d5bf;
-	}
-	.brand-mark {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		color: inherit;
-		font-weight: 900;
-		text-decoration: none;
-	}
-	.brand-seal {
-		display: grid;
-		place-items: center;
-		width: 1.85rem;
-		height: 1.85rem;
-		border: 2px solid #b43b3b;
-		border-radius: 999px;
-		color: #b43b3b;
-		background: #fffaf0;
-		font-size: 0.82rem;
-		font-weight: 900;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-lg);
 	}
 	.back-link {
-		color: #75654f;
+		color: var(--color-text-secondary);
 		font-size: 0.86rem;
 		font-weight: 800;
 		text-decoration: none;
 	}
 	.back-link:hover {
-		color: #9c3d4f;
+		color: var(--color-accent);
 	}
 	.deck-content {
 		padding: clamp(1.3rem, 4vw, 3rem);
-		background: linear-gradient(rgba(198, 75, 107, 0.035) 1px, transparent 1px), #fffdf8;
+		background:
+			linear-gradient(var(--color-paper-line) 1px, transparent 1px), var(--color-surface-raised);
 		background-size: 100% 3.2rem;
 	}
 	.page-heading,
@@ -223,7 +248,7 @@
 	}
 	.caption {
 		margin: 0 0 0.45rem;
-		color: #9c3d4f;
+		color: var(--color-accent);
 		font-size: 0.78rem;
 		font-weight: 900;
 	}
@@ -243,15 +268,15 @@
 	}
 	.intro {
 		margin: 0;
-		color: #75654f;
+		color: var(--color-text-secondary);
 	}
 	.card-count {
 		display: grid;
 		justify-items: end;
-		color: #75654f;
+		color: var(--color-text-secondary);
 	}
 	.card-count strong {
-		color: #b43b3b;
+		color: var(--color-accent-strong);
 		font-size: 2rem;
 		line-height: 1;
 	}
@@ -263,8 +288,8 @@
 	.deck-form,
 	.card-composer,
 	.card-list {
-		border: 1px solid #e2d5bf;
-		background: rgba(255, 250, 240, 0.75);
+		border: 1px solid var(--color-border-subtle);
+		background: color-mix(in srgb, var(--color-surface) 75%, transparent);
 	}
 	.deck-form {
 		padding: 1rem;
@@ -275,25 +300,20 @@
 		justify-content: space-between;
 		gap: 1rem;
 		margin-bottom: 0.45rem;
-		color: #75654f;
+		color: var(--color-text-secondary);
 		font-size: 0.78rem;
 		font-weight: 900;
-	}
-	label span {
-		color: #a89880;
-		font-weight: 700;
 	}
 	.title-row {
 		align-items: stretch;
 	}
-	input,
-	textarea {
+	input {
 		width: 100%;
 		box-sizing: border-box;
-		border: 1px solid #cbbca3;
-		border-radius: 4px;
-		background: #fffdf8;
-		color: #29231c;
+		border: 1px solid var(--color-input-border);
+		border-radius: var(--radius-sm);
+		background: var(--color-surface-raised);
+		color: var(--color-text);
 		font: inherit;
 		outline: none;
 	}
@@ -303,15 +323,9 @@
 		font-size: 1.1rem;
 		font-weight: 800;
 	}
-	textarea {
-		min-height: 7rem;
-		padding: 0.8rem;
-		resize: vertical;
-	}
-	input:focus,
-	textarea:focus {
-		border-color: #2f6f63;
-		box-shadow: 0 0 0 3px rgba(47, 111, 99, 0.12);
+	input:focus {
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 12%, transparent);
 	}
 	button {
 		border-radius: 5px;
@@ -325,10 +339,10 @@
 	}
 	.save-button,
 	.add-button {
-		border: 1px solid #1d554b;
-		background: #2f6f63;
-		color: #fffaf0;
-		box-shadow: 0 3px 0 #1d554b;
+		border: 1px solid var(--color-primary-active);
+		background: var(--color-primary);
+		color: var(--color-surface);
+		box-shadow: 0 3px 0 var(--color-primary-active);
 	}
 	.save-button {
 		min-width: 8rem;
@@ -340,7 +354,7 @@
 	}
 	.save-button:hover:not(:disabled),
 	.add-button:hover:not(:disabled) {
-		background: #285f55;
+		background: var(--color-primary-hover);
 	}
 	.editor-grid {
 		display: grid;
@@ -356,7 +370,7 @@
 		margin-bottom: 1.25rem;
 	}
 	.step-mark {
-		color: #b43b3b;
+		color: var(--color-accent-strong);
 		font-size: 0.78rem;
 		font-weight: 900;
 	}
@@ -381,11 +395,11 @@
 		gap: 0.8rem;
 		min-height: 4.2rem;
 		padding: 0.65rem 0.7rem;
-		border: 1px solid #e2d5bf;
-		background: #fffdf8;
+		border: 1px solid var(--color-border-subtle);
+		background: var(--color-surface-raised);
 	}
 	.index {
-		color: #b43b3b;
+		color: var(--color-accent-strong);
 		font-size: 0.74rem;
 		font-weight: 900;
 	}
@@ -402,15 +416,52 @@
 		white-space: nowrap;
 	}
 	.card-copy span {
-		color: #75654f;
+		color: var(--color-text-secondary);
 		font-size: 0.9rem;
+	}
+	.card-actions {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.card-edit-fields {
+		display: grid;
+		flex: 1;
+		gap: 0.4rem;
+		min-width: 0;
+	}
+	.card-edit-fields input {
+		min-height: 2.25rem;
+		padding: 0.45rem 0.6rem;
+		font-size: 0.9rem;
+		font-weight: 700;
+	}
+	.edit-button,
+	.edit-save-button,
+	.cancel-button {
+		min-height: 2rem;
+		padding: 0 0.6rem;
+		border: 1px solid var(--color-border);
+		background: transparent;
+		color: var(--color-text-secondary);
+		font-size: 0.76rem;
+	}
+	.edit-button:hover,
+	.edit-save-button:hover:not(:disabled) {
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+	.cancel-button:hover {
+		background: #f8e8e2;
+		color: var(--color-accent);
 	}
 	.delete-button {
 		width: 2rem;
 		height: 2rem;
-		border: 1px solid #d7c8ad;
+		border: 1px solid var(--color-border);
 		background: transparent;
-		color: #9c3d4f;
+		color: var(--color-accent);
 		font-size: 1.3rem;
 		line-height: 1;
 	}
@@ -421,12 +472,12 @@
 		display: grid;
 		place-items: center;
 		min-height: 14rem;
-		border: 1px dashed #cbbca3;
-		color: #75654f;
+		border: 1px dashed var(--color-input-border);
+		color: var(--color-text-secondary);
 		text-align: center;
 	}
 	.empty-state span {
-		color: #b43b3b;
+		color: var(--color-accent-strong);
 		font-size: 2rem;
 	}
 	.empty-state p {
@@ -435,7 +486,7 @@
 	}
 	.status {
 		margin: 1rem 0 0;
-		color: #2f6f63;
+		color: var(--color-primary);
 		font-size: 0.88rem;
 		font-weight: 800;
 	}
@@ -453,6 +504,12 @@
 		}
 		.editor-grid {
 			grid-template-columns: 1fr;
+		}
+		.card-list li {
+			align-items: flex-start;
+		}
+		.card-actions {
+			align-self: center;
 		}
 	}
 	@media (max-width: 420px) {
