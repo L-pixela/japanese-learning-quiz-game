@@ -28,11 +28,11 @@ describe('requireDeckOwnership', () => {
 		}
 	})
 
-	it('returns ok when the deck exists and belongs to the user', async () => {
+	it('returns ok with the deck when it exists and belongs to the user', async () => {
 		const db = mockSelect([{ id: 'd1', userId: 'u1' }]) as any
 
 		const result = await requireDeckOwnership(db, 'd1', 'u1', 'edit')
 
-		expect(result).toEqual({ ok: true })
+		expect(result).toEqual({ ok: true, deck: { id: 'd1', userId: 'u1' } })
 	})
 })
