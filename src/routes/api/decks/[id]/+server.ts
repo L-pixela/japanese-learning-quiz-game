@@ -5,6 +5,23 @@ import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
 
+export const GET: RequestHandler = async ({ params, platform, locals }) => {
+	const userId = locals.user?.id
+
+	if (!userId) {
+		return json({ error: 'unauthorized' }, { status: 401 })
+	}
+
+	const db = getDb(platform!.env.DB)
+
+	const ownership = await requireDeckOwnership(db, params.id, userId, 'access')
+	if (!ownership.ok) {
+		return ownership.error
+	}
+
+	return json({ deck: ownership.deck })
+}
+
 export const PUT: RequestHandler = async ({ request, params, platform, locals }) => {
 	const { title } = (await request.json()) as { title: string }
 	const userId = locals.user?.id
