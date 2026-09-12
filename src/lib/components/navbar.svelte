@@ -7,7 +7,7 @@
 
 <header class="navbar">
 	<div class="nav-container">
-		<a href={resolveRoute('/dashboard')} class="logo">
+		<a href={resolveRoute('/dashboard', {})} class="logo">
 			<span class="logo-icon">🍡</span>
 			<span class="logo-text">Takoyaki Cards</span>
 		</a>
@@ -15,12 +15,12 @@
 		<!-- Desktop Navigation with Dynamic Route Binds -->
 		<nav class="nav-links desktop-nav">
 			<a
-				href={resolveRoute('/dashboard')}
+				href={resolveRoute('/dashboard', {})} 
 				class:active={$page.url.pathname === '/dashboard' || $page.url.pathname === '/'}
 			>
 				Dashboard
 			</a>
-			<a href={resolveRoute('/decks')} class:active={$page.url.pathname.startsWith('/decks')}>
+			<a href={resolveRoute('/decks', {})} class:active={$page.url.pathname.startsWith('/decks')}>
 				Decks
 			</a>
 		</nav>
@@ -40,12 +40,12 @@
 	{#if isMenuOpen}
 		<nav class="mobile-nav">
 			<a
-				href={resolveRoute('/dashboard')}
+				href={resolveRoute('/dashboard', {})}
 				class:active={$page.url.pathname === '/dashboard' || $page.url.pathname === '/'}
 			>
 				Dashboard
 			</a>
-			<a href={resolveRoute('/decks')} class:active={$page.url.pathname.startsWith('/decks')}>
+			<a href={resolveRoute('/decks', {})} class:active={$page.url.pathname.startsWith('/decks')}>
 				Decks
 			</a>
 		</nav>
