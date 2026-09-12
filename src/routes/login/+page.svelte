@@ -1,49 +1,66 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
-	import RegisterRankPreview from '$lib/components/RegisterRankPreview.svelte'
 	import RegisterTextField from '$lib/components/RegisterTextField.svelte'
 
 	let username = $state('')
 	let password = $state('')
-	let confirmPassword = $state('')
 	let submitted = $state(false)
+	let serverError = $state('')
+	let isSubmitting = $state(false)
 
 	const usernameError = $derived(
 		submitted && username.trim().length === 0
-			? 'Choose a username.'
+			? 'Enter your username.'
 			: submitted && username.trim().length < 3
 				? 'Username needs at least 3 characters.'
 				: '',
 	)
 	const passwordError = $derived(
 		submitted && password.length === 0
-			? 'Create a password.'
+			? 'Enter your password.'
 			: submitted && password.length < 8
 				? 'Password needs at least 8 characters.'
 				: '',
 	)
-	const confirmPasswordError = $derived(
-		submitted && confirmPassword.length === 0
-			? 'Confirm your password.'
-			: submitted && password !== confirmPassword
-				? 'Passwords do not match.'
-				: '',
-	)
-	const isValid = $derived(submitted && !usernameError && !passwordError && !confirmPasswordError)
+	const isValid = $derived(!usernameError && !passwordError)
 
-	function handleSubmit(event: SubmitEvent) {
+	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault()
 		submitted = true
+		serverError = ''
 
-		if (isValid) {
-			goto(resolve('/', {}))
+		if (!isValid || isSubmitting) return
+
+		isSubmitting = true
+
+		try {
+			const response = await fetch('/api/login', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ username: username.trim(), password }),
+			})
+
+			if (!response.ok) {
+				const data = (await response.json()) as { error?: string }
+				serverError =
+					data.error === 'invalid credentials'
+						? 'Username or password is incorrect.'
+						: 'Unable to log in right now.'
+				return
+			}
+
+			await goto(resolve('/', {}))
+		} catch {
+			serverError = 'Unable to connect. Please try again.'
+		} finally {
+			isSubmitting = false
 		}
 	}
 </script>
 
-<main class="register-page">
-	<section class="register-shell" aria-labelledby="register-title">
+<main class="login-page">
+	<section class="login-shell" aria-labelledby="login-title">
 		<header class="site-header">
 			<a class="brand-mark" href={resolve('/', {})} aria-label="TanTore home">
 				<span class="brand-seal">単</span>
@@ -52,15 +69,29 @@
 			<p>単語トレーニング / Word training</p>
 		</header>
 
-		<div class="register-layout">
+		<div class="login-layout">
 			<aside class="rank-panel" aria-label="TanTore rank preview">
-				<RegisterRankPreview titleId="register-title" />
+				<div class="preview">
+					<div class="starter-rank">
+						<div class="rank-emblem" aria-hidden="true">
+							<span>米</span>
+						</div>
+						<div>
+							<p class="caption">今日の練習</p>
+							<h1 id="login-title">Welcome back to practice</h1>
+							<p class="intro">
+								Keep your streak going, review your vocabulary, and grow your food rank one session
+								at a time.
+							</p>
+						</div>
+					</div>
+				</div>
 			</aside>
 
-			<form class="register-form" onsubmit={handleSubmit} novalidate>
+			<form class="login-form" onsubmit={handleSubmit} novalidate>
 				<div class="form-title">
-					<p class="caption">登録</p>
-					<h2>New profile <span class="japanese-label">新しいプロフィール</span></h2>
+					<p class="caption">ログイン</p>
+					<h2>Log in <span class="japanese-label">ログイン</span></h2>
 				</div>
 
 				<RegisterTextField
@@ -78,27 +109,22 @@
 					label="Password / パスワード"
 					name="password"
 					type="password"
-					autocomplete="new-password"
+					autocomplete="current-password"
 					error={passwordError}
 					showPasswordToggle
 				/>
 
-				<RegisterTextField
-					id="confirm-password"
-					bind:value={confirmPassword}
-					label="Confirm password / パスワード確認"
-					name="confirm-password"
-					type="password"
-					autocomplete="new-password"
-					error={confirmPasswordError}
-					showPasswordToggle
-				/>
+				{#if serverError}
+					<p class="server-error" role="alert">{serverError}</p>
+				{/if}
 
-				<button type="submit">Create Account / アカウントを作成</button>
+				<button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? 'Logging in... / ログイン中...' : 'Log in / ログイン'}
+				</button>
 
-				<p class="login-link">
-					Already practicing? / もう練習中ですか？ <a href={resolve('/login', {})}
-						>Log in / ログイン</a
+				<p class="register-link">
+					New to TanTore? / 初めてですか？ <a href={resolve('/register', {})}
+						>Create an account / アカウントを作成</a
 					>
 				</p>
 			</form>
@@ -107,14 +133,14 @@
 </main>
 
 <style>
-	.register-page {
+	.login-page {
 		min-height: 100vh;
 		display: grid;
 		place-items: center;
 		padding: 1.5rem;
 	}
 
-	.register-shell {
+	.login-shell {
 		width: min(100%, 58rem);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
@@ -129,7 +155,7 @@
 		font-weight: 800;
 	}
 
-	.register-layout {
+	.login-layout {
 		display: grid;
 		grid-template-columns: minmax(17rem, 0.78fr) minmax(20rem, 1fr);
 		min-height: 34rem;
@@ -154,7 +180,45 @@
 			var(--rank-badge-background);
 	}
 
-	.register-form {
+	.preview {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 1.35rem;
+	}
+
+	.starter-rank {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.rank-emblem {
+		display: grid;
+		place-items: center;
+		width: 6.2rem;
+		height: 6.2rem;
+		border: 4px solid #b7ac86;
+		border-radius: 999px;
+		background: #fffaf0;
+		box-shadow:
+			inset 0 0 0 5px #ffffff,
+			0 8px 18px rgba(68, 47, 25, 0.14);
+	}
+
+	.rank-emblem span {
+		color: #b7ac86;
+		font-size: 2.4rem;
+		font-weight: 900;
+	}
+
+	.intro {
+		margin: 0;
+		color: #625746;
+		font-size: 0.98rem;
+		line-height: 1.7;
+	}
+
+	.login-form {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -176,16 +240,23 @@
 		font-weight: 900;
 	}
 
+	h1,
 	h2,
 	p {
 		margin-top: 0;
+	}
+
+	h1 {
+		margin-bottom: 0.85rem;
+		color: var(--color-text);
+		font-size: 2.45rem;
+		line-height: 1.02;
 	}
 
 	h2 {
 		margin-bottom: 0;
 		font-size: 1.85rem;
 		line-height: 1.1;
-		letter-spacing: 0;
 	}
 
 	button {
@@ -204,41 +275,52 @@
 			background 120ms ease;
 	}
 
-	button:hover {
+	button:hover:not(:disabled) {
 		background: var(--color-primary-hover);
 		transform: translateY(1px);
 		box-shadow: 0 3px 0 var(--color-primary-active);
 	}
 
-	button:active {
+	button:active:not(:disabled) {
 		transform: translateY(4px);
 		box-shadow: 0 0 0 var(--color-primary-active);
 	}
 
-	.login-link {
+	button:disabled {
+		cursor: wait;
+		opacity: 0.7;
+	}
+
+	.server-error {
+		margin: 0;
+		color: var(--color-error);
+		font-weight: 800;
+	}
+
+	.register-link {
 		margin: 0;
 		color: var(--color-text-secondary);
 		font-weight: 750;
 		text-align: center;
 	}
 
-	.login-link a {
+	.register-link a {
 		color: var(--color-accent);
 		font-weight: 900;
 		text-decoration: none;
 	}
 
-	.login-link a:hover {
+	.register-link a:hover {
 		text-decoration: underline;
 	}
 
 	@media (max-width: 760px) {
-		.register-page {
+		.login-page {
 			padding: 0.85rem;
 			place-items: start center;
 		}
 
-		.register-layout {
+		.login-layout {
 			grid-template-columns: 1fr;
 		}
 
@@ -247,14 +329,18 @@
 			border-bottom: 1px solid var(--color-border-subtle);
 			padding: 1.35rem;
 		}
+
+		h1 {
+			font-size: 2.05rem;
+		}
 	}
 
 	@media (max-width: 420px) {
-		.register-page {
+		.login-page {
 			padding: 0;
 		}
 
-		.register-shell {
+		.login-shell {
 			min-height: 100vh;
 			border: 0;
 			border-radius: 0;
