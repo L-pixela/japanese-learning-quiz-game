@@ -10,12 +10,14 @@ export async function findDeckById(db: Db, id: string) {
 	return existing
 }
 
+type Deck = NonNullable<Awaited<ReturnType<typeof findDeckById>>>
+
 export async function requireDeckOwnership(
 	db: Db,
 	deckId: string,
 	userId: string,
 	action: string,
-): Promise<{ ok: true } | { ok: false; error: Response }> {
+): Promise<{ ok: true; deck: Deck } | { ok: false; error: Response }> {
 	const existing = await findDeckById(db, deckId)
 
 	if (!existing) {
@@ -29,7 +31,7 @@ export async function requireDeckOwnership(
 		}
 	}
 
-	return { ok: true }
+	return { ok: true, deck: existing }
 }
 
 export async function findCardWithDeckOwner(db: Db, id: string) {

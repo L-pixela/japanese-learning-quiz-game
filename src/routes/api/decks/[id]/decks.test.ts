@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest'
-import { PUT, DELETE } from './+server'
+import { GET, PUT, DELETE } from './+server'
 import { getDb } from '$lib/server/db'
 import { mockSelect } from '$lib/server/db/mock-db'
 
@@ -9,6 +9,57 @@ vi.mock('$lib/server/db', () => ({
 }))
 
 describe('/api/decks/[id]', () => {
+	describe('GET', () => {
+		it('returns 401 if user is not logged in', async () => {
+			const locals = {} as any
+			const response = await GET({ params: { id: 'd1' }, platform: {}, locals } as any)
+			const data = await response.json()
+
+			expect(response.status).toBe(401)
+			expect(data).toEqual({ error: 'unauthorized' })
+		})
+
+		it('returns 404 if deck does not exist', async () => {
+			vi.mocked(getDb).mockReturnValue(mockSelect([]) as any)
+
+			const locals = { user: { id: 'u1' } } as any
+			const platform = { env: { DB: {} } } as any
+
+			const response = await GET({ params: { id: 'd1' }, platform, locals } as any)
+			const data = await response.json()
+
+			expect(response.status).toBe(404)
+			expect(data).toEqual({ error: 'deck not found' })
+		})
+
+		it('returns 403 if deck belongs to another user', async () => {
+			vi.mocked(getDb).mockReturnValue(mockSelect([{ id: 'd1', userId: 'u2' }]) as any)
+
+			const locals = { user: { id: 'u1' } } as any
+			const platform = { env: { DB: {} } } as any
+
+			const response = await GET({ params: { id: 'd1' }, platform, locals } as any)
+			const data = await response.json()
+
+			expect(response.status).toBe(403)
+			expect(data).toEqual({ error: 'not authorized to access this deck' })
+		})
+
+		it('returns 200 with the deck when user owns it', async () => {
+			const deckRow = { id: 'd1', userId: 'u1', title: 'My Deck' }
+			vi.mocked(getDb).mockReturnValue(mockSelect([deckRow]) as any)
+
+			const locals = { user: { id: 'u1' } } as any
+			const platform = { env: { DB: {} } } as any
+
+			const response = await GET({ params: { id: 'd1' }, platform, locals } as any)
+			const data = await response.json()
+
+			expect(response.status).toBe(200)
+			expect(data).toEqual({ deck: deckRow })
+		})
+	})
+
 	describe('PUT', () => {
 		it('returns 401 if user is not logged in', async () => {
 			const request = { json: vi.fn().mockResolvedValue({ title: 'New Title' }) } as any

@@ -49,3 +49,17 @@ export const card = sqliteTable('card', {
 	front: text('front').notNull(),
 	back: text('back').notNull(),
 })
+
+export const word = sqliteTable(
+	'word',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		japanese: text('japanese').notNull(),
+		reading: text('reading').notNull(),
+		meaning: text('meaning').notNull(),
+		level: integer('level').notNull(),
+	},
+	(table) => [index('word_level_idx').on(table.level)],
+)
