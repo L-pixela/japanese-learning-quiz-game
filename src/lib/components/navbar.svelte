@@ -15,12 +15,15 @@
 		<!-- Desktop Navigation with Dynamic Route Binds -->
 		<nav class="nav-links desktop-nav">
 			<a
-				href={resolveRoute('/dashboard', {})} 
+				href={resolveRoute('/dashboard', {})}
 				class:active={$page.url.pathname === '/dashboard' || $page.url.pathname === '/'}
 			>
 				Dashboard
 			</a>
-			<a href={resolveRoute('/decks', {})} class:active={$page.url.pathname.startsWith('/decks')}>
+			<a
+				href={resolveRoute('/deck_list', {})}
+				class:active={$page.url.pathname.startsWith('/deck_list')}
+			>
 				Decks
 			</a>
 		</nav>
@@ -45,7 +48,10 @@
 			>
 				Dashboard
 			</a>
-			<a href={resolveRoute('/decks', {})} class:active={$page.url.pathname.startsWith('/decks')}>
+			<a
+				href={resolveRoute('/deck_list', {})}
+				class:active={$page.url.pathname.startsWith('/deck_list')}
+			>
 				Decks
 			</a>
 		</nav>
