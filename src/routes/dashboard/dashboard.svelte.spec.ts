@@ -19,7 +19,7 @@ describe('Dashboard +page.svelte', () => {
     render(Dashboard)
 
     await expect.element(page.getByText('1,250')).toBeInTheDocument()
-    await expect.element(page.getByText('45')).toBeInTheDocument()
+    await expect.element(page.getByText('80')).toBeInTheDocument()
   })
 
   it('renders the decks section heading and create button', async () => {
