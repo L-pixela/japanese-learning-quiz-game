@@ -1,12 +1,10 @@
 import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
-import { findDeckById } from '$lib/server/db/queries'
+import { requireDeckOwnership } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
+import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE } from '$lib/server/quiz'
 import { eq, sql } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
-
-export const DEFAULT_QUIZ_SIZE = 10
-export const MAX_QUIZ_SIZE = 50
 
 /**
  * GET /api/decks/:id/quiz
@@ -38,14 +36,9 @@ export const GET: RequestHandler = async ({ params, url, platform, locals }) => 
 
 	const db = getDb(platform!.env.DB)
 
-	const existingDeck = await findDeckById(db, params.id)
-
-	if (!existingDeck) {
-		return json({ error: 'deck not found' }, { status: 404 })
-	}
-
-	if (existingDeck.userId !== userId) {
-		return json({ error: 'not authorized to access this deck' }, { status: 403 })
+	const ownership = await requireDeckOwnership(db, params.id, userId, 'access')
+	if (!ownership.ok) {
+		return ownership.error
 	}
 
 	const countParam = url.searchParams.get('count')

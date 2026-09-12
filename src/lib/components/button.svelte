@@ -9,6 +9,7 @@
 		size?: Size
 		disabled?: boolean
 		type?: 'button' | 'submit' | 'reset'
+		onclick?: (event: MouseEvent) => void
 		children?: Snippet
 	}
 
@@ -17,11 +18,12 @@
 		size = 'md',
 		disabled = false,
 		type = 'button',
+		onclick,
 		children,
 	}: Props = $props()
 </script>
 
-<button {type} class="button button--{variant} button--{size}" {disabled}>
+<button {type} class="button button--{variant} button--{size}" {disabled} {onclick}>
 	{@render children?.()}
 </button>
 

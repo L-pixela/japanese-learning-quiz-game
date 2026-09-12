@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
-import { findDeckById } from '$lib/server/db/queries'
+import { requireDeckOwnership } from '$lib/server/db/queries'
 import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
@@ -19,14 +19,9 @@ export const PUT: RequestHandler = async ({ request, params, platform, locals })
 
 	const db = getDb(platform!.env.DB)
 
-	const existing = await findDeckById(db, params.id)
-
-	if (!existing) {
-		return json({ error: 'deck not found' }, { status: 404 })
-	}
-
-	if (existing.userId !== userId) {
-		return json({ error: 'not authorized to edit this deck' }, { status: 403 })
+	const ownership = await requireDeckOwnership(db, params.id, userId, 'edit')
+	if (!ownership.ok) {
+		return ownership.error
 	}
 
 	const [updated] = await db.update(deck).set({ title }).where(eq(deck.id, params.id)).returning()
@@ -43,14 +38,9 @@ export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
 
 	const db = getDb(platform!.env.DB)
 
-	const existing = await findDeckById(db, params.id)
-
-	if (!existing) {
-		return json({ error: 'deck not found' }, { status: 404 })
-	}
-
-	if (existing.userId !== userId) {
-		return json({ error: 'not authorized to delete this deck' }, { status: 403 })
+	const ownership = await requireDeckOwnership(db, params.id, userId, 'delete')
+	if (!ownership.ok) {
+		return ownership.error
 	}
 
 	await db.delete(deck).where(eq(deck.id, params.id))
