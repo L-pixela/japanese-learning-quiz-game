@@ -49,7 +49,7 @@
 				<span class="brand-seal">単</span>
 				<span>TanTore</span>
 			</a>
-			<p>単語トレーニング</p>
+			<p>単語トレーニング / Word training</p>
 		</header>
 
 		<div class="register-layout">
@@ -60,13 +60,13 @@
 			<form class="register-form" onsubmit={handleSubmit} novalidate>
 				<div class="form-title">
 					<p class="caption">登録</p>
-					<h2>New profile</h2>
+					<h2>New profile <span class="japanese-label">新しいプロフィール</span></h2>
 				</div>
 
 				<RegisterTextField
 					id="username"
 					bind:value={username}
-					label="Username"
+					label="Username / ユーザー名"
 					name="username"
 					autocomplete="username"
 					error={usernameError}
@@ -75,7 +75,7 @@
 				<RegisterTextField
 					id="password"
 					bind:value={password}
-					label="Password"
+					label="Password / パスワード"
 					name="password"
 					type="password"
 					autocomplete="new-password"
@@ -85,38 +85,26 @@
 				<RegisterTextField
 					id="confirm-password"
 					bind:value={confirmPassword}
-					label="Confirm password"
+					label="Confirm password / パスワード確認"
 					name="confirm-password"
 					type="password"
 					autocomplete="new-password"
 					error={confirmPasswordError}
 				/>
 
-				<button type="submit">Create Account</button>
+				<button type="submit">Create Account / アカウントを作成</button>
 
-				<p class="login-link">Already practicing? <a href={resolve('/login', {})}>Log in</a></p>
+				<p class="login-link">
+					Already practicing? / もう練習中ですか？ <a href={resolve('/login', {})}
+						>Log in / ログイン</a
+					>
+				</p>
 			</form>
 		</div>
 	</section>
 </main>
 
 <style>
-	:global(body) {
-		margin: 0;
-		background:
-			linear-gradient(90deg, rgba(91, 74, 48, 0.035) 1px, transparent 1px),
-			linear-gradient(rgba(91, 74, 48, 0.035) 1px, transparent 1px), #f6f0e3;
-		background-size: 34px 34px;
-		color: #29231c;
-		font-family:
-			ui-sans-serif,
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			sans-serif;
-	}
-
 	.register-page {
 		min-height: 100vh;
 		display: grid;
@@ -126,46 +114,15 @@
 
 	.register-shell {
 		width: min(100%, 58rem);
-		border: 1px solid #d7c8ad;
-		border-radius: 8px;
-		background: #fffaf0;
-		box-shadow: 0 18px 42px rgba(68, 47, 25, 0.12);
-	}
-
-	.site-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		border-bottom: 1px solid #e2d5bf;
-		padding: 0.9rem 1rem;
-	}
-
-	.brand-mark {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		color: inherit;
-		font-weight: 900;
-		text-decoration: none;
-	}
-
-	.brand-seal {
-		display: grid;
-		place-items: center;
-		width: 1.85rem;
-		height: 1.85rem;
-		border: 2px solid #b43b3b;
-		border-radius: 999px;
-		color: #b43b3b;
-		background: #fffaf0;
-		font-size: 0.82rem;
-		font-weight: 900;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-lg);
 	}
 
 	.site-header p {
 		margin: 0;
-		color: #75654f;
+		color: var(--color-text-secondary);
 		font-size: 0.86rem;
 		font-weight: 800;
 	}
@@ -181,7 +138,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.35rem;
-		border-right: 1px solid #e2d5bf;
+		border-right: 1px solid var(--color-border-subtle);
 		padding: 2rem;
 		background:
 			linear-gradient(135deg, rgba(198, 75, 107, 0.06), transparent 42%),
@@ -192,7 +149,7 @@
 				transparent 1px,
 				transparent 11px
 			),
-			#fbf7ec;
+			var(--rank-badge-background);
 	}
 
 	.register-form {
@@ -201,7 +158,8 @@
 		justify-content: center;
 		gap: 1rem;
 		padding: clamp(1.5rem, 4vw, 3rem);
-		background: linear-gradient(rgba(198, 75, 107, 0.04) 1px, transparent 1px), #fffdf8;
+		background:
+			linear-gradient(var(--color-paper-line) 1px, transparent 1px), var(--color-surface-raised);
 		background-size: 100% 3.2rem;
 	}
 
@@ -211,7 +169,7 @@
 
 	.caption {
 		margin: 0 0 0.45rem;
-		color: #9c3d4f;
+		color: var(--color-accent);
 		font-size: 0.78rem;
 		font-weight: 900;
 	}
@@ -230,14 +188,14 @@
 
 	button {
 		min-height: 3.1rem;
-		border: 1px solid #1d554b;
+		border: 1px solid var(--color-primary-active);
 		border-radius: 6px;
-		background: #2f6f63;
-		color: #fffaf0;
+		background: var(--color-primary);
+		color: var(--color-surface);
 		font: inherit;
 		font-weight: 900;
 		cursor: pointer;
-		box-shadow: 0 4px 0 #1d554b;
+		box-shadow: 0 4px 0 var(--color-primary-active);
 		transition:
 			transform 120ms ease,
 			box-shadow 120ms ease,
@@ -245,25 +203,25 @@
 	}
 
 	button:hover {
-		background: #285f55;
+		background: var(--color-primary-hover);
 		transform: translateY(1px);
-		box-shadow: 0 3px 0 #1d554b;
+		box-shadow: 0 3px 0 var(--color-primary-active);
 	}
 
 	button:active {
 		transform: translateY(4px);
-		box-shadow: 0 0 0 #1d554b;
+		box-shadow: 0 0 0 var(--color-primary-active);
 	}
 
 	.login-link {
 		margin: 0;
-		color: #75654f;
+		color: var(--color-text-secondary);
 		font-weight: 750;
 		text-align: center;
 	}
 
 	.login-link a {
-		color: #9c3d4f;
+		color: var(--color-accent);
 		font-weight: 900;
 		text-decoration: none;
 	}
@@ -284,7 +242,7 @@
 
 		.rank-panel {
 			border-right: 0;
-			border-bottom: 1px solid #e2d5bf;
+			border-bottom: 1px solid var(--color-border-subtle);
 			padding: 1.35rem;
 		}
 	}

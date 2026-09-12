@@ -42,21 +42,21 @@
 	.text-field {
 		display: grid;
 		gap: 0.4rem;
-		color: #352d23;
+		color: var(--color-text);
 		font-size: 0.9rem;
-		font-weight: 850;
+		font-weight: var(--font-weight-bold);
 	}
 
 	input {
 		width: 100%;
 		box-sizing: border-box;
-		border: 1px solid #d8c7ad;
-		border-radius: 6px;
-		background: #fffaf0;
+		border: 1px solid var(--color-input-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
 		padding: 0.9rem 0.95rem;
-		color: #29231c;
+		color: var(--color-text);
 		font: inherit;
-		font-weight: 650;
+		font-weight: var(--font-weight-medium);
 		outline: none;
 		transition:
 			border-color 140ms ease,
@@ -65,23 +65,23 @@
 	}
 
 	input::placeholder {
-		color: #9a8a70;
-		font-weight: 600;
+		color: var(--color-disabled-text);
+		font-weight: var(--font-weight-medium);
 	}
 
 	input:focus {
-		border-color: #6e8f63;
-		background: #ffffff;
-		box-shadow: 0 0 0 3px rgba(110, 143, 99, 0.17);
+		border-color: var(--color-primary);
+		background: var(--color-surface-raised);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 17%, transparent);
 	}
 
 	input[aria-invalid='true'] {
-		border-color: #c43d3d;
-		box-shadow: 0 0 0 3px rgba(196, 61, 61, 0.12);
+		border-color: var(--color-error);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 12%, transparent);
 	}
 
 	.field-error {
-		color: #a43333;
+		color: var(--color-error);
 		font-size: 0.85rem;
 		font-weight: 800;
 		line-height: 1.45;
