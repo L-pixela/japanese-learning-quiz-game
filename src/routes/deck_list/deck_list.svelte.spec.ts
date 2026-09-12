@@ -24,10 +24,12 @@ describe('Deck Management +page.svelte', () => {
 	it('renders the table headers', async () => {
 		render(DecksPage)
 
-		await expect.element(page.getByText('Deck Title')).toBeInTheDocument()
-		await expect.element(page.getByText('Cards')).toBeInTheDocument()
-		await expect.element(page.getByText('Status')).toBeInTheDocument()
-		await expect.element(page.getByText('Actions')).toBeInTheDocument()
+		await expect.element(page.getByRole('columnheader', { name: 'Deck Title' })).toBeInTheDocument()
+		await expect
+			.element(page.getByRole('columnheader', { name: 'Cards', exact: true }))
+			.toBeInTheDocument()
+		await expect.element(page.getByRole('columnheader', { name: 'Status' })).toBeInTheDocument()
+		await expect.element(page.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument()
 	})
 
 	it('renders every mock deck with title, card count, and status', async () => {
