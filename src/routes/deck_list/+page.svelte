@@ -38,10 +38,10 @@
 		<table class="deck-table">
 			<thead>
 				<tr>
-					<th>Deck Title</th>
-					<th>Cards</th>
-					<th>Status</th>
-					<th class="text-right">Actions</th>
+					<th scope="col">Deck Title</th>
+					<th scope="col">Cards</th>
+					<th scope="col">Status</th>
+					<th scope="col" class="text-right">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
