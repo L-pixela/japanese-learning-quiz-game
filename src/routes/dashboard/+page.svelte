@@ -235,7 +235,7 @@
 	}
 	.board-table {
 		display: grid;
-		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px minmax(60px, max-content);
+		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px 92px;
 	}
 	.board-columns,
 	.board-list {
@@ -319,10 +319,6 @@
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
 	}
-	.board-columns > span:last-child,
-	.board-points {
-		text-align: right;
-	}
 	.board-list {
 		list-style: none;
 		padding: 0;
@@ -404,7 +400,7 @@
 			padding: 22px 18px 6px;
 		}
 		.board-table {
-			grid-template-columns: 30px minmax(0, 1fr) auto;
+			grid-template-columns: 40px minmax(0, 1fr) 92px;
 		}
 		.board-columns,
 		.board-list li {
@@ -413,9 +409,6 @@
 		/* Narrow screens: university and badge drop to a second line. */
 		.board-list li {
 			grid-template-areas: 'rank name points' '. university badge';
-		}
-		.board-badge {
-			justify-content: flex-end;
 		}
 		.board-columns {
 			grid-template-areas: 'rank name points';
