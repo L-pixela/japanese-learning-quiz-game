@@ -1,94 +1,28 @@
 import { json } from '@sveltejs/kit'
+import { and, eq } from 'drizzle-orm'
 import { getDb } from '$lib/server/db'
-import { user } from '$lib/server/db/schema'
-import { eq } from 'drizzle-orm'
+import { quizAttempt } from '$lib/server/db/schema'
+import { gradeAnswers, saveQuizScore, getQuizResult } from '$lib/server/level-quiz'
 import type { RequestHandler } from './$types'
 
-// TODO: once Rivath's rank calculation module (#10) exists, replace this with
-// an import from $lib/server/rank instead of duplicating the logic here.
-function getRankFromStreak(streak: number): string {
-	if (streak >= 100) return 'hinotama'
-	if (streak >= 60) return 'gekikara-kimchi'
-	if (streak >= 30) return 'ichimi-togarashi'
-	if (streak >= 14) return 'wasabi'
-	if (streak >= 7) return 'mentaiko'
-	if (streak >= 3) return 'umeboshi'
-	return 'shiragohan'
-}
-
-function isSameDay(a: Date, b: Date): boolean {
-	return (
-		a.getFullYear() === b.getFullYear() &&
-		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate()
-	)
-}
-
-function isConsecutiveDay(previous: Date, now: Date): boolean {
-	const oneDayMs = 24 * 60 * 60 * 1000
-	const diff = now.getTime() - previous.getTime()
-	return diff > 0 && diff <= oneDayMs * 2 && !isSameDay(previous, now)
-}
-
-export const POST: RequestHandler = async ({ request, platform }) => {
-	const { userId, correctCount, totalCount } = (await request.json()) as {
-		userId: string
-		correctCount: number
-		totalCount: number
-	}
-
-	if (!userId || typeof correctCount !== 'number' || typeof totalCount !== 'number') {
-		return json({ error: 'userId, correctCount, and totalCount are required' }, { status: 400 })
-	}
-
-	if (correctCount < 0 || totalCount <= 0 || correctCount > totalCount) {
-		return json({ error: 'invalid correctCount/totalCount values' }, { status: 400 })
-	}
-
-	const db = getDb(platform!.env.DB)
-
-	const [existingUser] = await db.select().from(user).where(eq(user.id, userId)).limit(1)
-
-	if (!existingUser) {
-		return json({ error: 'user not found' }, { status: 404 })
-	}
-
-	const pointsEarned = correctCount * 10
-	const now = new Date()
-
-	let newStreak: number
-	if (!existingUser.lastQuizAt) {
-		newStreak = 1
-	} else if (isSameDay(existingUser.lastQuizAt, now)) {
-		newStreak = existingUser.streak
-	} else if (isConsecutiveDay(existingUser.lastQuizAt, now)) {
-		newStreak = existingUser.streak + 1
-	} else {
-		newStreak = 1
-	}
-
-	const newPoints = existingUser.points + pointsEarned
-	const newRank = getRankFromStreak(newStreak)
-
-	const [updatedUser] = await db
-		.update(user)
-		.set({
-			points: newPoints,
-			streak: newStreak,
-			lastQuizAt: now,
-			rank: newRank,
-		})
-		.where(eq(user.id, userId))
-		.returning({
-			id: user.id,
-			username: user.username,
-			points: user.points,
-			streak: user.streak,
-			rank: user.rank,
-		})
-
-	return json({
-		pointsEarned,
-		user: updatedUser,
+export const POST: RequestHandler = async ({ request, platform, locals }) => {
+	if (!locals.user) return json({ error: 'unauthorized' }, { status: 401 })
+	const body = (await request.json().catch(() => null)) as Record<string, unknown> | null
+	if (!body || typeof body.attemptId !== 'string')
+		return json({ error: 'attemptId and 10 answers are required' }, { status: 400 })
+	const d1 = platform!.env.DB
+	const [attempt] = await getDb(d1)
+		.select()
+		.from(quizAttempt)
+		.where(and(eq(quizAttempt.id, body.attemptId), eq(quizAttempt.userId, locals.user.id)))
+		.limit(1)
+	if (!attempt) return json({ error: 'quiz attempt not found' }, { status: 404 })
+	const score = gradeAnswers(attempt.questions, body.answers)
+	if (score === null)
+		return json({ error: 'Provide exactly 10 answer indices from 0 to 3' }, { status: 400 })
+	if (!attempt.submittedAt)
+		await saveQuizScore(d1, locals.user.id, attempt.id, attempt.level, score)
+	return json(await getQuizResult(d1, locals.user.id, attempt.id), {
+		headers: { 'Cache-Control': 'no-store' },
 	})
 }

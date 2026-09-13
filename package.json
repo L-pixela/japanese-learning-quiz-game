@@ -17,6 +17,7 @@
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
 		"gen": "wrangler types",
+		"db:seed": "node scripts/seed-words.ts",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "wrangler d1 migrations apply jpquizgame-db --local",
 		"db:migrate:remote": "wrangler d1 migrations apply jpquizgame-db --remote",

@@ -15,7 +15,13 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 export const POST: RequestHandler = async ({ request, platform }) => {
-	const { username, password } = (await request.json()) as { username: string; password: string }
+	const body = (await request.json().catch(() => null)) as Record<string, unknown> | null
+	if (!body || typeof body !== 'object')
+		return json({ error: 'invalid JSON body' }, { status: 400 })
+	const { username, password, university } = body
+	if (university != null && (typeof university !== 'string' || university.trim().length > 200)) {
+		return json({ error: 'university must be text of at most 200 characters' }, { status: 400 })
+	}
 
 	if (!username || !password) {
 		return json({ error: 'username and password are required' }, { status: 400 })
@@ -44,6 +50,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		.values({
 			username,
 			passwordHash,
+			university: university?.trim() || null,
 		})
 		.returning({ id: user.id, username: user.username })
 
