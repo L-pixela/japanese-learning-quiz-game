@@ -165,7 +165,7 @@
 	}
 	.member-info h2 {
 		margin-bottom: 6px;
-		font-size: 26px;
+		font-size: clamp(19px, 2.9vw, 26px);
 		letter-spacing: 1px;
 	}
 	.member-en {
