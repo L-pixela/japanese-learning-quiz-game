@@ -1,6 +1,9 @@
 <script lang="ts">
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { team } from '$lib/team'
+
+	// Fall back to the portrait placeholder if the artwork file is missing.
+	let failed = $state<Record<string, boolean>>({})
 </script>
 
 <svelte:head
@@ -29,12 +32,13 @@
 	<section class="team-grid" aria-label="Team members">
 		{#each team as member, index (member.name)}<article class="member">
 				<div class="portrait">
-					{#if member.image}<img
+					{#if member.image && !failed[member.name]}<img
 							src={member.image}
-							alt={member.name + ' anime profile portrait'}
+							alt={member.japanese + ' anime profile portrait'}
+							onerror={() => (failed[member.name] = true)}
 						/>{:else}<div
 							class="portrait-frame"
-							aria-label={'Profile image placeholder for ' + member.name}
+							aria-label={'Profile image placeholder for ' + member.japanese}
 						>
 							<svg viewBox="0 0 120 140" fill="none" aria-hidden="true"
 								><path
@@ -55,8 +59,8 @@
 				</div>
 				<div class="member-info">
 					<p class="study-eyebrow">{member.role}</p>
-					<h2>{member.name}</h2>
-					<p class="member-jp" lang="ja">{member.japanese}</p>
+					<h2 lang="ja">{member.japanese}</h2>
+					<p class="member-en">{member.name}</p>
 					<p class="contribution">{member.contribution}</p>
 				</div>
 			</article>{/each}
@@ -120,6 +124,8 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		/* Bias the crop upward so faces survive the wide frame. */
+		object-position: center 25%;
 	}
 	.portrait-frame {
 		display: flex;
@@ -155,11 +161,12 @@
 	.member-info h2 {
 		font-size: 23px;
 		margin-bottom: 8px;
+		letter-spacing: 1.5px;
 	}
-	.member-jp {
-		font-size: 13px;
+	.member-en {
+		font-size: 12px;
 		color: #62695f;
-		letter-spacing: 2px;
+		letter-spacing: 1.4px;
 	}
 	.contribution {
 		border-top: 1px solid #d9d9cb;
