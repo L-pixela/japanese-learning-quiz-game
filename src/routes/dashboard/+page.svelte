@@ -126,11 +126,6 @@
 			</ol>
 		</div>
 	</section>
-	<!-- <a class="deck-link" href={resolve('/deck_list', {})}
-		><span>{t('dashboard.deckLink')}</span>
-		{t('dashboard.browseDecks')}
-		<span aria-hidden="true">↗</span></a
-	> -->
 </StudyShell>
 
 <style>
@@ -389,17 +384,6 @@
 		background: rgba(251, 247, 236, 0.14);
 		box-shadow: inset 4px 0 0 var(--color-accent);
 	}
-	.deck-link {
-		display: flex;
-		gap: 8px;
-		justify-content: end;
-		margin-top: 26px;
-		font-size: var(--font-size-caption);
-		text-decoration: none;
-	}
-	.deck-link > span:first-child {
-		color: var(--color-text-secondary);
-	}
 	@media (max-width: 800px) {
 		.hero-copy {
 			padding: 28px;
@@ -439,10 +423,6 @@
 		.board-columns > span:nth-child(3),
 		.board-columns > span:nth-child(4) {
 			display: none;
-		}
-		.deck-link {
-			flex-wrap: wrap;
-			justify-content: start;
 		}
 	}
 </style>
