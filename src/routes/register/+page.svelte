@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
+	import { t } from '$lib/i18n.svelte'
 	import RegisterRankPreview from '$lib/components/RegisterRankPreview.svelte'
+	import JapanScene from '$lib/components/JapanScene.svelte'
 	import RegisterTextField from '$lib/components/RegisterTextField.svelte'
 
 	let username = $state('')
@@ -85,19 +87,20 @@
 
 		<div class="register-layout">
 			<aside class="rank-panel" aria-label="TanTore rank preview">
+				<div class="panel-scene"><JapanScene scene="torii" /></div>
 				<RegisterRankPreview titleId="register-title" />
 			</aside>
 
 			<form method="POST" class="register-form" onsubmit={handleSubmit} novalidate>
 				<div class="form-title">
 					<p class="caption">登録</p>
-					<h2>New profile <span class="japanese-label">新しいプロフィール</span></h2>
+					<h2>{t('auth.newProfile')}</h2>
 				</div>
 
 				<RegisterTextField
 					id="username"
 					bind:value={username}
-					label="Username / ユーザー名"
+					label={t('auth.username')}
 					name="username"
 					autocomplete="username"
 					error={usernameError}
@@ -106,7 +109,7 @@
 				<RegisterTextField
 					id="university"
 					name="university"
-					label="University (optional)"
+					label={t('auth.university')}
 					bind:value={university}
 					autocomplete="organization"
 				/>
@@ -114,7 +117,7 @@
 				<RegisterTextField
 					id="password"
 					bind:value={password}
-					label="Password / パスワード"
+					label={t('auth.password')}
 					name="password"
 					type="password"
 					autocomplete="new-password"
@@ -125,7 +128,7 @@
 				<RegisterTextField
 					id="confirm-password"
 					bind:value={confirmPassword}
-					label="Confirm password / パスワード確認"
+					label={t('auth.confirmPassword')}
 					name="confirm-password"
 					type="password"
 					autocomplete="new-password"
@@ -138,11 +141,11 @@
 				{/if}
 
 				<button type="submit" disabled={isSubmitting}>
-					{isSubmitting ? 'Creating account...' : 'Create Account'}
+					{isSubmitting ? t('auth.creating') : t('auth.register')}
 				</button>
 
 				<p class="login-link">
-					Already have an account? <a href={resolve('/login', {})}>Log in / ログイン</a>
+					{t('auth.haveAccount')} <a href={resolve('/login', {})}>{t('auth.login')}</a>
 				</p>
 			</form>
 		</div>
@@ -158,11 +161,11 @@
 	}
 
 	.register-shell {
-		width: min(100%, 58rem);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
+		width: min(100%, 60rem);
+		border-radius: var(--radius-xl);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-lg);
+		overflow: hidden;
 	}
 
 	.site-header p {
@@ -183,29 +186,29 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.35rem;
-		border-right: 1px solid var(--color-border-subtle);
-		padding: 2rem;
-		background:
-			linear-gradient(135deg, rgba(198, 75, 107, 0.06), transparent 42%),
-			repeating-linear-gradient(
-				-45deg,
-				rgba(183, 172, 134, 0.16) 0,
-				rgba(183, 172, 134, 0.16) 1px,
-				transparent 1px,
-				transparent 11px
-			),
-			var(--rank-badge-background);
+		padding: 2.4rem;
+		background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+		color: var(--color-on-primary);
+		overflow: hidden;
+	}
+	.panel-scene {
+		position: absolute;
+		inset: auto -15% -10% -15%;
+		height: 58%;
+		opacity: 0.4;
+	}
+	.rank-panel :global(*) {
+		position: relative;
+		z-index: 1;
 	}
 
 	.register-form {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 1rem;
-		padding: clamp(1.5rem, 4vw, 3rem);
-		background:
-			linear-gradient(var(--color-paper-line) 1px, transparent 1px), var(--color-surface-raised);
-		background-size: 100% 3.2rem;
+		gap: 1.1rem;
+		padding: clamp(1.6rem, 4vw, 3rem);
+		background: var(--color-surface);
 	}
 
 	.form-title {
@@ -213,10 +216,14 @@
 	}
 
 	.caption {
-		margin: 0 0 0.45rem;
-		color: var(--color-accent);
-		font-size: 0.78rem;
-		font-weight: 900;
+		display: inline-block;
+		margin: 0 0 0.6rem;
+		padding: 6px 14px;
+		border-radius: var(--radius-full);
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-bold);
 	}
 
 	h2,
@@ -226,21 +233,25 @@
 
 	h2 {
 		margin-bottom: 0;
-		font-size: 1.85rem;
+		font-family: var(--font-display);
+		font-size: var(--font-size-h2);
+		font-weight: var(--font-weight-bold);
 		line-height: 1.1;
 		letter-spacing: 0;
 	}
 
 	button {
-		min-height: 3.1rem;
-		border: 1px solid var(--color-primary-active);
-		border-radius: 6px;
+		min-height: 3.4rem;
+		border: 0;
+		border-radius: var(--radius-full);
 		background: var(--color-primary);
-		color: var(--color-surface);
+		color: var(--color-on-primary);
 		font: inherit;
+		font-family: var(--font-display);
+		font-size: var(--font-size-body);
 		font-weight: 900;
 		cursor: pointer;
-		box-shadow: 0 4px 0 var(--color-primary-active);
+		box-shadow: var(--shadow-solid) var(--color-primary-active);
 		transition:
 			transform 120ms ease,
 			box-shadow 120ms ease,
@@ -298,9 +309,7 @@
 		}
 
 		.rank-panel {
-			border-right: 0;
-			border-bottom: 1px solid var(--color-border-subtle);
-			padding: 1.35rem;
+			padding: 1.6rem;
 		}
 	}
 

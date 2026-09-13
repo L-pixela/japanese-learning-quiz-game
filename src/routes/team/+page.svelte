@@ -1,6 +1,7 @@
 <script lang="ts">
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { team } from '$lib/team'
+	import { t } from '$lib/i18n.svelte'
 
 	// Fall back to the portrait placeholder if the artwork file is missing.
 	let failed = $state<Record<string, boolean>>({})
@@ -15,18 +16,15 @@
 <StudyShell>
 	<div class="study-heading">
 		<div>
-			<p class="study-eyebrow">The people behind the practice / 制作チーム</p>
-			<h1>Made together.<br />For the way we learn.</h1>
-			<p class="study-muted">
-				We’re building a small space for a daily Japanese habit.<br />These are the people bringing
-				TanTore to life.
-			</p>
+			<p class="study-eyebrow">{t('team.eyebrow')}</p>
+			<h1>{t('team.title')}</h1>
+			<p class="study-muted">{t('team.lead')}</p>
 		</div>
 		<span class="study-stamp" lang="ja">仲間</span>
 	</div>
 	<div class="team-intro">
 		<span lang="ja">共に学び、共に作る。</span>
-		<p>Learning together. Building together.</p>
+		<p>{t('team.together')}</p>
 		<span class="edition">TANTORE / TEAM NOTES</span>
 	</div>
 	<section class="team-grid" aria-label="Team members">
@@ -54,7 +52,7 @@
 									stroke="currentColor"
 									opacity=".4"
 								/></svg
-							><span>PORTRAIT TO COME</span><small>Anime profile space</small>
+							><span>{t('team.portraitPending')}</span>
 						</div>{/if}<span class="member-index">{String(index + 1).padStart(2, '0')}</span>
 				</div>
 				<div class="member-info">
@@ -67,10 +65,7 @@
 	</section>
 	<div class="team-note">
 		<span lang="ja">ありがとう</span>
-		<p>
-			To everyone learning, testing, and sharing ideas with us.<br />Thank you for being part of the
-			journey.
-		</p>
+		<p>{t('team.thanks')}</p>
 	</div>
 </StudyShell>
 
@@ -80,24 +75,28 @@
 		flex-wrap: wrap;
 		gap: 12px 22px;
 		align-items: center;
-		border-block: 1px solid #d9d9cb;
-		padding: 22px 0;
 		margin: 35px 0;
+		padding: 24px 30px;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
 	}
 	.team-intro > span:first-child {
-		font-family: 'Yu Mincho', serif;
-		font-size: 19px;
+		color: var(--color-primary);
+		font-family: var(--font-display);
+		font-size: var(--font-size-h3);
+		font-weight: var(--font-weight-bold);
 	}
 	.team-intro p {
-		color: #62695f;
-		font-size: 11px;
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-caption);
 		margin: 0;
 	}
 	.edition {
 		margin-left: auto;
-		font-size: 9px;
+		font-size: var(--font-size-caption);
 		letter-spacing: 1.6px;
-		color: #62695f;
+		color: var(--color-text-secondary);
 	}
 	.team-grid {
 		display: grid;
@@ -105,20 +104,26 @@
 		gap: 25px;
 	}
 	.member {
-		border: 1px solid #d9d9cb;
-		background: #fcfaf3;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
+		overflow: hidden;
+		transition: transform var(--duration-base) var(--ease-standard);
+	}
+	.member:hover {
+		transform: translateY(-4px);
 	}
 	.portrait {
-		background: #e8ecdf;
 		position: relative;
 		aspect-ratio: 1.18;
+		background: var(--color-primary-soft);
 		overflow: hidden;
 	}
 	.member:nth-child(3n + 2) .portrait {
-		background: #eee4d8;
+		background: var(--color-surface);
 	}
 	.member:nth-child(3n) .portrait {
-		background: #e4e7e4;
+		background: var(--color-success-soft);
 	}
 	.portrait img {
 		width: 100%;
@@ -133,7 +138,7 @@
 		align-items: center;
 		justify-content: center;
 		height: 100%;
-		color: #6c7965;
+		color: var(--color-text-faint);
 	}
 	.portrait-frame svg {
 		height: 57%;
@@ -141,40 +146,41 @@
 		margin-bottom: 8px;
 	}
 	.portrait-frame span {
-		font-size: 8px;
-		letter-spacing: 2px;
-	}
-	.portrait-frame small {
-		font-size: 10px;
-		margin-top: 5px;
+		font-size: var(--text-sm);
+		font-weight: var(--font-weight-semibold);
 	}
 	.member-index {
 		position: absolute;
-		top: 16px;
-		left: 18px;
-		font-size: 10px;
-		color: #62695f;
+		top: 14px;
+		left: 14px;
+		padding: 5px 12px;
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.92);
+		color: var(--color-primary-active);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-bold);
 	}
 	.member-info {
 		padding: 25px;
 	}
 	.member-info h2 {
-		font-size: 23px;
-		margin-bottom: 8px;
-		letter-spacing: 1.5px;
+		margin-bottom: 6px;
+		font-size: 26px;
+		letter-spacing: 1px;
 	}
 	.member-en {
-		font-size: 12px;
-		color: #62695f;
-		letter-spacing: 1.4px;
+		color: var(--color-primary);
+		font-size: var(--font-size-small);
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: 0.6px;
 	}
 	.contribution {
-		border-top: 1px solid #d9d9cb;
-		padding-top: 18px;
 		margin: 20px 0 0;
-		font-size: 12px;
-		color: #62695f;
-		line-height: 1.6;
+		padding-top: 18px;
+		border-top: 1px solid var(--color-border-subtle);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-small);
+		line-height: var(--line-height-normal);
 	}
 	.team-note {
 		display: flex;
@@ -184,15 +190,20 @@
 		padding: 50px 0 0;
 	}
 	.team-note > span {
-		color: #aa4235;
-		font-family: 'Yu Mincho', serif;
-		font-size: 23px;
+		padding: 14px 26px;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+		color: var(--color-on-primary);
+		box-shadow: var(--shadow-solid) var(--color-border-strong);
+		font-family: var(--font-display);
+		font-size: 24px;
+		font-weight: var(--font-weight-bold);
 	}
 	.team-note p {
 		margin: 0;
-		font-size: 12px;
-		color: #62695f;
-		line-height: 1.8;
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-small);
+		line-height: var(--line-height-relaxed);
 	}
 	@media (max-width: 750px) {
 		.team-grid {

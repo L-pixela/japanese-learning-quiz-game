@@ -10,6 +10,13 @@ export const user = sqliteTable(
 		username: text('username').notNull().unique(),
 		passwordHash: text('password_hash').notNull(),
 		university: text('university'),
+		displayName: text('display_name'),
+		phone: text('phone'),
+		linkedin: text('linkedin'),
+		github: text('github'),
+		bio: text('bio'),
+		// A square data: URL (resized in the browser) or a path to a bundled image.
+		avatar: text('avatar'),
 		points: integer('points').notNull().default(0),
 		streak: integer('streak').notNull().default(0),
 		lastQuizAt: integer('last_quiz_at', { mode: 'timestamp' }),

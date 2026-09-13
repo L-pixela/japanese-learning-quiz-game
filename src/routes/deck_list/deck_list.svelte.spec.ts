@@ -1,69 +1,66 @@
 import { page } from 'vitest/browser'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import DecksPage from './+page.svelte'
-import { MOCK_DECKS } from '$lib/mock-data/decks'
+import DeckPage from './+page.svelte'
+import { LEVELS } from '$lib/levels'
+import type { PageData } from './$types'
 
-vi.mock('$app/stores', () => ({
-	page: {
-		subscribe: (fn: (value: { url: URL }) => void) => {
-			fn({ url: new URL('http://localhost/deck_list') })
-			return () => {}
-		},
-	},
-}))
+const words = [
+	{ id: 'w1', japanese: '米', reading: 'こめ', meaning: 'uncooked rice' },
+	{ id: 'w2', japanese: '味噌', reading: 'みそ', meaning: 'miso, bean paste' },
+	{ id: 'w3', japanese: '眠る', reading: 'ねむる', meaning: 'to sleep' },
+]
 
-describe('Deck Management +page.svelte', () => {
-	it('renders the page header and create button', async () => {
-		render(DecksPage)
+const data: PageData = {
+	level: 1,
+	count: words.length,
+	words,
+	levels: LEVELS.map((level) => ({
+		...level,
+		status: 'not_started',
+		bestScore: 0,
+		attempts: 0,
+		updatedAt: null,
+	})),
+}
 
-		await expect.element(page.getByText('Deck Management')).toBeInTheDocument()
-		await expect.element(page.getByRole('button', { name: '+ Create Deck' })).toBeInTheDocument()
-	})
-
-	it('renders the table headers', async () => {
-		render(DecksPage)
-
-		await expect.element(page.getByRole('columnheader', { name: 'Deck Title' })).toBeInTheDocument()
+describe('My deck', () => {
+	it('describes the selected level and how the quiz samples it', async () => {
+		render(DeckPage, { data })
 		await expect
-			.element(page.getByRole('columnheader', { name: 'Cards', exact: true }))
+			.element(page.getByRole('heading', { name: 'Study the words first.' }))
 			.toBeInTheDocument()
-		await expect.element(page.getByRole('columnheader', { name: 'Status' })).toBeInTheDocument()
-		await expect.element(page.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument()
+		await expect.element(page.getByText('Level 01 · Easy')).toBeInTheDocument()
+		await expect.element(page.getByText('words in this deck')).toBeInTheDocument()
+		await expect.element(page.getByText('drawn per quiz')).toBeInTheDocument()
 	})
 
-	it('renders every mock deck with title, card count, and status', async () => {
-		render(DecksPage)
-
-		for (const deck of MOCK_DECKS) {
-			await expect.element(page.getByText(deck.title)).toBeInTheDocument()
-			await expect.element(page.getByText(`${deck.cardCount} cards`)).toBeInTheDocument()
+	it('lists every word with its reading and meaning', async () => {
+		render(DeckPage, { data })
+		for (const word of words) {
+			await expect.element(page.getByText(word.japanese, { exact: true })).toBeInTheDocument()
+			await expect.element(page.getByText(word.reading, { exact: true })).toBeInTheDocument()
+			await expect.element(page.getByText(word.meaning, { exact: true })).toBeInTheDocument()
 		}
-
-		const statusPills = page.getByText('Active')
-		await expect.element(statusPills.first()).toBeInTheDocument()
 	})
 
-	it('renders Edit and Delete actions for each deck', async () => {
-		render(DecksPage)
-
-		const editButtons = page.getByRole('button', { name: 'Edit' })
-		const deleteButtons = page.getByRole('button', { name: 'Delete' })
-
-		await expect.element(editButtons.first()).toBeInTheDocument()
-		await expect.element(deleteButtons.first()).toBeInTheDocument()
+	it('links to the quiz for the level being studied', async () => {
+		render(DeckPage, { data })
+		await expect
+			.element(page.getByRole('link', { name: /Quiz this level/ }))
+			.toHaveAttribute('href', '/quiz/1')
 	})
 
-	it('filters decks by search query', async () => {
-		render(DecksPage)
+	it('filters the deck by Japanese, reading or meaning', async () => {
+		render(DeckPage, { data })
+		await page.getByRole('searchbox', { name: 'Search this deck' }).fill('miso')
+		await expect.element(page.getByText('味噌', { exact: true })).toBeInTheDocument()
+		await expect.element(page.getByText('米', { exact: true })).not.toBeInTheDocument()
+	})
 
-		const firstDeckTitle = MOCK_DECKS[0].title
-		const otherDeckTitle = MOCK_DECKS[1].title
-
-		const searchInput = page.getByPlaceholder('Search decks...')
-		await searchInput.fill(firstDeckTitle)
-
-		await expect.element(page.getByText(firstDeckTitle)).toBeInTheDocument()
-		await expect.element(page.getByText(otherDeckTitle)).not.toBeInTheDocument()
+	it('explains an empty search result without hiding the deck size', async () => {
+		render(DeckPage, { data })
+		await page.getByRole('searchbox', { name: 'Search this deck' }).fill('zzzz')
+		await expect.element(page.getByText(/No word here matches/)).toBeInTheDocument()
 	})
 })

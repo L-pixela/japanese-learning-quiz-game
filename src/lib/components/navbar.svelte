@@ -26,7 +26,7 @@
 			>
 				Decks
 			</a>
-			<a href={resolveRoute('/quiz', {})}>Practice</a>
+			<a href={resolveRoute('/quiz', {})}>Quiz</a>
 			<a href={resolveRoute('/team', {})}>Our team</a>
 		</nav>
 
@@ -56,7 +56,7 @@
 			>
 				Decks
 			</a>
-			<a href={resolveRoute('/quiz', {})}>Practice</a>
+			<a href={resolveRoute('/quiz', {})}>Quiz</a>
 			<a href={resolveRoute('/team', {})}>Our team</a>
 		</nav>
 	{/if}

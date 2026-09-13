@@ -69,10 +69,10 @@
 <style>
 	.text-field {
 		display: grid;
-		gap: 0.4rem;
+		gap: 0.5rem;
 		color: var(--color-text);
-		font-size: 0.9rem;
-		font-weight: var(--font-weight-bold);
+		font-size: var(--font-size-small);
+		font-weight: var(--font-weight-semibold);
 	}
 
 	.input-wrapper {
@@ -82,13 +82,15 @@
 
 	input {
 		width: 100%;
+		min-height: 3.4rem;
 		box-sizing: border-box;
-		border: 1px solid var(--color-input-border);
+		border: 2px solid var(--color-input-border);
 		border-radius: var(--radius-md);
-		background: var(--color-surface);
-		padding: 0.9rem 0.95rem;
+		background: var(--color-surface-sunken);
+		padding: 0.9rem 1.1rem;
 		color: var(--color-text);
 		font: inherit;
+		font-size: var(--font-size-body);
 		font-weight: var(--font-weight-medium);
 		outline: none;
 		transition:
@@ -104,8 +106,8 @@
 
 	input:focus {
 		border-color: var(--color-primary);
-		background: var(--color-surface-raised);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 17%, transparent);
+		background: var(--color-surface);
+		box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 18%, transparent);
 	}
 
 	input[aria-invalid='true'] {

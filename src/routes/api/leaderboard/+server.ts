@@ -22,7 +22,7 @@ import type { RequestHandler } from './$types'
  * Example response (200):
  *   {
  *     "leaderboard": [
- *       { "position": 11, "id": "u1", "username": "alice", "points": 340, "streak": 12, "rank": "wasabi" }
+ *       { "position": 11, "id": "u1", "username": "alice", "university": "RUPP", "points": 340, "streak": 12, "rank": "wasabi" }
  *     ],
  *     "page": 2,
  *     "pageSize": 10
@@ -71,6 +71,7 @@ export const GET: RequestHandler = async ({ url, platform, locals }) => {
 		.select({
 			id: user.id,
 			username: user.username,
+			university: user.university,
 			points: user.points,
 			streak: user.streak,
 			rank: user.rank,

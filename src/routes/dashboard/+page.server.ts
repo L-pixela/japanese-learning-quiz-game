@@ -1,8 +1,7 @@
 import { pageApi } from '$lib/server/page-api'
-import type { LevelProgress } from '$lib/levels'
 import type { PageServerLoad } from './$types'
 export const load: PageServerLoad = async ({ fetch }) => {
-	const [profile, ranking, progress] = await Promise.all([
+	const [profile, ranking] = await Promise.all([
 		pageApi<{
 			user: {
 				id: string
@@ -14,10 +13,16 @@ export const load: PageServerLoad = async ({ fetch }) => {
 			}
 		}>(fetch, '/api/me'),
 		pageApi<{
-			leaderboard: Array<{ id: string; username: string; points: number; position: number }>
+			leaderboard: Array<{
+				id: string
+				username: string
+				university: string | null
+				points: number
+				streak: number
+				position: number
+			}>
 			position: number
-		}>(fetch, '/api/leaderboard?pageSize=5&withPosition=true'),
-		pageApi<{ levels: LevelProgress[] }>(fetch, '/api/levels'),
+		}>(fetch, '/api/leaderboard?pageSize=10&withPosition=true'),
 	])
-	return { ...profile, ...ranking, ...progress }
+	return { ...profile, ...ranking }
 }

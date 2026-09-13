@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
+	import JapanScene from '$lib/components/JapanScene.svelte'
 	import { LEVELS } from '$lib/levels'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
@@ -10,18 +11,21 @@
 <svelte:head><title>Your quiz results · TanTore</title></svelte:head>
 <StudyShell>
 	{#if result}
-		<div class="study-heading">
-			<div>
+		<section class={'verdict ' + (result.passed ? 'passed' : 'retry')}>
+			<div class="verdict-art">
+				<JapanScene scene={result.passed ? 'torii' : 'daruma'} />
+			</div>
+			<div class="verdict-copy">
 				<p class="study-eyebrow">Practice complete / おつかれさま</p>
 				<h1>{result.passed ? 'One step further.' : 'Every attempt is progress.'}</h1>
-				<p class="study-muted">
+				<p>
 					{result.passed
 						? 'You passed this level. Take that feeling into the next one.'
 						: 'A few more words to get familiar with. You can try again anytime.'}
 				</p>
+				<span class="verdict-stamp" lang="ja">{result.passed ? '合格' : '復習'}</span>
 			</div>
-			<span class="study-stamp" lang="ja">{result.passed ? '合格' : '復習'}</span>
-		</div>
+		</section>
 		<div class="results-layout">
 			<section class="score-panel study-panel">
 				<p class="study-eyebrow">
@@ -86,6 +90,54 @@
 </StudyShell>
 
 <style>
+	.verdict {
+		display: grid;
+		grid-template-columns: 260px minmax(0, 1fr);
+		align-items: center;
+		gap: 30px;
+		margin-bottom: 30px;
+		padding: 34px 40px;
+		border-radius: var(--radius-xl);
+		background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+		box-shadow: var(--shadow-md);
+		color: var(--color-on-primary);
+	}
+	.verdict.retry {
+		background: linear-gradient(120deg, var(--color-canvas-deep) 0%, var(--color-primary) 100%);
+	}
+	.verdict-art {
+		aspect-ratio: 1;
+		border-radius: var(--radius-lg);
+		background: rgba(255, 248, 236, 0.14);
+		overflow: hidden;
+	}
+	.verdict-copy :global(.study-eyebrow) {
+		background: rgba(255, 248, 236, 0.2);
+		color: var(--color-on-primary);
+	}
+	.verdict-copy h1 {
+		font-size: var(--font-size-display);
+		line-height: 1.05;
+	}
+	.verdict-copy p {
+		margin-bottom: 0;
+		font-size: var(--font-size-body);
+		line-height: var(--line-height-relaxed);
+		color: rgba(255, 248, 236, 0.92);
+	}
+	.verdict-stamp {
+		display: inline-block;
+		margin-top: 20px;
+		padding: 10px 22px;
+		border-radius: var(--radius-full);
+		background: var(--color-surface);
+		color: var(--color-primary-active);
+		box-shadow: var(--shadow-solid) rgba(20, 25, 17, 0.22);
+		font-family: var(--font-display);
+		font-size: 22px;
+		font-weight: var(--font-weight-bold);
+		letter-spacing: 4px;
+	}
 	.results-layout {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -96,22 +148,22 @@
 		padding: 35px;
 	}
 	.score-circle {
-		--ring: #c8a244;
+		--ring: var(--color-gold);
 		width: 215px;
 		height: 215px;
 		display: grid;
 		place-items: center;
 		border-radius: 50%;
-		background: conic-gradient(var(--ring) var(--score), #e3e5d9 0);
+		background: conic-gradient(var(--ring) var(--score), var(--color-border-subtle) 0);
 		margin: 30px auto;
 	}
 	.score-circle.passed {
-		--ring: #37664d;
+		--ring: var(--color-success);
 	}
 	.score-circle > div {
 		width: 193px;
 		height: 193px;
-		background: #fcfaf3;
+		background: var(--color-surface);
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
@@ -119,23 +171,24 @@
 		flex-direction: column;
 	}
 	.score-circle strong {
-		font-size: 70px;
-		font-weight: 400;
+		font-family: var(--font-display);
+		font-size: 76px;
+		font-weight: var(--font-weight-bold);
 		letter-spacing: -4px;
 	}
 	.score-circle strong span {
-		font-size: 23px;
-		color: #7e8777;
+		font-size: 26px;
+		color: var(--color-text-faint);
 		letter-spacing: -1px;
 	}
 	.score-circle small {
-		font-size: 9px;
-		letter-spacing: 1.5px;
-		color: #62695f;
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-semibold);
 	}
 	.score-panel > .study-muted {
 		margin: 15px 0 0;
-		font-size: 12px;
+		font-size: var(--font-size-caption);
 	}
 	.result-details {
 		display: grid;
@@ -149,14 +202,15 @@
 	}
 	.earned strong,
 	.community > strong {
-		font-size: 52px;
-		font-weight: 400;
+		font-family: var(--font-display);
+		font-size: 54px;
+		font-weight: var(--font-weight-bold);
 		letter-spacing: -2px;
 	}
 	.earned strong span,
 	.community > strong span {
 		font-size: 20px;
-		color: #62695f;
+		color: var(--color-text-secondary);
 	}
 	.earned p {
 		margin-bottom: 0;
@@ -166,23 +220,37 @@
 		margin-top: 8px;
 	}
 	.community-bar {
-		height: 5px;
-		background: #e3e5d9;
+		height: 12px;
 		margin: 20px 0 12px;
+		border-radius: var(--radius-full);
+		background: var(--color-border-subtle);
+		overflow: hidden;
 	}
 	.community-bar span {
 		display: block;
 		height: 100%;
-		background: #37664d;
+		border-radius: var(--radius-full);
+		background: var(--color-success);
 	}
 	.community small {
-		font-size: 10px;
-		color: #62695f;
+		color: var(--color-text-faint);
+		font-size: var(--font-size-caption);
 	}
 	.dashboard-link {
-		font-size: 12px;
 		margin-left: auto;
-		text-decoration: none;
+		font-size: var(--font-size-small);
+		font-weight: var(--font-weight-semibold);
+	}
+	@media (max-width: 750px) {
+		.verdict {
+			grid-template-columns: 1fr;
+			padding: 24px;
+			text-align: center;
+			justify-items: center;
+		}
+		.verdict-art {
+			width: 180px;
+		}
 	}
 	@media (max-width: 650px) {
 		.results-layout {

@@ -328,7 +328,7 @@
 		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 12%, transparent);
 	}
 	button {
-		border-radius: 5px;
+		border-radius: var(--radius-sm);
 		font: inherit;
 		font-weight: 900;
 		cursor: pointer;
@@ -453,7 +453,7 @@
 		color: var(--color-primary);
 	}
 	.cancel-button:hover {
-		background: #f8e8e2;
+		background: var(--color-danger-soft);
 		color: var(--color-accent);
 	}
 	.delete-button {
@@ -466,7 +466,7 @@
 		line-height: 1;
 	}
 	.delete-button:hover {
-		background: #f8e8e2;
+		background: var(--color-danger-soft);
 	}
 	.empty-state {
 		display: grid;
