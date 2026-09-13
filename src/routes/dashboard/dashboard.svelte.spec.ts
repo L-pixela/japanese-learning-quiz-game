@@ -34,14 +34,11 @@ describe('Dashboard', () => {
 			.toBeInTheDocument()
 		await expect.element(page.getByText('梅干し · Umeboshi', { exact: true })).toBeInTheDocument()
 	})
-	it('puts quiz practice first while retaining a secondary deck link', async () => {
+	it('puts quiz practice first', async () => {
 		render(Dashboard, { data })
 		await expect
 			.element(page.getByRole('link', { name: 'Start Quiz' }))
 			.toHaveAttribute('href', '/quiz')
-		await expect
-			.element(page.getByRole('link', { name: /Prefer your own vocabulary/ }))
-			.toHaveAttribute('href', '/deck_list')
 	})
 	it('ranks learners with their university and marks the signed-in row', async () => {
 		render(Dashboard, { data })

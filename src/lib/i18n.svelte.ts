@@ -62,8 +62,6 @@ const dictionary = {
 	'dashboard.colUniversity': ['University', '大学'],
 	'dashboard.colPoints': ['Points', 'ポイント'],
 	'dashboard.you': ['you', 'あなた'],
-	'dashboard.deckLink': ['Prefer your own vocabulary?', '自分の単語帳を見ますか？'],
-	'dashboard.browseDecks': ['Browse your decks', '単語帳を開く'],
 
 	'quiz.eyebrow': ['Quiz', 'クイズ'],
 	'quiz.title': ['Choose your quiz.', 'クイズを選ぶ。'],
