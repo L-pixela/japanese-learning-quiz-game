@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { eq, sql } from 'drizzle-orm'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { quizAttempt, word } from '$lib/server/db/schema'
 import type { RequestHandler } from './$types'
 
@@ -18,7 +18,7 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 	const level = body?.level
 	if (typeof level !== 'number' || !Number.isInteger(level) || level < 1 || level > 10)
 		return json({ error: 'level must be 1–10' }, { status: 400 })
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 	const words = await db
 		.select()
 		.from(word)

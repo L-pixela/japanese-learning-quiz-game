@@ -10,8 +10,8 @@ export type RankTier = {
 	id: string
 	name: string
 	nameJp: string
-	minStreak: number
-	maxStreak: number | null
+	minPoints: number
+	maxPoints: number | null
 	image: string
 	ringColor: string
 }
@@ -21,8 +21,8 @@ export const RANKS: RankTier[] = [
 		id: 'shiragohan',
 		name: 'Shiragohan',
 		nameJp: '白ご飯',
-		minStreak: 0,
-		maxStreak: 2,
+		minPoints: 0,
+		maxPoints: 9,
 		image: riceBowlImage,
 		ringColor: '#B7AC86',
 	},
@@ -30,8 +30,8 @@ export const RANKS: RankTier[] = [
 		id: 'umeboshi',
 		name: 'Umeboshi',
 		nameJp: '梅干し',
-		minStreak: 3,
-		maxStreak: 6,
+		minPoints: 10,
+		maxPoints: 19,
 		image: misoSoupImage,
 		ringColor: '#C64B6B',
 	},
@@ -39,8 +39,8 @@ export const RANKS: RankTier[] = [
 		id: 'mentaiko',
 		name: 'Mentaiko',
 		nameJp: '明太子',
-		minStreak: 7,
-		maxStreak: 13,
+		minPoints: 20,
+		maxPoints: 29,
 		image: tamagoyakiImage,
 		ringColor: '#E8735A',
 	},
@@ -48,8 +48,8 @@ export const RANKS: RankTier[] = [
 		id: 'wasabi',
 		name: 'Wasabi',
 		nameJp: 'わさび',
-		minStreak: 14,
-		maxStreak: 29,
+		minPoints: 30,
+		maxPoints: 39,
 		image: udonTsukimiImage,
 		ringColor: '#6E8F63',
 	},
@@ -57,8 +57,8 @@ export const RANKS: RankTier[] = [
 		id: 'ichimi-togarashi',
 		name: 'Ichimi Togarashi',
 		nameJp: '一味唐辛子',
-		minStreak: 30,
-		maxStreak: 59,
+		minPoints: 40,
+		maxPoints: 59,
 		image: takoyakiImage,
 		ringColor: '#4C7FB0',
 	},
@@ -66,8 +66,8 @@ export const RANKS: RankTier[] = [
 		id: 'gekikara-kimchi',
 		name: 'Gekikara Kimchi',
 		nameJp: '激辛キムチ',
-		minStreak: 60,
-		maxStreak: 99,
+		minPoints: 60,
+		maxPoints: 79,
 		image: tonkatsuImage,
 		ringColor: '#C43D3D',
 	},
@@ -75,17 +75,17 @@ export const RANKS: RankTier[] = [
 		id: 'hinotama',
 		name: 'Hinotama',
 		nameJp: '火の玉',
-		minStreak: 100,
-		maxStreak: null,
+		minPoints: 80,
+		maxPoints: null,
 		image: yakinikuImage,
 		ringColor: '#E8804B',
 	},
 ]
 
-export function getRankFromStreak(streak: number): RankTier {
-	if (streak < 0) return RANKS[0]
+export function getRankFromPoints(points: number): RankTier {
+	if (points < 0) return RANKS[0]
 	for (let i = RANKS.length - 1; i >= 0; i--) {
-		if (streak >= RANKS[i].minStreak) return RANKS[i]
+		if (points >= RANKS[i].minPoints) return RANKS[i]
 	}
 	return RANKS[0]
 }
@@ -96,20 +96,20 @@ export function getNextRank(current: RankTier): RankTier | null {
 	return RANKS[idx + 1]
 }
 
-export function getRankProgress(streak: number): {
+export function getRankProgress(points: number): {
 	fraction: number
-	daysToNext: number
+	pointsToNext: number
 	next: RankTier
 } | null {
-	const current = getRankFromStreak(streak)
+	const current = getRankFromPoints(points)
 	const next = getNextRank(current)
 	if (!next) return null
 
-	const span = next.minStreak - current.minStreak
-	const into = streak - current.minStreak
+	const span = next.minPoints - current.minPoints
+	const into = points - current.minPoints
 	return {
 		fraction: Math.min(1, Math.max(0, into / span)),
-		daysToNext: Math.max(0, next.minStreak - streak),
+		pointsToNext: Math.max(0, next.minPoints - points),
 		next,
 	}
 }

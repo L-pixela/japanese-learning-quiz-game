@@ -1,14 +1,14 @@
 <script lang="ts">
 	import RankBadge from '$lib/components/rank_badge.svelte'
 
-	const mockStreaks = [0, 4, 9, 20, 45, 75, 120]
+	const mockPoints = [0, 12, 25, 35, 50, 70, 90]
 </script>
 
 <main>
 	<section>
 		<div class="row">
-			{#each mockStreaks as streak (streak)}
-				<RankBadge {streak} size="lg" showLabel />
+			{#each mockPoints as points (points)}
+				<RankBadge {points} size="lg" showLabel />
 			{/each}
 		</div>
 	</section>

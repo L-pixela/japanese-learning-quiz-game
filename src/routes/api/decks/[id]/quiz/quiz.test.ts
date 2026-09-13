@@ -7,6 +7,7 @@ import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE } from '$lib/server/quiz'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 function mockUrl(params: Record<string, string> = {}) {

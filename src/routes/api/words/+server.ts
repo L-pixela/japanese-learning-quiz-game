@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { asc, eq } from 'drizzle-orm'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { word } from '$lib/server/db/schema'
 import type { RequestHandler } from './$types'
 
@@ -28,7 +28,7 @@ export const GET: RequestHandler = async ({ locals, platform, url }) => {
 	if (!Number.isInteger(level) || level < 1 || level > 10)
 		return json({ error: 'level must be 1–10' }, { status: 400 })
 
-	const words = await getDb(platform!.env.DB)
+	const words = await getDb(requireDb(platform))
 		.select({
 			id: word.id,
 			japanese: word.japanese,

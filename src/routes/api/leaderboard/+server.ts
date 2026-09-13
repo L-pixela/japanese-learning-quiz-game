@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { user } from '$lib/server/db/schema'
 import { DEFAULT_LEADERBOARD_PAGE_SIZE, MAX_LEADERBOARD_PAGE_SIZE } from '$lib/server/leaderboard'
 import { and, asc, desc, eq, gt, lt, or, sql } from 'drizzle-orm'
@@ -65,7 +65,7 @@ export const GET: RequestHandler = async ({ url, platform, locals }) => {
 
 	const offset = (page - 1) * pageSize
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const rows = await db
 		.select({

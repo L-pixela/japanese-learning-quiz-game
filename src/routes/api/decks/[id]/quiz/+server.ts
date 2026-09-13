@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { requireDeckOwnership } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
 import { DEFAULT_QUIZ_SIZE, MAX_QUIZ_SIZE } from '$lib/server/quiz'
@@ -34,7 +34,7 @@ export const GET: RequestHandler = async ({ params, url, platform, locals }) => 
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId, 'access')
 	if (!ownership.ok) {

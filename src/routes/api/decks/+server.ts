@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, platform, locals }) => {
 		return json({ error: 'title is required' }, { status: 400 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const [created] = await db
 		.insert(deck)
@@ -37,7 +37,7 @@ export const GET: RequestHandler = async ({ platform, locals }) => {
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const decks = await db.select().from(deck).where(eq(deck.userId, userId))
 

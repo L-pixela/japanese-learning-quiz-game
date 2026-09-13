@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { quizAttempt } from '$lib/server/db/schema'
 import { gradeAnswers, saveQuizScore, getQuizResult } from '$lib/server/level-quiz'
 import type { RequestHandler } from './$types'
@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request, platform, locals }) => {
 	const body = (await request.json().catch(() => null)) as Record<string, unknown> | null
 	if (!body || typeof body.attemptId !== 'string')
 		return json({ error: 'attemptId and 10 answers are required' }, { status: 400 })
-	const d1 = platform!.env.DB
+	const d1 = requireDb(platform)
 	const [attempt] = await getDb(d1)
 		.select()
 		.from(quizAttempt)

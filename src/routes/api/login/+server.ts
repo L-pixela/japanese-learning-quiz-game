@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit'
 import { scrypt } from 'node:crypto'
 import { promisify } from 'node:util'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { user, session } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
@@ -23,7 +23,7 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
 		return json({ error: 'username and password are required' }, { status: 400 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const existing = await db.select().from(user).where(eq(user.username, username)).limit(1)
 

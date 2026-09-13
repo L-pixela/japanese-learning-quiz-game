@@ -3,15 +3,15 @@
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import JapanScene from '$lib/components/JapanScene.svelte'
 	import RankBadge from '$lib/components/rank_badge.svelte'
-	import { getRankFromStreak, getRankProgress } from '$lib/components/ranks'
+	import { getRankFromPoints, getRankProgress } from '$lib/components/ranks'
 	import { t } from '$lib/i18n.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 
-	// Badges are earned by keeping a daily streak, so the next one is a number
-	// of practice days away.
-	let badge = $derived(getRankFromStreak(data.user.streak))
-	let toNext = $derived(getRankProgress(data.user.streak))
+	// Badges are earned by accumulating points, so the next one is a number
+	// of points away.
+	let badge = $derived(getRankFromPoints(data.user.points))
+	let toNext = $derived(getRankProgress(data.user.points))
 </script>
 
 <svelte:head
@@ -41,7 +41,7 @@
 		</div>
 		<div class="study-metric">
 			<small>{t('dashboard.rank')}</small>
-			<RankBadge streak={data.user.streak} size="md" />
+			<RankBadge points={data.user.points} size="md" />
 		</div>
 		<div class="study-metric">
 			<small>{t('dashboard.position')}</small><strong
@@ -81,10 +81,10 @@
 			>
 		</div>
 		<div class="rank-status">
-			<RankBadge streak={data.user.streak} size="sm" />
+			<RankBadge points={data.user.points} size="sm" />
 			<div class="rank-status-text">
 				<strong><span lang="ja">{badge.nameJp}</span> · {badge.name}</strong>
-				<small>{t('rank.earnedAt', { n: badge.minStreak })}</small>
+				<small>{t('rank.earnedAt', { n: badge.minPoints })}</small>
 			</div>
 			{#if toNext}
 				<div class="rank-next">
@@ -92,8 +92,8 @@
 						<span style={'width: ' + Math.round(toNext.fraction * 100) + '%'}></span>
 					</div>
 					<small
-						>{t('rank.next')}: {toNext.next.name} · {t('rank.daysToGo', {
-							n: toNext.daysToNext,
+						>{t('rank.next')}: {toNext.next.name} · {t('rank.pointsToGo', {
+							n: toNext.pointsToNext,
 						})}</small
 					>
 				</div>
@@ -118,7 +118,7 @@
 								>{/if}</span
 						>
 						<span class="board-university">{learner.university ?? '·'}</span>
-						<span class="board-badge"><RankBadge streak={learner.streak} size="sm" /></span>
+						<span class="board-badge"><RankBadge points={learner.points} size="sm" /></span>
 						<span class="board-points"
 							><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
 						>
