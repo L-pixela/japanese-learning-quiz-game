@@ -92,7 +92,7 @@
 <style>
 	.verdict {
 		display: grid;
-		grid-template-columns: 260px minmax(0, 1fr);
+		grid-template-columns: clamp(160px, 30vw, 260px) minmax(0, 1fr);
 		align-items: center;
 		gap: 30px;
 		margin-bottom: 30px;
@@ -103,10 +103,11 @@
 		color: var(--color-on-primary);
 	}
 	.verdict.retry {
-		background: linear-gradient(120deg, var(--color-canvas-deep) 0%, var(--color-primary) 100%);
+		background: var(--color-danger);
 	}
 	.verdict-art {
 		aspect-ratio: 1;
+		margin-left: 16px;
 		border-radius: var(--radius-lg);
 		background: rgba(255, 248, 236, 0.14);
 		overflow: hidden;
@@ -172,12 +173,12 @@
 	}
 	.score-circle strong {
 		font-family: var(--font-display);
-		font-size: 76px;
+		font-size: clamp(44px, 8.5vw, 76px);
 		font-weight: var(--font-weight-bold);
 		letter-spacing: -4px;
 	}
 	.score-circle strong span {
-		font-size: 26px;
+		font-size: clamp(16px, 3vw, 26px);
 		color: var(--color-text-faint);
 		letter-spacing: -1px;
 	}
@@ -203,13 +204,13 @@
 	.earned strong,
 	.community > strong {
 		font-family: var(--font-display);
-		font-size: 54px;
+		font-size: clamp(32px, 6vw, 54px);
 		font-weight: var(--font-weight-bold);
 		letter-spacing: -2px;
 	}
 	.earned strong span,
 	.community > strong span {
-		font-size: 20px;
+		font-size: clamp(14px, 2.2vw, 20px);
 		color: var(--color-text-secondary);
 	}
 	.earned p {
@@ -250,6 +251,7 @@
 		}
 		.verdict-art {
 			width: 180px;
+			margin-left: 0;
 		}
 	}
 	@media (max-width: 650px) {

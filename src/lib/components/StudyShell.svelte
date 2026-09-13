@@ -6,6 +6,7 @@
 	import AppControls from './AppControls.svelte'
 	import { t } from '$lib/i18n.svelte'
 	let { children }: { children: Snippet } = $props()
+	let isMenuOpen = $state(false)
 	const links = [
 		{ href: '/dashboard', key: 'nav.overview' },
 		{ href: '/quiz', key: 'nav.quiz' },
@@ -22,7 +23,7 @@
 				>TanTore<small>{t('nav.brandTagline')}</small></span
 			></a
 		>
-		<nav aria-label="Main navigation">
+		<nav id="study-nav-links" class:open={isMenuOpen} aria-label="Main navigation">
 			{#each links as link (link.href)}
 				<a
 					href={resolve(link.href, {})}
@@ -30,8 +31,18 @@
 					>{t(link.key)}</a
 				>
 			{/each}
+			<AppControls />
 		</nav>
-		<AppControls />
+		<button
+			type="button"
+			class="study-nav-toggle"
+			aria-expanded={isMenuOpen}
+			aria-controls="study-nav-links"
+			aria-label={t('nav.menu')}
+			onclick={() => (isMenuOpen = !isMenuOpen)}
+		>
+			{isMenuOpen ? '✕' : '☰'}
+		</button>
 	</header>
 	<main class="study-main">{@render children()}</main>
 	<footer class="study-footer">

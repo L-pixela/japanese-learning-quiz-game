@@ -388,15 +388,16 @@
 	.result-art {
 		position: relative;
 		margin: -1px -34px 22px;
-		padding: 30px 0 22px;
+		padding: 30px 0;
 		border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 		background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 	}
 	.failed .result-art {
-		background: linear-gradient(120deg, var(--color-canvas-deep) 0%, var(--color-primary) 100%);
+		background: var(--color-danger);
 	}
 	.result-art img {
 		width: 148px;
+		margin: 14px;
 		height: 148px;
 		border-radius: var(--radius-full);
 		border: 5px solid #fff;
@@ -418,7 +419,7 @@
 		letter-spacing: 3px;
 	}
 	.result-card h2 {
-		font-size: 30px;
+		font-size: clamp(20px, 3.3vw, 30px);
 	}
 	.result-lead {
 		margin: 10px 0 0;
@@ -438,7 +439,7 @@
 	.result-stats strong {
 		display: block;
 		font-family: var(--font-display);
-		font-size: 32px;
+		font-size: clamp(21px, 3.6vw, 32px);
 		font-weight: var(--font-weight-bold);
 		letter-spacing: -1px;
 	}
