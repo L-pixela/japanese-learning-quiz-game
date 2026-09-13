@@ -21,6 +21,27 @@ it('returns the viewer’s global position even outside the requested page', asy
 	expect(body.position).toBe(30)
 	expect(body.leaderboard).toHaveLength(5)
 })
+it('treats a null created_at as the oldest possible tiebreaker', async () => {
+	db.sqlite
+		.prepare('INSERT INTO user(id,username,password_hash,points,created_at) VALUES (?,?,?,?,?)')
+		.run('u-null', 'nullcreated', 'hash', 100, null)
+	const response = await GET({
+		locals: { user: { id: 'u-null' } },
+		platform: { env: { DB: db.d1 } },
+		url: new URL('http://localhost/api/leaderboard?withPosition=true'),
+	} as RequestEvent)
+	const body = (await response.json()) as { position: number }
+	expect(body.position).toBe(1)
+})
+it('returns a null position when the viewer has no matching user row', async () => {
+	const response = await GET({
+		locals: { user: { id: 'ghost' } },
+		platform: { env: { DB: db.d1 } },
+		url: new URL('http://localhost/api/leaderboard?withPosition=true'),
+	} as RequestEvent)
+	const body = (await response.json()) as { position: number | null }
+	expect(body.position).toBeNull()
+})
 it('uses the same deterministic tiebreakers for page rows and viewer position', async () => {
 	db.sqlite.exec('UPDATE user SET points=0, streak=0, created_at=1')
 	const response = await GET({
