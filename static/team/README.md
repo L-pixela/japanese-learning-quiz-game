@@ -1,0 +1,1 @@
+Add your anime profile images here, then set the corresponding image path and name in src/lib/team.ts. Example: image: '/team/bunleap.webp'. Until then the team screen shows a portrait placeholder. No image upload service is required.

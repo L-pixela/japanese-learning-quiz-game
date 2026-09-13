@@ -5,6 +5,7 @@
 	import RegisterTextField from '$lib/components/RegisterTextField.svelte'
 
 	let username = $state('')
+	let university = $state('')
 	let password = $state('')
 	let confirmPassword = $state('')
 	let submitted = $state(false)
@@ -47,7 +48,11 @@
 			const response = await fetch('/api/register', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ username: username.trim(), password }),
+				body: JSON.stringify({
+					username: username.trim(),
+					password,
+					university: university.trim(),
+				}),
 			})
 
 			if (!response.ok) {
@@ -83,7 +88,7 @@
 				<RegisterRankPreview titleId="register-title" />
 			</aside>
 
-			<form class="register-form" onsubmit={handleSubmit} novalidate>
+			<form method="POST" class="register-form" onsubmit={handleSubmit} novalidate>
 				<div class="form-title">
 					<p class="caption">登録</p>
 					<h2>New profile <span class="japanese-label">新しいプロフィール</span></h2>
@@ -96,6 +101,14 @@
 					name="username"
 					autocomplete="username"
 					error={usernameError}
+				/>
+
+				<RegisterTextField
+					id="university"
+					name="university"
+					label="University (optional)"
+					bind:value={university}
+					autocomplete="organization"
 				/>
 
 				<RegisterTextField

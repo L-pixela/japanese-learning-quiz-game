@@ -1,380 +1,195 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
-	import Badge from '$lib/components/badge.svelte'
-	import Button from '$lib/components/button.svelte'
-	import QuizRankPanel from '$lib/components/quiz-rank-panel.svelte'
-	import QuizResultMetric from '$lib/components/quiz-result-metric.svelte'
-	import QuizStreakBanner from '$lib/components/quiz-streak-banner.svelte'
-
-	type QuizResult = {
-		pointsEarned: number
-		user: {
-			points: number
-			streak: number
-			rank: string
-		}
-	}
-
-	const quizResult: QuizResult = {
-		pointsEarned: 80,
-		user: {
-			points: 1280,
-			streak: 7,
-			rank: 'mentaiko',
-		},
-	}
-
-	let showToast = $state(false)
-
-	function startAnotherQuiz() {
-		showToast = true
-		window.setTimeout(() => (showToast = false), 2400)
-	}
+	import StudyShell from '$lib/components/StudyShell.svelte'
+	import { LEVELS } from '$lib/levels'
+	import type { PageData } from './$types'
+	let { data }: { data: PageData } = $props()
+	let result = $derived(data.result)
 </script>
 
-<svelte:head>
-	<title>Quiz results / クイズ結果 | TanTore</title>
-	<meta
-		name="description"
-		content="Quiz points, streak, and rank results / クイズのポイント、連続日数、ランク結果"
-	/>
-</svelte:head>
-
-<main class="results-page">
-	<header class="results-header">
-		<a class="brand-mark" href={resolve('/', {})} aria-label="TanTore home">
-			<span class="brand-seal">単</span>
-			<span>TanTore</span>
-		</a>
-		<div class="header-meta">
-			<span class="eyebrow">QUIZ COMPLETE / クイズ完了</span>
-			<span class="header-divider" aria-hidden="true"></span>
-			<span>Quiz results / クイズ結果</span>
-		</div>
-	</header>
-
-	<section class="results-shell" aria-labelledby="results-title">
-		<div class="intro-row">
+<svelte:head><title>Your quiz results · TanTore</title></svelte:head>
+<StudyShell>
+	{#if result}
+		<div class="study-heading">
 			<div>
-				<p class="kicker">おつかれさま / Nice work</p>
-				<h1 id="results-title">Quiz complete / クイズ完了</h1>
-				<p class="intro-copy">Your results are ready. / 結果が出ました。</p>
+				<p class="study-eyebrow">Practice complete / おつかれさま</p>
+				<h1>{result.passed ? 'One step further.' : 'Every attempt is progress.'}</h1>
+				<p class="study-muted">
+					{result.passed
+						? 'You passed this level. Take that feeling into the next one.'
+						: 'A few more words to get familiar with. You can try again anytime.'}
+				</p>
 			</div>
-			<Badge variant="success">Completed / 完了</Badge>
+			<span class="study-stamp" lang="ja">{result.passed ? '合格' : '復習'}</span>
 		</div>
-
-		<div class="results-grid">
-			<section class="score-panel" aria-label="Points earned / 獲得ポイント">
-				<div class="score-ring points-ring">
-					<div class="score-ring-inner">
-						<strong>+{quizResult.pointsEarned}</strong><span>pt</span>
-					</div>
+		<div class="results-layout">
+			<section class="score-panel study-panel">
+				<p class="study-eyebrow">
+					Level {String(result.level).padStart(2, '0')} · {result.difficulty}
+				</p>
+				<h2>{LEVELS[result.level - 1].name}</h2>
+				<div
+					class="score-circle"
+					class:passed={result.passed}
+					style={'--score: ' + result.score * 10 + '%'}
+				>
+					<div><strong>{result.score}<span>/10</span></strong><small>CORRECT ANSWERS</small></div>
 				</div>
-				<div class="score-copy">
-					<span class="metric-label">POINTS EARNED / 獲得ポイント</span>
-					<h2>Great job! / よくできました！</h2>
-					<p>Added to your total points. / 累計ポイントに加算されました。</p>
-				</div>
+				<span class={'study-pill ' + (result.passed ? 'completed' : 'attempted')}
+					>{result.passed ? '✓ Passed' : 'Not passed this time'}</span
+				>
+				<p class="study-muted">Pass mark: 6 out of 10</p>
 			</section>
-
-			<div class="metric-stack">
-				<QuizResultMetric
-					label="POINTS EARNED / 獲得ポイント"
-					value="+{quizResult.pointsEarned}"
-					note="This quiz / 今回のクイズ"
-					icon="＋"
-					compact
-				/>
-				<QuizResultMetric
-					label="TOTAL POINTS / 累計ポイント"
-					value={quizResult.user.points}
-					note="Your account total / アカウントの合計"
-					icon="✓"
-					tone="success"
-					compact
-				/>
+			<div class="result-details">
+				<section class="study-panel earned">
+					<div>
+						<p class="study-eyebrow">Points earned</p>
+						<strong>+{result.pointsEarned}<span> pt</span></strong>
+					</div>
+					<p class="study-muted">
+						{result.user.points.toLocaleString()} total points<br />{result.user.streak}-day streak
+					</p>
+				</section>
+				<section class="study-panel community">
+					<p class="study-eyebrow">A shared milestone / みんなの記録</p>
+					<strong>{result.completion.percentage}<span>%</span></strong>
+					<h2>have completed this level</h2>
+					<p class="study-muted">
+						{result.completion.completedUsers} of {result.completion.totalUsers} registered learners have
+						passed Level {result.level}.
+					</p>
+					<div class="community-bar" aria-hidden="true">
+						<span style={'width: ' + result.completion.percentage + '%'}></span>
+					</div>
+					<small>Each learner counts once, however many times they practice.</small>
+				</section>
 			</div>
 		</div>
-
-		<QuizStreakBanner streak={quizResult.user.streak} compact />
-
-		<div class="lower-grid">
-			<QuizRankPanel streak={quizResult.user.streak} compact />
-		</div>
-
-		<div class="actions">
-			<Button variant="primary" size="lg" onclick={startAnotherQuiz}
-				>Start another quiz / もう一度クイズ <span aria-hidden="true">→</span></Button
+		<div class="study-actions">
+			{#if result.passed && result.level < 10}<a
+					class="study-button"
+					href={resolve('/quiz/[level]', { level: String(result.level + 1) })}>Next level →</a
+				>{:else}<a
+					class="study-button"
+					href={resolve('/quiz/[level]', { level: String(result.level) })}>Practice again ↗</a
+				>{/if}<a class="study-button secondary" href={resolve('/quiz', {})}>Back to the path</a><a
+				class="dashboard-link"
+				href={resolve('/dashboard', {})}>Your study desk</a
 			>
-			<a class="secondary-action" href={resolve('/', {})}>Back home / ホームへ戻る</a>
 		</div>
-	</section>
-
-	{#if showToast}<div class="toast" role="status">
-			Ready for another quiz. / 次のクイズの準備ができました。
-		</div>{/if}
-</main>
+	{:else}<section class="study-panel">
+			<p class="study-eyebrow">Your next chapter</p>
+			<h1>A little practice comes first.</h1>
+			<p class="study-muted">Finish a level quiz to see your score and progress here.</p>
+			<a class="study-button" href={resolve('/quiz', {})}>Choose a level →</a>
+		</section>{/if}
+</StudyShell>
 
 <style>
-	.results-page {
-		min-height: 100vh;
-		padding: 0.75rem clamp(1rem, 4vw, 4rem) 1.5rem;
-		background:
-			radial-gradient(circle at 87% 8%, rgba(198, 75, 107, 0.12), transparent 20rem),
-			linear-gradient(135deg, rgba(255, 250, 240, 0.7), transparent 45%), var(--color-background);
-	}
-	.results-header,
-	.results-shell {
-		width: min(100%, 68rem);
-		margin: 0 auto;
-	}
-	.results-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding-bottom: 1.25rem;
-		border-bottom: 1px solid var(--color-border-subtle);
-	}
-	.header-meta {
-		display: flex;
-		align-items: center;
-		gap: 0.8rem;
-		color: var(--color-text-secondary);
-		font-size: 0.78rem;
-		font-weight: 750;
-	}
-	.eyebrow,
-	.kicker,
-	.metric-label {
-		letter-spacing: 0.1em;
-		font-size: 0.7rem;
-		font-weight: 900;
-	}
-	.eyebrow,
-	.kicker {
-		color: var(--color-accent);
-	}
-	.header-divider {
-		width: 1px;
-		height: 1rem;
-		background: var(--color-border);
-	}
-	.results-shell {
-		margin-top: clamp(1rem, 3vw, 2rem);
-	}
-	.intro-row {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1rem;
-	}
-	.kicker {
-		margin: 0 0 0.75rem;
-	}
-	h1,
-	h2,
-	p {
-		margin-top: 0;
-	}
-	h1 {
-		margin-bottom: 0.6rem;
-		font-size: clamp(2rem, 4vw, 3rem);
-		line-height: 0.98;
-		letter-spacing: -0.04em;
-	}
-	.intro-copy {
-		margin: 0;
-		color: var(--color-text-secondary);
-		font-size: 1.05rem;
-	}
-	.results-grid {
+	.results-layout {
 		display: grid;
-		grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.65fr);
-		gap: 1rem;
-		margin-top: 1.25rem;
+		grid-template-columns: 1fr 1fr;
+		gap: 24px;
 	}
 	.score-panel {
-		border: 1px solid var(--color-border);
-		background: var(--color-surface-raised);
-		box-shadow: var(--shadow-sm);
+		text-align: center;
+		padding: 35px;
 	}
-	.score-panel {
-		display: flex;
-		align-items: center;
-		gap: clamp(1rem, 3vw, 2rem);
-		padding: var(--spacing-lg);
-		border-radius: var(--radius-lg);
-		background: linear-gradient(
-			125deg,
-			var(--color-surface-raised) 0%,
-			var(--color-background) 100%
-		);
-	}
-	.score-ring {
-		position: relative;
+	.score-circle {
+		--ring: #c8a244;
+		width: 215px;
+		height: 215px;
 		display: grid;
 		place-items: center;
-		width: clamp(8rem, 17vw, 11.5rem);
-		aspect-ratio: 1;
-		flex: 0 0 auto;
 		border-radius: 50%;
-		background: conic-gradient(var(--color-primary) var(--score-angle), var(--color-border) 0);
-		animation: score-in 700ms var(--ease-out) both;
+		background: conic-gradient(var(--ring) var(--score), #e3e5d9 0);
+		margin: 30px auto;
 	}
-	.points-ring {
-		background: conic-gradient(var(--color-primary) 100%, var(--color-border) 0);
+	.score-circle.passed {
+		--ring: #37664d;
 	}
-	.score-ring::after {
-		content: '';
-		position: absolute;
-		inset: 0.65rem;
+	.score-circle > div {
+		width: 193px;
+		height: 193px;
+		background: #fcfaf3;
 		border-radius: 50%;
-		background: var(--color-surface);
-	}
-	.score-ring-inner {
-		z-index: 1;
-		display: flex;
-		align-items: baseline;
-		gap: 0.15rem;
-	}
-	.score-ring strong {
-		font-size: clamp(2.5rem, 6vw, 4rem);
-		line-height: 1;
-	}
-	.score-ring span {
-		color: var(--color-text-secondary);
-		font-size: 0.8rem;
-		font-weight: 800;
-	}
-	.score-copy h2 {
-		margin: 0.45rem 0 0.3rem;
-		font-size: clamp(1.7rem, 3vw, 2.35rem);
-	}
-	.score-copy p {
-		margin: 0;
-		color: var(--color-text-secondary);
-	}
-	.metric-stack {
-		display: grid;
-		gap: var(--spacing-md);
-	}
-	.lower-grid {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		gap: var(--spacing-md);
-		margin-top: var(--spacing-md);
-	}
-	.actions {
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-md);
-		margin-top: var(--spacing-md);
+		justify-content: center;
+		flex-direction: column;
 	}
-	.actions :global(.button) {
-		box-shadow: 0 4px 0 var(--color-primary-active);
+	.score-circle strong {
+		font-size: 70px;
+		font-weight: 400;
+		letter-spacing: -4px;
 	}
-	.actions :global(.button span) {
-		margin-left: 0.6rem;
+	.score-circle strong span {
+		font-size: 23px;
+		color: #7e8777;
+		letter-spacing: -1px;
 	}
-	.secondary-action {
-		color: var(--color-text-secondary);
-		font-size: 0.85rem;
-		font-weight: 800;
+	.score-circle small {
+		font-size: 9px;
+		letter-spacing: 1.5px;
+		color: #62695f;
+	}
+	.score-panel > .study-muted {
+		margin: 15px 0 0;
+		font-size: 12px;
+	}
+	.result-details {
+		display: grid;
+		gap: 24px;
+	}
+	.earned {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 20px;
+	}
+	.earned strong,
+	.community > strong {
+		font-size: 52px;
+		font-weight: 400;
+		letter-spacing: -2px;
+	}
+	.earned strong span,
+	.community > strong span {
+		font-size: 20px;
+		color: #62695f;
+	}
+	.earned p {
+		margin-bottom: 0;
+	}
+	.community h2 {
+		font-size: 19px;
+		margin-top: 8px;
+	}
+	.community-bar {
+		height: 5px;
+		background: #e3e5d9;
+		margin: 20px 0 12px;
+	}
+	.community-bar span {
+		display: block;
+		height: 100%;
+		background: #37664d;
+	}
+	.community small {
+		font-size: 10px;
+		color: #62695f;
+	}
+	.dashboard-link {
+		font-size: 12px;
+		margin-left: auto;
 		text-decoration: none;
 	}
-	.secondary-action:hover {
-		color: var(--color-text);
-	}
-	.toast {
-		position: fixed;
-		right: 1.25rem;
-		bottom: 1.25rem;
-		padding: 0.9rem 1.1rem;
-		border: 1px solid var(--color-primary-active);
-		border-radius: var(--radius-md);
-		background: var(--color-primary);
-		color: #fff;
-		box-shadow: var(--shadow-md);
-		font-size: 0.85rem;
-		font-weight: 750;
-		animation: toast-in 220ms var(--ease-out) both;
-	}
-	@keyframes score-in {
-		from {
-			opacity: 0;
-			transform: scale(0.75) rotate(-18deg);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1) rotate(0);
-		}
-	}
-	@keyframes toast-in {
-		from {
-			opacity: 0;
-			transform: translateY(0.5rem);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		*,
-		*::before,
-		*::after {
-			animation-duration: 0.01ms !important;
-			animation-iteration-count: 1 !important;
-			scroll-behavior: auto !important;
-		}
-	}
-	@media (max-width: 760px) {
-		.results-page {
-			padding-inline: 0.85rem;
-		}
-		.results-header {
-			align-items: flex-start;
-		}
-		.header-meta {
-			flex-direction: column;
-			align-items: flex-end;
-			gap: 0.2rem;
-			text-align: right;
-		}
-		.header-divider {
-			display: none;
-		}
-		.results-grid,
-		.lower-grid {
+	@media (max-width: 650px) {
+		.results-layout {
 			grid-template-columns: 1fr;
 		}
-		.score-panel {
-			align-items: flex-start;
-		}
-	}
-	@media (max-width: 480px) {
-		h1 {
-			font-size: 2.35rem;
-		}
-		.intro-row {
-			align-items: flex-start;
-		}
-		.intro-row :global(.badge) {
-			margin-top: 0.2rem;
-		}
-		.score-panel {
-			flex-direction: column;
-			align-items: center;
-			text-align: center;
-		}
-		.score-copy {
-			width: 100%;
-		}
-		.actions {
-			flex-direction: column;
-			align-items: stretch;
-			text-align: center;
+		.dashboard-link {
+			margin-left: 0;
 		}
 	}
 </style>

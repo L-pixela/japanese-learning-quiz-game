@@ -15,6 +15,7 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 		.select({
 			id: user.id,
 			username: user.username,
+			university: user.university,
 			points: user.points,
 			streak: user.streak,
 			rank: user.rank,
