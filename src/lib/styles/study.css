@@ -299,8 +299,8 @@
 	gap: 7px;
 	padding: 8px 16px;
 	border-radius: var(--radius-full);
-	background: var(--color-surface-sunken);
-	color: var(--muted);
+	background: var(--status-neutral-soft);
+	color: var(--status-neutral);
 	font-size: var(--text-sm);
 	font-weight: var(--font-weight-semibold);
 }
@@ -309,8 +309,8 @@
 	color: var(--color-primary);
 }
 .study-pill.attempted {
-	background: var(--color-warning-soft);
-	color: var(--color-text-secondary);
+	background: var(--status-caution-soft);
+	color: var(--status-caution);
 }
 
 /* ------------------------------------------------------------
