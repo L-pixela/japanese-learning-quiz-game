@@ -9,7 +9,7 @@
 	<div class="nav-container">
 		<a href={resolveRoute('/dashboard', {})} class="logo">
 			<span class="logo-icon">🍡</span>
-			<span class="logo-text">Takoyaki Cards</span>
+			<span class="logo-text">TanTore</span>
 		</a>
 
 		<!-- Desktop Navigation with Dynamic Route Binds -->
@@ -26,6 +26,8 @@
 			>
 				Decks
 			</a>
+			<a href={resolveRoute('/quiz', {})}>Practice</a>
+			<a href={resolveRoute('/team', {})}>Our team</a>
 		</nav>
 
 		<div class="nav-right">
@@ -54,6 +56,8 @@
 			>
 				Decks
 			</a>
+			<a href={resolveRoute('/quiz', {})}>Practice</a>
+			<a href={resolveRoute('/team', {})}>Our team</a>
 		</nav>
 	{/if}
 </header>

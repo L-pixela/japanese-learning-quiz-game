@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { check, index, integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const user = sqliteTable(
 	'user',
@@ -9,6 +9,7 @@ export const user = sqliteTable(
 			.$defaultFn(() => crypto.randomUUID()),
 		username: text('username').notNull().unique(),
 		passwordHash: text('password_hash').notNull(),
+		university: text('university'),
 		points: integer('points').notNull().default(0),
 		streak: integer('streak').notNull().default(0),
 		lastQuizAt: integer('last_quiz_at', { mode: 'timestamp' }),
@@ -62,4 +63,58 @@ export const word = sqliteTable(
 		level: integer('level').notNull(),
 	},
 	(table) => [index('word_level_idx').on(table.level)],
+)
+
+export const userLevelProgress = sqliteTable(
+	'user_level_progress',
+	{
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		level: integer('level').notNull(),
+		status: text('status', { enum: ['not_started', 'attempted', 'completed'] })
+			.notNull()
+			.default('not_started'),
+		bestScore: integer('best_score').notNull().default(0),
+		attempts: integer('attempts').notNull().default(0),
+		updatedAt: integer('updated_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date()),
+	},
+	(table) => [
+		primaryKey({ columns: [table.userId, table.level] }),
+		index('progress_level_status_idx').on(table.level, table.status),
+		check('progress_level_range', sql`${table.level} between 1 and 10`),
+		check('progress_score_range', sql`${table.bestScore} between 0 and 10`),
+		check('progress_attempts_positive', sql`${table.attempts} >= 0`),
+		check(
+			'progress_status_valid',
+			sql`${table.status} in ('not_started', 'attempted', 'completed')`,
+		),
+	],
+)
+
+// Snapshot answers on the server so edits to vocabulary cannot change an active quiz.
+export const quizAttempt = sqliteTable(
+	'quiz_attempt',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		level: integer('level').notNull(),
+		questions: text('questions', { mode: 'json' })
+			.$type<
+				Array<{ japanese: string; reading: string; options: string[]; correctIndex: number }>
+			>()
+			.notNull(),
+		score: integer('score'),
+		createdAt: integer('created_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date()),
+		submittedAt: integer('submitted_at', { mode: 'timestamp' }),
+	},
+	(table) => [index('attempt_user_idx').on(table.userId)],
 )

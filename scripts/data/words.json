@@ -1,0 +1,3852 @@
+[
+	{
+		"japanese": "食事",
+		"reading": "しょくじする",
+		"meaning": "meal",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "米",
+		"reading": "こめ",
+		"meaning": "uncooked rice",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "味",
+		"reading": "あじ",
+		"meaning": "flavor, taste",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "味噌",
+		"reading": "みそ",
+		"meaning": "miso, bean paste",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "サラダ",
+		"reading": "サラダ",
+		"meaning": "salad",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "サンドイッチ",
+		"reading": "サンドイッチ",
+		"meaning": "sandwich",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ケーキ",
+		"reading": "ケーキ",
+		"meaning": "cake",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ジャム",
+		"reading": "ジャム",
+		"meaning": "jam",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ぶどう",
+		"reading": "ぶどう",
+		"meaning": "grapes",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "湯",
+		"reading": "ゆ",
+		"meaning": "hot water",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "眠い",
+		"reading": "ねむい",
+		"meaning": "sleepy, drowsy",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "眠る",
+		"reading": "ねむる",
+		"meaning": "to sleep",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "起こす",
+		"reading": "おこす",
+		"meaning": "to wake (someone) up",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "片付ける",
+		"reading": "かたづける",
+		"meaning": "to (clean) tidy up (v.t.), to put away",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ごみ",
+		"reading": "ごみ",
+		"meaning": "trash, garbage",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "棚",
+		"reading": "たな",
+		"meaning": "shelves, rack",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "鏡",
+		"reading": "かがみ",
+		"meaning": "mirror",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "布団",
+		"reading": "ふとん",
+		"meaning": "futon",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "畳",
+		"reading": "たたみ",
+		"meaning": "tatami mat (Japanese straw mat)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "カーテン",
+		"reading": "カーテン",
+		"meaning": "curtain",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "壁",
+		"reading": "かべ",
+		"meaning": "wall",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "電灯",
+		"reading": "でんとう",
+		"meaning": "electric light",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "水道",
+		"reading": "すいどう",
+		"meaning": "water service, water line",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ガス",
+		"reading": "ガス",
+		"meaning": "gas",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "ガラス",
+		"reading": "ガラス",
+		"meaning": "glass, pane",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "おもちゃ",
+		"reading": "おもちゃ",
+		"meaning": "a toy",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "人形",
+		"reading": "にんぎょう",
+		"meaning": "doll, figure",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "漫画",
+		"reading": "まんが",
+		"meaning": "comic (book), cartoon",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "音",
+		"reading": "おと",
+		"meaning": "sound, note",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "踊る",
+		"reading": "おどる",
+		"meaning": "to dance",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "笑う",
+		"reading": "わらう",
+		"meaning": "to laugh, to smile",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "泣く",
+		"reading": "なく",
+		"meaning": "to cry",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "怒る",
+		"reading": "おこる",
+		"meaning": "to get angry; to scold angrily",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "嬉しい",
+		"reading": "うれしい",
+		"meaning": "to be happy; to be glad",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "悲しい",
+		"reading": "かなしい",
+		"meaning": "sad, sorrowful",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "寂しい",
+		"reading": "さびしい",
+		"meaning": "lonely, lonesome",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "怖い",
+		"reading": "こわい",
+		"meaning": "scary, frightening",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "優しい",
+		"reading": "やさしい",
+		"meaning": "kind (person), gentle (person), easy (problem)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "親切",
+		"reading": "しんせつ",
+		"meaning": "kindness",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "美しい",
+		"reading": "うつくしい",
+		"meaning": "beautiful, lovely",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "赤ちゃん",
+		"reading": "あかちゃん",
+		"meaning": "baby, infant",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "親",
+		"reading": "おや",
+		"meaning": "a parent",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "祖父",
+		"reading": "そふ",
+		"meaning": "grandfather",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "祖母",
+		"reading": "そぼ",
+		"meaning": "grandmother",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "夫",
+		"reading": "おっと",
+		"meaning": "husband",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "妻",
+		"reading": "つま",
+		"meaning": "wife (humble)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "息子",
+		"reading": "むすこ",
+		"meaning": "(humble) son",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "娘",
+		"reading": "むすめ",
+		"meaning": "daughter (humble)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "彼",
+		"reading": "かれ",
+		"meaning": "he, boyfriend",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "彼女",
+		"reading": "かのじょ",
+		"meaning": "girlfriend; she",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "僕",
+		"reading": "ぼく",
+		"meaning": "I (used by men towards those of equal or lower status)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "君",
+		"reading": "きみ",
+		"meaning": "you (informal for men)",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "苦い",
+		"reading": "にがい",
+		"meaning": "bitter",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "柔らかい",
+		"reading": "やわらかい",
+		"meaning": "soft (in reference to texture), tender",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "沸く",
+		"reading": "わく",
+		"meaning": "to boil, to grow hot",
+		"level": 1,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "生活",
+		"reading": "せいかつする",
+		"meaning": "living, life; to live",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "近所",
+		"reading": "きんじょ",
+		"meaning": "neighborhood",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "店員",
+		"reading": "てんいん",
+		"meaning": "clerk; shop-employee",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "客",
+		"reading": "きゃく",
+		"meaning": "guest, customer",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "値段",
+		"reading": "ねだん",
+		"meaning": "price",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "おつり",
+		"reading": "おつり",
+		"meaning": "change; balance of money returned to the purchaser",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "払う",
+		"reading": "はらう",
+		"meaning": "to pay",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "売り場",
+		"reading": "うりば",
+		"meaning": "place where things are sold",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "食料品",
+		"reading": "しょくりょうひん",
+		"meaning": "foodstuff, groceries",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "贈り物",
+		"reading": "おくりもの",
+		"meaning": "a gift; a present",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "プレゼント",
+		"reading": "プレゼント",
+		"meaning": "present, gift",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "お土産",
+		"reading": "おみやげ",
+		"meaning": "souvenir",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "住所",
+		"reading": "じゅうしょ",
+		"meaning": "address; place of residence",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "今夜",
+		"reading": "こんや",
+		"meaning": "this evening, tonight",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "最近",
+		"reading": "さいきん",
+		"meaning": "recently, nowadays, in recent years, most recent, latest",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "今度",
+		"reading": "こんど",
+		"meaning": "now, this time, near future, one of these days, next time",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "昔",
+		"reading": "むかし",
+		"meaning": "old days; past",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "最初",
+		"reading": "さいしょ",
+		"meaning": "beginning, first",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "最後",
+		"reading": "さいご",
+		"meaning": "last, end",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "一度",
+		"reading": "いちど",
+		"meaning": "once, one time",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "予定",
+		"reading": "よてい",
+		"meaning": "plans, arrangement, schedule",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "用事",
+		"reading": "ようじ",
+		"meaning": "business to take care of; tasks; errands",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "約束",
+		"reading": "やくそく",
+		"meaning": "arrangement, appointment, promise",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "遅れる",
+		"reading": "おくれる",
+		"meaning": "to (be) become late",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "急ぐ",
+		"reading": "いそぐ",
+		"meaning": "to hurry, to be in a hurry, to rush",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "手伝う",
+		"reading": "てつだう",
+		"meaning": "to help",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "運ぶ",
+		"reading": "はこぶ",
+		"meaning": "to transport, to carry",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "送る",
+		"reading": "おくる",
+		"meaning": "to send, to dispatch",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "もらう",
+		"reading": "もらう",
+		"meaning": "to receive",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "あげる",
+		"reading": "あげる",
+		"meaning": "to give",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "くれる",
+		"reading": "くれる",
+		"meaning": "to give, to do for",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "忘れ物",
+		"reading": "わすれもの",
+		"meaning": "lost article, something forgotten",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "探す",
+		"reading": "さがす",
+		"meaning": "to search, to seek, to look for",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "見つける",
+		"reading": "みつける",
+		"meaning": "to discover, to find (v.t.)",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "見つかる",
+		"reading": "みつかる",
+		"meaning": "to be found (v.i.), to be discovered",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "選ぶ",
+		"reading": "えらぶ",
+		"meaning": "to choose; to select",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "決める",
+		"reading": "きめる",
+		"meaning": "to decide (v.t.)",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "始める",
+		"reading": "はじめる",
+		"meaning": "to start, to begin",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "続ける",
+		"reading": "つづける",
+		"meaning": "to continue, to keep up",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "終わり",
+		"reading": "おわり",
+		"meaning": "end",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "戻る",
+		"reading": "もどる",
+		"meaning": "to return (v.i.); to come back",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "直す",
+		"reading": "なおす",
+		"meaning": "to correct (v.t.); to fix",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "直る",
+		"reading": "なおる",
+		"meaning": "to be fixed",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "開く",
+		"reading": "ひらく",
+		"meaning": "to open; to hold (an event)",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "空く",
+		"reading": "すく",
+		"meaning": "to be empty (in reference to people), to be less crowded",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "残る",
+		"reading": "のこる",
+		"meaning": "to remain (v.i.), to be left",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "足りる",
+		"reading": "たりる",
+		"meaning": "to be sufficient; to be enough",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "間違える",
+		"reading": "まちがえる",
+		"meaning": "to make a mistake",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "捨てる",
+		"reading": "すてる",
+		"meaning": "throw away (trash), dump, discard",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "拾う",
+		"reading": "ひろう",
+		"meaning": "to pick up (something), to find",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "包む",
+		"reading": "つつむ",
+		"meaning": "to wrap, to cover",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "届ける",
+		"reading": "とどける",
+		"meaning": "to deliver (v.t.)",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "返事",
+		"reading": "へんじ",
+		"meaning": "reply, answer",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "お礼",
+		"reading": "おれい",
+		"meaning": "expression of gratitude; thanking; gift of appreciation; bow",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "挨拶する",
+		"reading": "あいさつする",
+		"meaning": "to greet",
+		"level": 2,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "空港",
+		"reading": "くうこう",
+		"meaning": "airport",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "飛行場",
+		"reading": "ひこうじょう",
+		"meaning": "airport",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "港",
+		"reading": "みなと",
+		"meaning": "harbor, port",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "駐車場",
+		"reading": "ちゅうしゃじょう",
+		"meaning": "parking lot",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "交通",
+		"reading": "こうつう",
+		"meaning": "traffic, transportation",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "運転",
+		"reading": "うんてんする",
+		"meaning": "driving",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "運転手",
+		"reading": "うんてんしゅ",
+		"meaning": "driver (by occupation)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "急行",
+		"reading": "きゅうこう",
+		"meaning": "express train or bus",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "特急",
+		"reading": "とっきゅう",
+		"meaning": "limited express (train faster than an express)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "汽車",
+		"reading": "きしゃ",
+		"meaning": "train (steam)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "乗り物",
+		"reading": "のりもの",
+		"meaning": "vehicle",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "乗り換える",
+		"reading": "のりかえる",
+		"meaning": "to transfer (trains), to change (bus, train, etc.)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "出発",
+		"reading": "しゅっぱつする",
+		"meaning": "departure",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "泊まる",
+		"reading": "とまる",
+		"meaning": "to stay (over night) (v.i.)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "予約",
+		"reading": "よやく",
+		"meaning": "reservation",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "旅館",
+		"reading": "りょかん",
+		"meaning": "a Japanese inn",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "案内",
+		"reading": "あんないする",
+		"meaning": "information, guidance",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "通り",
+		"reading": "とおり",
+		"meaning": "~ Street, ~ Avenue",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "坂",
+		"reading": "さか",
+		"meaning": "slope, hill",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "郊外",
+		"reading": "こうがい",
+		"meaning": "suburb, outskirts",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "田舎",
+		"reading": "いなか",
+		"meaning": "rural, countryside",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "神社",
+		"reading": "じんじゃ",
+		"meaning": "Shinto shrine",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "寺",
+		"reading": "てら",
+		"meaning": "Buddhist temple",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "教会",
+		"reading": "きょうかい",
+		"meaning": "church",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "動物園",
+		"reading": "どうぶつえん",
+		"meaning": "zoo",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "美術館",
+		"reading": "びじゅつかん",
+		"meaning": "art gallery, art museum",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "受付",
+		"reading": "うけつけ",
+		"meaning": "reception(ist) desk",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "会場",
+		"reading": "かいじょう",
+		"meaning": "venue, meeting place",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "事務所",
+		"reading": "じむしょ",
+		"meaning": "office",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "屋上",
+		"reading": "おくじょう",
+		"meaning": "rooftop",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "景色",
+		"reading": "けしき",
+		"meaning": "scenery, landscape",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "島",
+		"reading": "しま",
+		"meaning": "island",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "海岸",
+		"reading": "かいがん",
+		"meaning": "coast, seashore",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "湖",
+		"reading": "みずうみ",
+		"meaning": "lake",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "森",
+		"reading": "もり",
+		"meaning": "forest",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "林",
+		"reading": "はやし",
+		"meaning": "woods, forest",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "草",
+		"reading": "くさ",
+		"meaning": "grass",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "葉",
+		"reading": "は",
+		"meaning": "leaf",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "枝",
+		"reading": "えだ",
+		"meaning": "branch, twig",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "石",
+		"reading": "いし",
+		"meaning": "stone",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "砂",
+		"reading": "すな",
+		"meaning": "sand",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "星",
+		"reading": "ほし",
+		"meaning": "star",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "雲",
+		"reading": "くも",
+		"meaning": "cloud",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "季節",
+		"reading": "きせつ",
+		"meaning": "season (in reference to weather)",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "天気予報",
+		"reading": "てんきよほう",
+		"meaning": "weather forecast",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "台風",
+		"reading": "たいふう",
+		"meaning": "typhoon",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "地震",
+		"reading": "じしん",
+		"meaning": "earthquake",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "火事",
+		"reading": "かじ",
+		"meaning": "fire",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "事故",
+		"reading": "じこ",
+		"meaning": "accident",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "警察",
+		"reading": "けいさつ",
+		"meaning": "police; police station",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "安全",
+		"reading": "あんぜん",
+		"meaning": "safety, security",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "危険",
+		"reading": "きけん",
+		"meaning": "danger, risk, hazard",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "道具",
+		"reading": "どうぐ",
+		"meaning": "tool",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "エスカレーター",
+		"reading": "エスカレーター",
+		"meaning": "escalator",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "オートバイ",
+		"reading": "オートバイ",
+		"meaning": "motorcycle (lit: auto-bi(ke))",
+		"level": 3,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "大学生",
+		"reading": "だいがくせい",
+		"meaning": "college student, university student",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "高校生",
+		"reading": "こうこうせい",
+		"meaning": "high school student",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "中学校",
+		"reading": "ちゅうがっこう",
+		"meaning": "junior high school pupil",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "小学校",
+		"reading": "しょうがっこう",
+		"meaning": "elementary school",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "入学",
+		"reading": "にゅうがくする",
+		"meaning": "entry to school or university",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "卒業",
+		"reading": "そつぎょう",
+		"meaning": "graduation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "試験",
+		"reading": "しけん",
+		"meaning": "an exam",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "復習",
+		"reading": "ふくしゅう",
+		"meaning": "review (of lessons), revision",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "予習",
+		"reading": "よしゅう",
+		"meaning": "preparation of lessons (for class)",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "文法",
+		"reading": "ぶんぽう",
+		"meaning": "grammar",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "発音",
+		"reading": "はつおん",
+		"meaning": "pronunciation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "会話",
+		"reading": "かいわ",
+		"meaning": "conversation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "辞典",
+		"reading": "じてん",
+		"meaning": "encyclopedia, reference book",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "数学",
+		"reading": "すうがく",
+		"meaning": "mathematics",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "地理",
+		"reading": "ちり",
+		"meaning": "geography",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "歴史",
+		"reading": "れきし",
+		"meaning": "history",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "科学",
+		"reading": "かがく",
+		"meaning": "science",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "文学",
+		"reading": "ぶんがく",
+		"meaning": "literature",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "文化",
+		"reading": "ぶんか",
+		"meaning": "culture",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "小説",
+		"reading": "しょうせつ",
+		"meaning": "novel",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "日記",
+		"reading": "にっき",
+		"meaning": "diary, journal",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "説明",
+		"reading": "せつめい",
+		"meaning": "explanation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "紹介",
+		"reading": "しょうかい",
+		"meaning": "an introduction",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "答",
+		"reading": "こたえ",
+		"meaning": "answer, response",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "翻訳",
+		"reading": "ほんやく",
+		"meaning": "translation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "意見",
+		"reading": "いけん",
+		"meaning": "opinion, view, idea",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "考える",
+		"reading": "かんがえる",
+		"meaning": "to think (about); to consider",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "思う",
+		"reading": "おもう",
+		"meaning": "to think, to feel",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "調べる",
+		"reading": "しらべる",
+		"meaning": "to check; to look up; to inquire; to search",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "比べる",
+		"reading": "くらべる",
+		"meaning": "to compare",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "伝える",
+		"reading": "つたえる",
+		"meaning": "to convey (a message); to tell, to report",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "知らせる",
+		"reading": "しらせる",
+		"meaning": "to notify",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "連絡",
+		"reading": "れんらく",
+		"meaning": "communication, contact, connection",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "準備",
+		"reading": "じゅんびする",
+		"meaning": "prepare",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "用意",
+		"reading": "ようい",
+		"meaning": "preparation",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "計画",
+		"reading": "けいかくする",
+		"meaning": "plan, project, schedule",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "運動",
+		"reading": "うんどうする",
+		"meaning": "exercise",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "水泳",
+		"reading": "すいえい",
+		"meaning": "swimming",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "テニス",
+		"reading": "テニス",
+		"meaning": "tennis",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "柔道",
+		"reading": "じゅうどう",
+		"meaning": "judo",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "試合",
+		"reading": "しあい",
+		"meaning": "match, game, competition",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "勝つ",
+		"reading": "かつ",
+		"meaning": "to win",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "負ける",
+		"reading": "まける",
+		"meaning": "to lose (a game) (v.i.), to be defeated",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "趣味",
+		"reading": "しゅみ",
+		"meaning": "hobby; pastime",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "興味",
+		"reading": "きょうみ",
+		"meaning": "interest (in something)",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "楽しみ",
+		"reading": "たのしみ",
+		"meaning": "pleasure, joy",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "夢",
+		"reading": "ゆめ",
+		"meaning": "a dream",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "頑張る",
+		"reading": "がんばる",
+		"meaning": "to try one's best, to try hard, to persist",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "熱心",
+		"reading": "ねっしん",
+		"meaning": "enthusiasm",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "真面目",
+		"reading": "まじめ",
+		"meaning": "diligent, serious",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "一生懸命",
+		"reading": "いっしょうけんめい",
+		"meaning": "very hard (as in \"to work hard\"), with utmost effort",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "正しい",
+		"reading": "ただしい",
+		"meaning": "correct",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "先輩",
+		"reading": "せんぱい",
+		"meaning": "senior members of a group",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "講義",
+		"reading": "こうぎ",
+		"meaning": "a lecture",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "消しゴム",
+		"reading": "けしゴム",
+		"meaning": "eraser",
+		"level": 4,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "経験",
+		"reading": "けいけんする",
+		"meaning": "experience",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "研究",
+		"reading": "けんきゅう",
+		"meaning": "study, research, investigation",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "技術",
+		"reading": "ぎじゅつ",
+		"meaning": "technique, technology, skill",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "医学",
+		"reading": "いがく",
+		"meaning": "medical science",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "教育",
+		"reading": "きょういく",
+		"meaning": "education",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "経済",
+		"reading": "けいざい",
+		"meaning": "economics, finance, economy",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "産業",
+		"reading": "さんぎょう",
+		"meaning": "industry",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "工業",
+		"reading": "こうぎょう",
+		"meaning": "(manufacturing) industry",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "生産",
+		"reading": "せいさんする",
+		"meaning": "production; to produce",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "貿易",
+		"reading": "ぼうえき",
+		"meaning": "trade",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "輸入",
+		"reading": "ゆにゅう",
+		"meaning": "import",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "輸出",
+		"reading": "ゆしゅつする",
+		"meaning": "export",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "国際",
+		"reading": "こくさい",
+		"meaning": "international",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "社会",
+		"reading": "しゃかい",
+		"meaning": "society",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "世界",
+		"reading": "せかい",
+		"meaning": "world",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "人口",
+		"reading": "じんこう",
+		"meaning": "population",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "法律",
+		"reading": "ほうりつ",
+		"meaning": "law",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "政治",
+		"reading": "せいじ",
+		"meaning": "politics",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "市民",
+		"reading": "しみん",
+		"meaning": "citizen",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "公務員",
+		"reading": "こうむいん",
+		"meaning": "government worker, public servant",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "社長",
+		"reading": "しゃちょう",
+		"meaning": "president of a company",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "部長",
+		"reading": "ぶちょう",
+		"meaning": "department (division) manager",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "課長",
+		"reading": "かちょう",
+		"meaning": "section manager",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "会議",
+		"reading": "かいぎ",
+		"meaning": "business meeting; conference",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "専門",
+		"reading": "せんもん",
+		"meaning": "major; speciality",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "将来",
+		"reading": "しょうらい",
+		"meaning": "(in the) future; prospects",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "関係",
+		"reading": "かんけい",
+		"meaning": "relation(ship), connection",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "原因",
+		"reading": "げんいん",
+		"meaning": "cause, origin, source",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "理由",
+		"reading": "りゆう",
+		"meaning": "reason",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "場合",
+		"reading": "ばあい",
+		"meaning": "case, situation",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "機会",
+		"reading": "きかい",
+		"meaning": "chance, opportunity",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "必要",
+		"reading": "ひつよう",
+		"meaning": "necessary",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "大事",
+		"reading": "だいじ",
+		"meaning": "important, valuable, serious matter",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "特別",
+		"reading": "とくべつ",
+		"meaning": "special",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "普通",
+		"reading": "ふつう",
+		"meaning": "common; usual",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "簡単",
+		"reading": "かんたん",
+		"meaning": "simple",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "複雑",
+		"reading": "ふくざつ",
+		"meaning": "complexity, complication",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "厳しい",
+		"reading": "きびしい",
+		"meaning": "hard; rigorous; strict",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "丁寧",
+		"reading": "ていねい",
+		"meaning": "polite, courteous, careful",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "不便",
+		"reading": "ふべん",
+		"meaning": "inconvenience",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "無理",
+		"reading": "むり",
+		"meaning": "unreasonable, impossible",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "自由",
+		"reading": "じゆう",
+		"meaning": "freedom",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "反対",
+		"reading": "はんたい",
+		"meaning": "oppose, opposition, resistance",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "相談",
+		"reading": "そうだんする",
+		"meaning": "consultation",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "利用",
+		"reading": "りよう",
+		"meaning": "use, utilization",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "招待",
+		"reading": "しょうたいする",
+		"meaning": "invitation",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "出席",
+		"reading": "しゅっせきする",
+		"meaning": "attendance",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "失敗",
+		"reading": "しっぱい",
+		"meaning": "failure, mistake",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "安心",
+		"reading": "あんしん",
+		"meaning": "peace of mind, relief",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "心配",
+		"reading": "しんぱいする",
+		"meaning": "worry, concern",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "残念",
+		"reading": "ざんねん",
+		"meaning": "regret; regrettable",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "遠慮",
+		"reading": "えんりょする",
+		"meaning": "restraint, reserve, hesitate",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "習慣",
+		"reading": "しゅうかん",
+		"meaning": "custom (in reference to culture)",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "規則",
+		"reading": "きそく",
+		"meaning": "rule, regulation",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "競争",
+		"reading": "きょうそう",
+		"meaning": "competition, contest",
+		"level": 5,
+		"jlpt": "N4"
+	},
+	{
+		"japanese": "参加",
+		"reading": "さんか",
+		"meaning": "participation",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "賛成",
+		"reading": "さんせい",
+		"meaning": "approval, agreement",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "幸せ",
+		"reading": "しあわせ",
+		"meaning": "happiness, blessing",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "自然",
+		"reading": "しぜん",
+		"meaning": "nature, spontaneous",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "親しい",
+		"reading": "したしい",
+		"meaning": "intimate, close (e.g., friend)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実は",
+		"reading": "じつは",
+		"meaning": "actually; in fact",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "姉妹",
+		"reading": "しまい",
+		"meaning": "sisters",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "しゃべる",
+		"reading": "しゃべる",
+		"meaning": "to talk, to chat, to chatter (same as 話す (はなす))",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "就職",
+		"reading": "しゅうしょく",
+		"meaning": "finding employment",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "修理",
+		"reading": "しゅうり",
+		"meaning": "repairing, mending",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "種類",
+		"reading": "しゅるい",
+		"meaning": "variety, kind",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "順番",
+		"reading": "じゅんばん",
+		"meaning": "turn (in line), order of things",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "正午",
+		"reading": "しょうご",
+		"meaning": "noon, mid-day",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "正直",
+		"reading": "しょうじき",
+		"meaning": "honesty, integrity, frankness",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "冗談",
+		"reading": "じょうだん",
+		"meaning": "a joke",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "少年",
+		"reading": "しょうねん",
+		"meaning": "boys, juveniles",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "少女",
+		"reading": "しょうじょ",
+		"meaning": "young girl",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "商品",
+		"reading": "しょうひん",
+		"meaning": "commodity, merchandise",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "職業",
+		"reading": "しょくぎょう",
+		"meaning": "occupation, business",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "食品",
+		"reading": "しょくひん",
+		"meaning": "foodstuff",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "植物",
+		"reading": "しょくぶつ",
+		"meaning": "plant, vegetation",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "食欲",
+		"reading": "しょくよく",
+		"meaning": "appetite (for food)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "知らせ",
+		"reading": "しらせ",
+		"meaning": "notice",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "信号",
+		"reading": "しんごう",
+		"meaning": "traffic lights, signal, semaphore",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "信じる",
+		"reading": "しんじる",
+		"meaning": "to believe",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "人生",
+		"reading": "じんせい",
+		"meaning": "(human) life (e.g., conception to death)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "親戚",
+		"reading": "しんせき",
+		"meaning": "relative(s)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "新鮮",
+		"reading": "しんせん",
+		"meaning": "fresh",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "身長",
+		"reading": "しんちょう",
+		"meaning": "height (of body), stature",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "健康",
+		"reading": "けんこう",
+		"meaning": "health(y)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "気温",
+		"reading": "きおん",
+		"meaning": "temperature (weather - not used for things)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "天候",
+		"reading": "てんこう",
+		"meaning": "weather",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "太陽",
+		"reading": "たいよう",
+		"meaning": "sun",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "地球",
+		"reading": "ちきゅう",
+		"meaning": "the earth",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "友人",
+		"reading": "ゆうじん",
+		"meaning": "friend (formal)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "仲間",
+		"reading": "なかま",
+		"meaning": "company, fellow, colleague, associate",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "観光",
+		"reading": "かんこう",
+		"meaning": "sightseeing",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "乗客",
+		"reading": "じょうきゃく",
+		"meaning": "passenger",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "出身",
+		"reading": "しゅっしん",
+		"meaning": "come from",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "首都",
+		"reading": "しゅと",
+		"meaning": "capital city",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "住宅",
+		"reading": "じゅうたく",
+		"meaning": "resident, housing",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "住民",
+		"reading": "じゅうみん",
+		"meaning": "inhabitants, residents",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "親友",
+		"reading": "しんゆう",
+		"meaning": "close friend, buddy",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "笑顔",
+		"reading": "えがお",
+		"meaning": "smile (on one's face)",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "睡眠",
+		"reading": "すいみん",
+		"meaning": "sleep",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "頭痛",
+		"reading": "ずつう",
+		"meaning": "headache",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "スープ",
+		"reading": "スープ",
+		"meaning": "(Western) soup",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "衣服",
+		"reading": "いふく",
+		"meaning": "clothes",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "居間",
+		"reading": "いま",
+		"meaning": "living room",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "家具",
+		"reading": "かぐ",
+		"meaning": "furniture",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "家事",
+		"reading": "かじ",
+		"meaning": "household matters; housework (same as 家の仕事 (いえのしごと))",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "昼食",
+		"reading": "ちゅうしょく",
+		"meaning": "lunch (same as 昼ご飯 (ひるごはん))",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "休暇",
+		"reading": "きゅうか",
+		"meaning": "vacation, holiday, day off",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "帰宅",
+		"reading": "きたく",
+		"meaning": "returning home",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "通勤",
+		"reading": "つうきん",
+		"meaning": "commuting to work",
+		"level": 6,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "重要",
+		"reading": "じゅうよう",
+		"meaning": "important, essential",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "情報",
+		"reading": "じょうほう",
+		"meaning": "information, (military) intelligence",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "状況",
+		"reading": "じょうきょう",
+		"meaning": "state of affairs, situation",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "条件",
+		"reading": "じょうけん",
+		"meaning": "conditions, terms",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "常識",
+		"reading": "じょうしき",
+		"meaning": "common sense",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実際",
+		"reading": "じっさい",
+		"meaning": "in fact; in actuality",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実力",
+		"reading": "じつりょく",
+		"meaning": "ability; force",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "集中",
+		"reading": "しゅうちゅう",
+		"meaning": "concentration, focusing the mind",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "収入",
+		"reading": "しゅうにゅう",
+		"meaning": "income, revenue",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "支出",
+		"reading": "ししゅつ",
+		"meaning": "expenditure, expenses",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "支払う",
+		"reading": "しはらう",
+		"meaning": "to pay",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "借金",
+		"reading": "しゃっきん",
+		"meaning": "debt, loan, liabilities",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "注文",
+		"reading": "ちゅうもん",
+		"meaning": "order, request",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "希望",
+		"reading": "きぼう",
+		"meaning": "hope, wish, aspiration",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "目的",
+		"reading": "もくてき",
+		"meaning": "purpose, goal, aim",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "目標",
+		"reading": "もくひょう",
+		"meaning": "mark, objective, target",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "理解",
+		"reading": "りかい",
+		"meaning": "understanding, comprehension",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "表現",
+		"reading": "ひょうげん",
+		"meaning": "expression, presentation",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "感情",
+		"reading": "かんじょう",
+		"meaning": "emotion(s), feeling(s), sentiment",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "感じる",
+		"reading": "かんじる",
+		"meaning": "to feel, to sense",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "気付く",
+		"reading": "きづく",
+		"meaning": "to notice, to recognize, to become aware of",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "関心",
+		"reading": "かんしん",
+		"meaning": "concern, interest",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "感謝",
+		"reading": "かんしゃ",
+		"meaning": "thanks, gratitude",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "感動",
+		"reading": "かんどう",
+		"meaning": "being deeply moved, excitement",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "満足",
+		"reading": "まんぞく",
+		"meaning": "satisfaction",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "不満",
+		"reading": "ふまん",
+		"meaning": "dissatisfaction, discontent, complaints",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "期待",
+		"reading": "きたい",
+		"meaning": "expectation, anticipation, hope",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "努力",
+		"reading": "どりょく",
+		"meaning": "great effort, exertion, endeavor",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "苦労",
+		"reading": "くろう",
+		"meaning": "hardship; suffering",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "協力",
+		"reading": "きょうりょく",
+		"meaning": "cooperation, collaboration",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "応援",
+		"reading": "おうえん",
+		"meaning": "aid, assistance, help",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "連続",
+		"reading": "れんぞく",
+		"meaning": "consecutive, continuity, continuing",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "結果",
+		"reading": "けっか",
+		"meaning": "result, consequence",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "影響",
+		"reading": "えいきょう",
+		"meaning": "influence, effect",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "比較",
+		"reading": "ひかく",
+		"meaning": "comparison",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "選択",
+		"reading": "せんたく",
+		"meaning": "selection, choice",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "判断",
+		"reading": "はんだん",
+		"meaning": "judgment, decision",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "決定",
+		"reading": "けってい",
+		"meaning": "decision, determination",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "変更",
+		"reading": "へんこう",
+		"meaning": "change, modification, alteration",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "確認",
+		"reading": "かくにん",
+		"meaning": "affirmation, confirmation",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "連想",
+		"reading": "れんそう",
+		"meaning": "association (of ideas), suggestion",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "提案",
+		"reading": "ていあん",
+		"meaning": "proposal, proposition, suggestion",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "解決",
+		"reading": "かいけつ",
+		"meaning": "settlement, solution, resolution",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "方法",
+		"reading": "ほうほう",
+		"meaning": "method, means, technique",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "手段",
+		"reading": "しゅだん",
+		"meaning": "means, way, measure",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "感想",
+		"reading": "かんそう",
+		"meaning": "(one's) impressions, (one's) thoughts",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "記憶",
+		"reading": "きおく",
+		"meaning": "memory, recollection, remembrance",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "決心",
+		"reading": "けっしん",
+		"meaning": "determination, resolution",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "合格",
+		"reading": "ごうかく",
+		"meaning": "success, passing (e.g., exam)",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "交換",
+		"reading": "こうかん",
+		"meaning": "exchange, swap",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "付き合い",
+		"reading": "つきあい",
+		"meaning": "socialization; friendship; association",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "話し合う",
+		"reading": "はなしあう",
+		"meaning": "to discuss, to talk together",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "約",
+		"reading": "やく",
+		"meaning": "approximately, about, some",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "役割",
+		"reading": "やくわり",
+		"meaning": "assigning (allotment of) parts, role, duties",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "話題",
+		"reading": "わだい",
+		"meaning": "topic, subject",
+		"level": 7,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "資源",
+		"reading": "しげん",
+		"meaning": "resources",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "資本",
+		"reading": "しほん",
+		"meaning": "funds, capital",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "需要",
+		"reading": "じゅよう",
+		"meaning": "demand",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "消費",
+		"reading": "しょうひ",
+		"meaning": "consumption, expenditure",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "食糧",
+		"reading": "しょくりょう",
+		"meaning": "provisions, rations",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "出版",
+		"reading": "しゅっぱん",
+		"meaning": "publication",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "書類",
+		"reading": "しょるい",
+		"meaning": "documents, official papers",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "署名",
+		"reading": "しょめい",
+		"meaning": "signature",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "処理",
+		"reading": "しょり",
+		"meaning": "processing, treatment, disposition",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実験",
+		"reading": "じっけん",
+		"meaning": "lab work; experiment",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実現",
+		"reading": "じつげん",
+		"meaning": "implementation, materialization, realization",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実行",
+		"reading": "じっこう",
+		"meaning": "practice, execution (e.g., program), realization",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "実施",
+		"reading": "じっし",
+		"meaning": "enforcement, carry out, operation",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "指導",
+		"reading": "しどう",
+		"meaning": "leadership, guidance, coaching",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "支配",
+		"reading": "しはい",
+		"meaning": "rule, control, direction",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "主張",
+		"reading": "しゅちょう",
+		"meaning": "claim, insistence, assertion",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "主義",
+		"reading": "しゅぎ",
+		"meaning": "doctrine, cause, principle",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "主要",
+		"reading": "しゅよう",
+		"meaning": "chief, main",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "集団",
+		"reading": "しゅうだん",
+		"meaning": "group, mass",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "周囲",
+		"reading": "しゅうい",
+		"meaning": "surroundings, circumference, environs",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "重視",
+		"reading": "じゅうし",
+		"meaning": "importance, stress",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "修正",
+		"reading": "しゅうせい",
+		"meaning": "amendment, correction",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "証明",
+		"reading": "しょうめい",
+		"meaning": "proof, verification",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "省略",
+		"reading": "しょうりゃく",
+		"meaning": "omission, abbreviation, abridgment",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "承認",
+		"reading": "しょうにん",
+		"meaning": "recognition, approval",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "状態",
+		"reading": "じょうたい",
+		"meaning": "condition, situation",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "症状",
+		"reading": "しょうじょう",
+		"meaning": "symptoms, condition",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "診察",
+		"reading": "しんさつ",
+		"meaning": "medical examination (of a patient)",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "手術",
+		"reading": "しゅじゅつ",
+		"meaning": "surgical operation",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "神経",
+		"reading": "しんけい",
+		"meaning": "nerve, sensitivity",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "心臓",
+		"reading": "しんぞう",
+		"meaning": "heart",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "身体",
+		"reading": "しんたい",
+		"meaning": "the body",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "慎重",
+		"reading": "しんちょう",
+		"meaning": "careful, prudent, cautious",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "真剣",
+		"reading": "しんけん",
+		"meaning": "seriousness, earnestness",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "深刻",
+		"reading": "しんこく",
+		"meaning": "serious",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "障害",
+		"reading": "しょうがい",
+		"meaning": "obstacle, impediment",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "失業",
+		"reading": "しつぎょう",
+		"meaning": "unemployment",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "失望",
+		"reading": "しつぼう",
+		"meaning": "disappointment, despair",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "宗教",
+		"reading": "しゅうきょう",
+		"meaning": "religion",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "信仰",
+		"reading": "しんこう",
+		"meaning": "(religious) faith, belief",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "思想",
+		"reading": "しそう",
+		"meaning": "thought, idea",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "人工",
+		"reading": "じんこう",
+		"meaning": "artificial, man made, human work,",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "人種",
+		"reading": "じんしゅ",
+		"meaning": "race (of people)",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "刺激",
+		"reading": "しげき",
+		"meaning": "stimulus, impetus, incentive",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "質",
+		"reading": "しつ",
+		"meaning": "quality, nature (of person)",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "湿度",
+		"reading": "しつど",
+		"meaning": "humidity",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "酸素",
+		"reading": "さんそ",
+		"meaning": "oxygen",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "酸性",
+		"reading": "さんせい",
+		"meaning": "acidity",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "収穫",
+		"reading": "しゅうかく",
+		"meaning": "harvest, crop, ingathering",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "奨学金",
+		"reading": "しょうがくきん",
+		"meaning": "scholarship",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "進学",
+		"reading": "しんがく",
+		"meaning": "going on to university",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "上達",
+		"reading": "じょうたつ",
+		"meaning": "improvement, advance",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "順調",
+		"reading": "じゅんちょう",
+		"meaning": "doing well",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "商売",
+		"reading": "しょうばい",
+		"meaning": "trade, business, commerce",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "推薦",
+		"reading": "すいせん",
+		"meaning": "recommendation",
+		"level": 8,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "責任",
+		"reading": "せきにん",
+		"meaning": "duty, responsibility",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "権利",
+		"reading": "けんり",
+		"meaning": "right, privilege",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "義務",
+		"reading": "ぎむ",
+		"meaning": "duty, obligation, responsibility",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "制度",
+		"reading": "せいど",
+		"meaning": "system, institution",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "政府",
+		"reading": "せいふ",
+		"meaning": "government, administration",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "議会",
+		"reading": "ぎかい",
+		"meaning": "Diet, congress, parliament",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "議員",
+		"reading": "ぎいん",
+		"meaning": "member of the Diet, congress, or parliament",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "選挙",
+		"reading": "せんきょ",
+		"meaning": "election",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "投票",
+		"reading": "とうひょう",
+		"meaning": "voting, poll",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "裁判",
+		"reading": "さいばん",
+		"meaning": "trial, judgment",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "犯罪",
+		"reading": "はんざい",
+		"meaning": "crime",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "逮捕",
+		"reading": "たいほ",
+		"meaning": "arrest, apprehension, capture",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "事件",
+		"reading": "じけん",
+		"meaning": "event, affair, incident",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "平和",
+		"reading": "へいわ",
+		"meaning": "peace",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "軍隊",
+		"reading": "ぐんたい",
+		"meaning": "army, troops",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "外交",
+		"reading": "がいこう",
+		"meaning": "diplomacy",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "企業",
+		"reading": "きぎょう",
+		"meaning": "industry, business, undertaking",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "経営",
+		"reading": "けいえい",
+		"meaning": "management, administration",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "農業",
+		"reading": "のうぎょう",
+		"meaning": "agriculture",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "成功",
+		"reading": "せいこう",
+		"meaning": "success, hit",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "発展",
+		"reading": "はってん",
+		"meaning": "development, growth, progress",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "発達",
+		"reading": "はったつ",
+		"meaning": "development, growth",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "成長",
+		"reading": "せいちょう",
+		"meaning": "growth",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "進歩",
+		"reading": "しんぽ",
+		"meaning": "improvement, progress, development",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "改善",
+		"reading": "かいぜん",
+		"meaning": "betterment, improvement",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "解釈",
+		"reading": "かいしゃく",
+		"meaning": "explanation, interpretation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "評価",
+		"reading": "ひょうか",
+		"meaning": "assessment, evaluation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "批判",
+		"reading": "ひはん",
+		"meaning": "criticism",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "批評",
+		"reading": "ひひょう",
+		"meaning": "criticism, review, commentary",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "論争",
+		"reading": "ろんそう",
+		"meaning": "controversy, dispute",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "議論",
+		"reading": "ぎろん",
+		"meaning": "argument, discussion, dispute",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "調査",
+		"reading": "ちょうさ",
+		"meaning": "survey; investigation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "分析",
+		"reading": "ぶんせき",
+		"meaning": "analysis",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "検査",
+		"reading": "けんさ",
+		"meaning": "inspection, examination",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "検討",
+		"reading": "けんとう",
+		"meaning": "consideration, examination, investigation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "発見",
+		"reading": "はっけん",
+		"meaning": "discovery, detection, finding",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "発明",
+		"reading": "はつめい",
+		"meaning": "invention",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "観察",
+		"reading": "かんさつ",
+		"meaning": "observation, survey",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "予測",
+		"reading": "よそく",
+		"meaning": "prediction, estimation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "予防",
+		"reading": "よぼう",
+		"meaning": "prevention, protection against",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "税金",
+		"reading": "ぜいきん",
+		"meaning": "tax, duty",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "製造",
+		"reading": "せいぞう",
+		"meaning": "manufacture, production",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "製品",
+		"reading": "せいひん",
+		"meaning": "manufactured goods, finished goods",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "設計",
+		"reading": "せっけい",
+		"meaning": "plan, design",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "契約",
+		"reading": "けいやく",
+		"meaning": "contract, compact, agreement",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "建設",
+		"reading": "けんせつ",
+		"meaning": "construction, foundation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "建築",
+		"reading": "けんちく",
+		"meaning": "construction, architecture",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "憲法",
+		"reading": "けんぽう",
+		"meaning": "constitution",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "国民",
+		"reading": "こくみん",
+		"meaning": "national, people, citizen",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "国家",
+		"reading": "こっか",
+		"meaning": "state, country, nation",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "国会",
+		"reading": "こっかい",
+		"meaning": "National Diet, parliament, congress",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "国境",
+		"reading": "こっきょう",
+		"meaning": "national or state border",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "宣伝",
+		"reading": "せんでん",
+		"meaning": "advertisement, publicity",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "組織",
+		"reading": "そしき",
+		"meaning": "organization; structure; tissue",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "設備",
+		"reading": "せつび",
+		"meaning": "equipment, device, facilities",
+		"level": 9,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "具体",
+		"reading": "ぐたい",
+		"meaning": "concrete, tangible, material",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "現象",
+		"reading": "げんしょう",
+		"meaning": "phenomenon",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "存在",
+		"reading": "そんざい",
+		"meaning": "existence, being",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "意識",
+		"reading": "いしき",
+		"meaning": "consciousness, senses",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "知識",
+		"reading": "ちしき",
+		"meaning": "knowledge, information",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "知恵",
+		"reading": "ちえ",
+		"meaning": "wisdom, wit, intelligence",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "能力",
+		"reading": "のうりょく",
+		"meaning": "ability, faculty",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "才能",
+		"reading": "さいのう",
+		"meaning": "talent, ability",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "性格",
+		"reading": "せいかく",
+		"meaning": "character, personality",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "性質",
+		"reading": "せいしつ",
+		"meaning": "nature, property, disposition",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "特徴",
+		"reading": "とくちょう",
+		"meaning": "characteristic(s); feature(s); trait(s)",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "共通",
+		"reading": "きょうつう",
+		"meaning": "commonness, mutual",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "個人",
+		"reading": "こじん",
+		"meaning": "individual, private person",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "独立",
+		"reading": "どくりつ",
+		"meaning": "independence (e.g., Ind. Day), self-support",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "平等",
+		"reading": "びょうどう",
+		"meaning": "equality, impartiality, evenness",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "公平",
+		"reading": "こうへい",
+		"meaning": "fairness, impartial, justice",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "事実",
+		"reading": "じじつ",
+		"meaning": "fact, truth, reality",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "現実",
+		"reading": "げんじつ",
+		"meaning": "reality",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "理想",
+		"reading": "りそう",
+		"meaning": "ideal",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "想像",
+		"reading": "そうぞう",
+		"meaning": "imagination, guess",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "創造",
+		"reading": "そうぞう",
+		"meaning": "creation",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "価値",
+		"reading": "かち",
+		"meaning": "value, worth, merit",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "尊重",
+		"reading": "そんちょう",
+		"meaning": "respect, esteem, regard",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "尊敬",
+		"reading": "そんけい",
+		"meaning": "respect, reverence, honor",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "信頼",
+		"reading": "しんらい",
+		"meaning": "reliance, trust, confidence",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "信用",
+		"reading": "しんよう",
+		"meaning": "confidence, dependence",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "疑問",
+		"reading": "ぎもん",
+		"meaning": "question, problem, doubt",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "疑う",
+		"reading": "うたがう",
+		"meaning": "to doubt, to distrust",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "誤解",
+		"reading": "ごかい",
+		"meaning": "misunderstanding",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "微妙",
+		"reading": "びみょう",
+		"meaning": "delicate, subtle",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "積極的",
+		"reading": "せっきょくてき",
+		"meaning": "positive, active, proactive",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "偶然",
+		"reading": "ぐうぜん",
+		"meaning": "(by) chance, unexpectedly",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "可能",
+		"reading": "かのう",
+		"meaning": "possible, practicable, feasible",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "限界",
+		"reading": "げんかい",
+		"meaning": "limit, bound",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "永遠",
+		"reading": "えいえん",
+		"meaning": "eternity, perpetuity, immortality",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "見解",
+		"reading": "けんかい",
+		"meaning": "opinion, point of view",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "考慮",
+		"reading": "こうりょ",
+		"meaning": "consideration, taking into account",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "傾向",
+		"reading": "けいこう",
+		"meaning": "tendency, trend, inclination",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "克服",
+		"reading": "こくふく",
+		"meaning": "conquest, overcome",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "困難",
+		"reading": "こんなん",
+		"meaning": "difficulty, distress",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "混乱",
+		"reading": "こんらん",
+		"meaning": "chaos, confusion, mayhem",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "差別",
+		"reading": "さべつ",
+		"meaning": "discrimination, differentiation",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "唯一",
+		"reading": "ゆいいつ",
+		"meaning": "only, sole, unique",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "有効",
+		"reading": "ゆうこう",
+		"meaning": "valid, effectual",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "要素",
+		"reading": "ようそ",
+		"meaning": "element",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "要点",
+		"reading": "ようてん",
+		"meaning": "gist, main point",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "余裕",
+		"reading": "よゆう",
+		"meaning": "excess; surplus",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "利益",
+		"reading": "りえき",
+		"meaning": "profits, gains",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "例外",
+		"reading": "れいがい",
+		"meaning": "exception",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "冷静",
+		"reading": "れいせい",
+		"meaning": "calm, coolness",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "論文",
+		"reading": "ろんぶん",
+		"meaning": "thesis, paper",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "道徳",
+		"reading": "どうとく",
+		"meaning": "morals",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "伝統",
+		"reading": "でんとう",
+		"meaning": "tradition, convention",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "文明",
+		"reading": "ぶんめい",
+		"meaning": "civilization",
+		"level": 10,
+		"jlpt": "N3"
+	},
+	{
+		"japanese": "哲学",
+		"reading": "てつがく",
+		"meaning": "philosophy",
+		"level": 10,
+		"jlpt": "N3"
+	}
+]

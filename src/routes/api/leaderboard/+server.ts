@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
 import { user } from '$lib/server/db/schema'
 import { DEFAULT_LEADERBOARD_PAGE_SIZE, MAX_LEADERBOARD_PAGE_SIZE } from '$lib/server/leaderboard'
-import { asc, desc } from 'drizzle-orm'
+import { asc, desc, sql } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
 
 /**
@@ -76,11 +76,17 @@ export const GET: RequestHandler = async ({ url, platform, locals }) => {
 			rank: user.rank,
 		})
 		.from(user)
-		.orderBy(desc(user.points), desc(user.streak), asc(user.createdAt))
+		.orderBy(desc(user.points), desc(user.streak), asc(user.createdAt), asc(user.id))
 		.limit(pageSize)
 		.offset(offset)
 
 	const leaderboard = rows.map((row, i) => ({ position: offset + i + 1, ...row }))
 
+	if (url.searchParams.get('withPosition') === 'true') {
+		const rows = await db.all<{ position: number }>(
+			sql`SELECT position FROM (SELECT id, row_number() OVER (ORDER BY points DESC, streak DESC, created_at ASC, id ASC) AS position FROM user) WHERE id = ${userId}`,
+		)
+		return json({ leaderboard, page, pageSize, position: rows[0]?.position ?? null })
+	}
 	return json({ leaderboard, page, pageSize })
 }
