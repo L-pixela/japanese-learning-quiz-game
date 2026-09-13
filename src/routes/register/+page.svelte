@@ -8,6 +8,8 @@
 	let password = $state('')
 	let confirmPassword = $state('')
 	let submitted = $state(false)
+	let serverError = $state('')
+	let isSubmitting = $state(false)
 
 	const usernameError = $derived(
 		submitted && username.trim().length === 0
@@ -30,14 +32,38 @@
 				? 'Passwords do not match.'
 				: '',
 	)
-	const isValid = $derived(submitted && !usernameError && !passwordError && !confirmPasswordError)
+	const isValid = $derived(!usernameError && !passwordError && !confirmPasswordError)
 
-	function handleSubmit(event: SubmitEvent) {
+	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault()
 		submitted = true
+		serverError = ''
 
-		if (isValid) {
-			goto(resolve('/', {}))
+		if (!isValid || isSubmitting) return
+
+		isSubmitting = true
+
+		try {
+			const response = await fetch('/api/register', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ username: username.trim(), password }),
+			})
+
+			if (!response.ok) {
+				const data = (await response.json()) as { error?: string }
+				serverError =
+					data.error === 'username already taken'
+						? 'That username is already taken.'
+						: 'Unable to create account right now.'
+				return
+			}
+
+			await goto(resolve('/login', {}))
+		} catch {
+			serverError = 'Unable to connect. Please try again.'
+		} finally {
+			isSubmitting = false
 		}
 	}
 </script>
@@ -94,12 +120,16 @@
 					showPasswordToggle
 				/>
 
-				<button type="submit">Create Account / アカウントを作成</button>
+				{#if serverError}
+					<p class="server-error" role="alert">{serverError}</p>
+				{/if}
+
+				<button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? 'Creating account...' : 'Create Account'}
+				</button>
 
 				<p class="login-link">
-					Already practicing? / もう練習中ですか？ <a href={resolve('/login', {})}
-						>Log in / ログイン</a
-					>
+					Already have an account? <a href={resolve('/login', {})}>Log in / ログイン</a>
 				</p>
 			</form>
 		</div>
@@ -213,6 +243,18 @@
 	button:active {
 		transform: translateY(4px);
 		box-shadow: 0 0 0 var(--color-primary-active);
+	}
+
+	button:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+
+	.server-error {
+		margin: 0;
+		color: var(--color-danger, #c64b6b);
+		font-weight: 700;
+		font-size: 0.9rem;
 	}
 
 	.login-link {

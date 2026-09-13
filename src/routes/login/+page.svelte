@@ -50,7 +50,7 @@
 				return
 			}
 
-			await goto(resolve('/', {}))
+			await goto(resolve('/dashboard', {}))
 		} catch {
 			serverError = 'Unable to connect. Please try again.'
 		} finally {
