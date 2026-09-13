@@ -27,7 +27,11 @@ describe('Dashboard', () => {
 			.element(page.getByRole('heading', { name: 'Welcome back, Bunleap.' }))
 			.toBeInTheDocument()
 		await expect.element(page.getByText('#27', { exact: true })).toBeInTheDocument()
-		await expect.element(page.getByText('42', { exact: true })).toBeInTheDocument()
+		// Bunleap's own leaderboard row shares the same points total, so scope
+		// this to the summary metrics to keep the match unambiguous.
+		await expect
+			.element(page.getByLabelText('Your learning summary').getByText('42', { exact: true }))
+			.toBeInTheDocument()
 		await expect.element(page.getByText('梅干し · Umeboshi', { exact: true })).toBeInTheDocument()
 	})
 	it('puts quiz practice first while retaining a secondary deck link', async () => {

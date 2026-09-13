@@ -10,24 +10,26 @@ describe('RankBadge.svelte', () => {
 		render(RankBadge)
 
 		await expect
-			.element(page.getByRole('img', { name: 'Rice Bowl rank badge' }))
+			.element(page.getByRole('img', { name: 'Shiragohan rank badge' }))
 			.toBeInTheDocument()
-		await expect.element(page.getByText('Rice Bowl')).not.toBeInTheDocument()
+		await expect.element(page.getByText('Shiragohan')).not.toBeInTheDocument()
 	})
 
 	it('resolves a rank from the streak and displays its label', async () => {
 		render(RankBadge, { streak: 45, size: 'lg', showLabel: true })
 
-		await expect.element(page.getByRole('img', { name: 'Takoyaki rank badge' })).toBeInTheDocument()
-		await expect.element(page.getByText('Takoyaki')).toBeInTheDocument()
-		await expect.element(page.getByText('たこ焼き')).toBeInTheDocument()
-		await expect.element(page.getByAltText('Takoyaki')).toBeInTheDocument()
+		await expect
+			.element(page.getByRole('img', { name: 'Ichimi Togarashi rank badge' }))
+			.toBeInTheDocument()
+		await expect.element(page.getByText('Ichimi Togarashi')).toBeInTheDocument()
+		await expect.element(page.getByText('一味唐辛子')).toBeInTheDocument()
+		await expect.element(page.getByAltText('Ichimi Togarashi')).toBeInTheDocument()
 	})
 
 	it('uses a supplied rank and applies the small size', async () => {
 		render(RankBadge, { rank: RANKS[6], size: 'sm' })
 
-		const badge = page.getByRole('img', { name: 'Yakiniku rank badge' })
+		const badge = page.getByRole('img', { name: 'Hinotama rank badge' })
 		await expect.element(badge).toBeInTheDocument()
 		await expect.element(badge).toHaveClass('rank-badge--sm')
 	})

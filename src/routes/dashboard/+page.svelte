@@ -83,7 +83,7 @@
 		<div class="rank-status">
 			<RankBadge streak={data.user.streak} size="sm" />
 			<div class="rank-status-text">
-				<strong>{badge.name} <span lang="ja">{badge.nameJp}</span></strong>
+				<strong><span lang="ja">{badge.nameJp}</span> · {badge.name}</strong>
 				<small>{t('rank.earnedAt', { n: badge.minStreak })}</small>
 			</div>
 			{#if toNext}
@@ -118,7 +118,9 @@
 					>
 					<span class="board-university">{learner.university ?? '·'}</span>
 					<span class="board-badge"><RankBadge streak={learner.streak} size="sm" /></span>
-					<span class="board-points">{learner.points.toLocaleString()}<small>PTS</small></span>
+					<span class="board-points"
+						><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
+					>
 				</li>{/each}
 		</ol>
 	</section>

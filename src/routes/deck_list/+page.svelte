@@ -52,7 +52,7 @@
 		<div>
 			<p class="study-eyebrow">
 				{t('deck.level')}
-				{String(data.level).padStart(2, '0')}
+				{String(data.level).padStart(2, '0')} · {current.difficulty}
 			</p>
 			<h2>{current.name} <span lang="ja">{current.japanese}</span></h2>
 			<p class="study-muted">{current.description}</p>
