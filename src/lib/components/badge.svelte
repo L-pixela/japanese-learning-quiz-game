@@ -29,21 +29,21 @@
 
 	.badge--primary {
 		background-color: var(--color-primary);
-		color: #ffffff;
+		color: var(--color-surface);
 	}
 
 	.badge--success {
 		background-color: var(--color-success);
-		color: #ffffff;
+		color: var(--color-surface);
 	}
 
 	.badge--error {
 		background-color: var(--color-error);
-		color: #ffffff;
+		color: var(--color-surface);
 	}
 
 	.badge--warning {
 		background-color: var(--color-warning);
-		color: #292522;
+		color: var(--color-text);
 	}
 </style>

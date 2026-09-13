@@ -22,8 +22,5 @@ export type LevelProgress = (typeof LEVELS)[number] & {
 	attempts: number
 	updatedAt: string | null
 }
-export const STATUS_LABELS = {
-	not_started: 'Not started',
-	attempted: 'Keep practicing',
-	completed: 'Completed',
-}
+export const STATUSES = ['not_started', 'attempted', 'completed'] as const
+export type Status = (typeof STATUSES)[number]

@@ -1,154 +1,341 @@
+/* ============================================================
+   TanTore design tokens
+
+   THREE COLORS. Everything on every screen is built from them:
+
+     MATCHA  #546B41  primary — buttons, active nav, headings, the page ground
+     SAGE    #99AD7A  secondary — progress, accents, dark-mode primary
+     WHEAT   #DCCCAC  tertiary — highlights, stamps, warm fills
+     CREAM   #FFF8EC  the paper everything is printed on
+
+   Tints and shades below are mixes of those four, never new hues. The one
+   documented exception is --color-danger: destructive states must not read as
+   decoration, so they get a single muted terracotta.
+
+   TYPE SCALE — base 18px, ratio 1.25 (major third), rounded to whole pixels:
+     14 → 16 → 18 → 22 → 28 → 35 → 44 → 55
+   Nothing in the app may use a size outside this scale.
+
+   SPACING — 4px base, doubling: 4 8 12 16 24 32 48 64
+   RADIUS  — 10 16 24 32, plus full for pills.
+   ============================================================ */
+
 :root {
-	/* Brand colors */
-	--color-background: #f8f7f3;
-	--color-surface: #ffffff;
+	color-scheme: light;
+
+	/* --- The three, raw --- */
+	--matcha: #546b41;
+	--sage: #99ad7a;
+	--wheat: #dcccac;
+	--cream: #fff8ec;
+
+	/* --- Canvas: the ground the app sits on --- */
+	--color-canvas: #546b41;
+	--color-canvas-deep: #3d5030;
+	--color-pattern: rgba(255, 248, 236, 0.16);
+
+	/* --- Surfaces --- */
+	--color-background: #fff8ec;
+	--color-surface: #fffdf7;
 	--color-surface-raised: #ffffff;
-	--color-text: #292522;
-	--color-text-secondary: #6b665f;
-	--color-border: #e5e1d8;
-	--color-border-subtle: #e5e1d8;
-	--color-input-border: #e5e1d8;
-	--color-primary: #2f6f63;
-	--color-primary-hover: #34404d;
-	--color-primary-active: #2a343f;
-	--color-accent: #9c3d4f;
-	--color-accent-strong: #b43b3b;
-	--color-success: #5b8c5a;
-	--color-error: #c43d3d;
-	--color-warning: #d9a441;
-	--color-disabled-bg: #e5e1d8;
-	--color-disabled-text: #a39d92;
-	--color-focus-ring: #3f4e5e;
-	--color-paper-line: rgba(198, 75, 107, 0.04);
-	--color-paper-grid: rgba(91, 74, 48, 0.035);
+	--color-surface-sunken: #f5eeddcc;
+	--color-surface-accent: #eef0e4;
 
-	/* Brand colors
-	--color-background: #f6f0e3;
-	--color-surface: #fffaf0;
-	--color-surface-raised: #fffdf8;
-	--color-text: #29231c;
-	--color-text-secondary: #75654f;
-	--color-border: #d7c8ad;
-	--color-border-subtle: #e2d5bf;
-	--color-input-border: #cbbca3;
-	--color-primary: #2f6f63;
-	--color-primary-hover: #285f55;
-	--color-primary-active: #1d554b;
-	--color-accent: #9c3d4f;
-	--color-accent-strong: #b43b3b;
-	--color-success: #2f6f63;
-	--color-error: #a43333;
-	--color-warning: #d9a441;
-	--color-disabled-bg: #e2d5bf;
-	--color-disabled-text: #a89880;
-	--color-focus-ring: #2f6f63;
-	--color-paper-line: rgba(198, 75, 107, 0.04);
-	--color-paper-grid: rgba(91, 74, 48, 0.035); */
+	/* --- Ink --- */
+	--color-text: #26301d;
+	--color-text-secondary: #5f6e50;
+	--color-text-faint: #8b9679;
+	--color-text-on-dark: #fff8ec;
 
-	/* ========================================
-     Rank UI
-     ======================================== */
+	/* --- Lines --- */
+	--color-border: #e6dcc6;
+	--color-border-subtle: #efe7d6;
+	--color-border-strong: #d3c6a8;
+	--color-input-border: #ddd2b8;
 
-	--rank-badge-background: #fbf7ec;
+	/* --- Primary --- */
+	--color-primary: #546b41;
+	--color-primary-hover: #465936;
+	--color-primary-active: #3a4b2d;
+	--color-primary-soft: #e7ebdd;
+	--color-primary-shadow: #3a4b2d;
+	--color-on-primary: #fff8ec;
+
+	/* --- Secondary / tertiary --- */
+	--color-secondary: #99ad7a;
+	--color-secondary-soft: #eaefe0;
+	--color-accent: #dcccac;
+	--color-accent-soft: #f5eedd;
+
+	/* --- State --- */
+	--color-success: #546b41;
+	--color-success-soft: #e7ebdd;
+	--color-warning: #dcccac;
+	--color-warning-soft: #f7f1e3;
+	--color-danger: #a35442; /* documented exception: destructive only */
+	--color-danger-soft: #f6e4de;
+	--color-disabled-bg: #e6dcc6;
+	--color-disabled-text: #a2a891;
+	--color-focus-ring: #546b41;
+
+	/* --- Always-dark panels (leaderboard, hero, result banner). These two
+	   never invert, so text on them is readable in either theme. --- */
+	--panel-dark: #35452a;
+	--panel-dark-deep: #2a3721;
+	--on-panel-dark: #fbf7ec;
+	--on-panel-dark-muted: #cfd8bf;
+
+	/* --- Rank UI --- */
+	--rank-badge-background: #f5eedd;
 	--rank-ring-width: 3px;
 
-	/* ========================================
-     Typography
-     ======================================== */
+	/* ===== Typography ===== */
+	--font-display:
+		'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+	--font-body:
+		'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+	--font-family: var(--font-body);
 
-	--font-family:
-		ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--text-xs: 14px;
+	--text-sm: 16px;
+	--text-base: 18px;
+	--text-lg: 22px;
+	--text-xl: 28px;
+	--text-2xl: 35px;
+	--text-3xl: 44px;
+	--text-4xl: 55px;
 
-	--font-size-h1: 32px;
-	--font-size-h2: 24px;
-	--font-size-h3: 20px;
-	--font-size-body: 16px;
-	--font-size-small: 14px;
-	--font-size-caption: 12px;
+	/* Fluid headline sizes stay inside the scale at both ends. */
+	--text-display: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+	--text-headline: clamp(var(--text-2xl), 3.6vw, var(--text-3xl));
+
+	/* Legacy aliases — same values, older class names still resolve. */
+	--font-size-display: var(--text-display);
+	--font-size-h1: var(--text-headline);
+	--font-size-h2: var(--text-xl);
+	--font-size-h3: var(--text-lg);
+	--font-size-body: var(--text-base);
+	--font-size-small: var(--text-sm);
+	--font-size-caption: var(--text-xs);
 
 	--font-weight-regular: 400;
-	--font-weight-medium: 650;
-	--font-weight-semibold: 750;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 700;
 	--font-weight-bold: 900;
 
-	--line-height-tight: 1.25;
-	--line-height-normal: 1.5;
-	--line-height-relaxed: 1.75;
+	--line-height-tight: 1.15;
+	--line-height-snug: 1.3;
+	--line-height-normal: 1.6;
+	--line-height-relaxed: 1.8;
 
-	/* ========================================
-     Spacing
-     ======================================== */
-
+	/* ===== Spacing ===== */
 	--spacing-xs: 4px;
 	--spacing-sm: 8px;
 	--spacing-md: 16px;
 	--spacing-lg: 24px;
 	--spacing-xl: 32px;
 	--spacing-2xl: 48px;
+	--spacing-3xl: 64px;
 
-	/* ========================================
-     Border Radius
-     ======================================== */
-
-	--radius-sm: 4px;
-	--radius-md: 6px;
-	--radius-lg: 8px;
+	/* ===== Radius ===== */
+	--radius-sm: 10px;
+	--radius-md: 16px;
+	--radius-lg: 24px;
+	--radius-xl: 32px;
 	--radius-full: 9999px;
 
-	/* ========================================
-     Elevation / Shadow
-     ======================================== */
+	/* ===== Elevation ===== */
+	--shadow-sm: 0 4px 14px rgba(38, 48, 29, 0.07);
+	--shadow-md: 0 10px 30px rgba(38, 48, 29, 0.1);
+	--shadow-lg: 0 24px 60px rgba(38, 48, 29, 0.16);
+	--shadow-solid: 0 4px 0;
 
-	--shadow-sm: 0 4px 12px rgba(68, 47, 25, 0.08);
-	--shadow-md: 0 8px 24px rgba(68, 47, 25, 0.1);
-	--shadow-lg: 0 18px 42px rgba(68, 47, 25, 0.12);
-
-	/* ========================================
-     Motion
-     ======================================== */
-
+	/* ===== Motion ===== */
 	--duration-fast: 120ms;
 	--duration-base: 200ms;
 	--duration-slow: 320ms;
-
 	--ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 	--ease-out: cubic-bezier(0, 0, 0.2, 1);
 	--ease-in: cubic-bezier(0.4, 0, 1, 1);
 
-	/* ========================================
-     Z-Index
-     ======================================== */
-
+	/* ===== Z-Index ===== */
 	--z-dropdown: 100;
 	--z-sticky: 200;
 	--z-modal: 300;
 	--z-toast: 400;
 }
 
+/* ------------------------------------------------------------
+   Dark mode. Same three colors, inverted roles: sage becomes the
+   primary because matcha is too dark to read against a dark ground.
+   Applies on an explicit choice, or on system preference when the
+   viewer has not chosen.
+   ------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		color-scheme: dark;
+
+		--color-canvas: #1b2118;
+		--color-canvas-deep: #141911;
+		--color-pattern: rgba(153, 173, 122, 0.12);
+
+		--color-background: #222a1e;
+		--color-surface: #2a3325;
+		--color-surface-raised: #313b2b;
+		--color-surface-sunken: #1f2719;
+		--color-surface-accent: #313b2b;
+
+		--color-text: #f2efe3;
+		--color-text-secondary: #bcc7aa;
+		--color-text-faint: #8d9a7c;
+		--color-text-on-dark: #f2efe3;
+
+		--color-border: #3b4634;
+		--color-border-subtle: #333d2d;
+		--color-border-strong: #4d5a43;
+		--color-input-border: #4d5a43;
+
+		--color-primary: #99ad7a;
+		--color-primary-hover: #a8ba8c;
+		--color-primary-active: #b7c79e;
+		--color-primary-soft: #33402a;
+		--color-primary-shadow: #465936;
+		--color-on-primary: #1b2118;
+
+		--color-secondary: #dcccac;
+		--color-secondary-soft: #33402a;
+		--color-accent: #dcccac;
+		--color-accent-soft: #3a4430;
+
+		--color-success: #99ad7a;
+		--color-success-soft: #33402a;
+		--color-warning: #dcccac;
+		--color-warning-soft: #3a4430;
+		--color-danger: #d98b78;
+		--color-danger-soft: #462e27;
+		--color-disabled-bg: #3b4634;
+		--color-disabled-text: #7d8a6d;
+		--color-focus-ring: #dcccac;
+
+		--panel-dark: #2c3a23;
+		--panel-dark-deep: #222d1b;
+		--on-panel-dark: #f2efe3;
+		--on-panel-dark-muted: #b9c4a6;
+
+		--rank-badge-background: #313b2b;
+
+		--shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.3);
+		--shadow-md: 0 10px 30px rgba(0, 0, 0, 0.38);
+		--shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+	}
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+
+	--color-canvas: #1b2118;
+	--color-canvas-deep: #141911;
+	--color-pattern: rgba(153, 173, 122, 0.12);
+
+	--color-background: #222a1e;
+	--color-surface: #2a3325;
+	--color-surface-raised: #313b2b;
+	--color-surface-sunken: #1f2719;
+	--color-surface-accent: #313b2b;
+
+	--color-text: #f2efe3;
+	--color-text-secondary: #bcc7aa;
+	--color-text-faint: #8d9a7c;
+	--color-text-on-dark: #f2efe3;
+
+	--color-border: #3b4634;
+	--color-border-subtle: #333d2d;
+	--color-border-strong: #4d5a43;
+	--color-input-border: #4d5a43;
+
+	--color-primary: #99ad7a;
+	--color-primary-hover: #a8ba8c;
+	--color-primary-active: #b7c79e;
+	--color-primary-soft: #33402a;
+	--color-primary-shadow: #465936;
+	--color-on-primary: #1b2118;
+
+	--color-secondary: #dcccac;
+	--color-secondary-soft: #33402a;
+	--color-accent: #dcccac;
+	--color-accent-soft: #3a4430;
+
+	--color-success: #99ad7a;
+	--color-success-soft: #33402a;
+	--color-warning: #dcccac;
+	--color-warning-soft: #3a4430;
+	--color-danger: #d98b78;
+	--color-danger-soft: #462e27;
+	--color-disabled-bg: #3b4634;
+	--color-disabled-text: #7d8a6d;
+	--color-focus-ring: #dcccac;
+
+	--panel-dark: #2c3a23;
+	--panel-dark-deep: #222d1b;
+	--on-panel-dark: #f2efe3;
+	--on-panel-dark-muted: #b9c4a6;
+
+	--rank-badge-background: #313b2b;
+
+	--shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 10px 30px rgba(0, 0, 0, 0.38);
+	--shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* 青海波 seigaiha — the wave-scale pattern, tinted from the token so it
+   follows the theme instead of being painted twice. */
 body {
 	margin: 0;
-	background:
-		linear-gradient(90deg, var(--color-paper-grid) 1px, transparent 1px),
-		linear-gradient(var(--color-paper-grid) 1px, transparent 1px), var(--color-background);
-	background-size: 34px 34px;
+	background-color: var(--color-canvas);
+	background-image:
+		radial-gradient(
+			circle at 50% 100%,
+			transparent 14px,
+			var(--color-pattern) 15px,
+			transparent 16px
+		),
+		radial-gradient(
+			circle at 50% 100%,
+			transparent 26px,
+			var(--color-pattern) 27px,
+			transparent 28px
+		),
+		radial-gradient(
+			circle at 50% 100%,
+			transparent 38px,
+			var(--color-pattern) 39px,
+			transparent 40px
+		);
+	background-size: 80px 40px;
+	background-attachment: fixed;
 	color: var(--color-text);
-	font-family: var(--font-family);
+	font-family: var(--font-body);
+	font-size: var(--text-base);
+	line-height: var(--line-height-normal);
+	-webkit-font-smoothing: antialiased;
 }
 
 .site-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
+	gap: var(--spacing-md);
 	border-bottom: 1px solid var(--color-border-subtle);
-	padding: 0.9rem 1rem;
+	padding: var(--spacing-md) var(--spacing-lg);
 }
 
 .brand-mark {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.6rem;
+	gap: var(--spacing-sm);
 	color: inherit;
+	font-family: var(--font-display);
+	font-size: var(--text-lg);
 	font-weight: var(--font-weight-bold);
 	text-decoration: none;
 }
@@ -156,21 +343,22 @@ body {
 .brand-seal {
 	display: grid;
 	place-items: center;
-	width: 1.85rem;
-	height: 1.85rem;
-	border: 2px solid var(--color-accent-strong);
-	border-radius: var(--radius-full);
-	color: var(--color-accent-strong);
-	background: var(--color-surface);
-	font-size: 0.82rem;
+	width: 42px;
+	height: 42px;
+	border-radius: var(--radius-md);
+	color: var(--color-on-primary);
+	background: var(--color-primary);
+	box-shadow: var(--shadow-solid) var(--color-primary-shadow);
+	font-family: var(--font-display);
+	font-size: var(--text-base);
 	font-weight: var(--font-weight-bold);
 }
 
 .japanese-label {
 	display: inline-block;
-	margin-left: 0.45rem;
+	margin-left: var(--spacing-xs);
 	color: var(--color-text-secondary);
-	font-size: var(--font-size-small);
+	font-size: var(--text-sm);
 	font-weight: var(--font-weight-medium);
 	vertical-align: middle;
 }

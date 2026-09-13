@@ -1,183 +1,280 @@
 <script lang="ts">
-	import Button from '$lib/components/button.svelte'
-	import Navbar from '$lib/components/navbar.svelte'
-	import { MOCK_DECKS } from '$lib/mock-data/decks'
+	import { resolve } from '$app/paths'
+	import StudyShell from '$lib/components/StudyShell.svelte'
+	import { t } from '$lib/i18n.svelte'
+	import type { PageData } from './$types'
 
-	let searchQuery = $state('')
+	let { data }: { data: PageData } = $props()
+	let search = $state('')
 
-	let filteredDecks = $derived(
-		MOCK_DECKS.filter((deck) => deck.title.toLowerCase().includes(searchQuery.toLowerCase())),
+	let current = $derived(data.levels.find((entry) => entry.level === data.level) ?? data.levels[0])
+	let words = $derived(
+		data.words.filter((word) => {
+			const term = search.trim().toLowerCase()
+			return (
+				!term ||
+				word.japanese.includes(term) ||
+				word.reading.includes(term) ||
+				word.meaning.toLowerCase().includes(term)
+			)
+		}),
 	)
 </script>
 
-<svelte:head>
-	<title>Manage Decks - Takoyaki Cards</title>
-</svelte:head>
-
-<Navbar />
-
-<main class="page-container">
-	<div class="page-header">
+<svelte:head
+	><title>My deck · TanTore</title><meta
+		name="description"
+		content="Every word behind each TanTore level. Study the deck, then take the quiz."
+	/></svelte:head
+>
+<StudyShell>
+	<div class="study-heading">
 		<div>
-			<h1>Deck Management</h1>
-			<p class="subtitle">Organize, edit, or create new vocabulary decks.</p>
+			<p class="study-eyebrow">{t('deck.eyebrow')}</p>
+			<h1>{t('deck.title')}</h1>
+			<p class="study-muted">{t('deck.lead')}</p>
 		</div>
-		<Button variant="primary">+ Create Deck</Button>
+		<span class="study-stamp" lang="ja">単語</span>
 	</div>
 
-	<div class="table-container">
-		<div class="table-actions">
-			<input
-				type="search"
-				placeholder="Search decks..."
-				bind:value={searchQuery}
-				class="search-input"
-			/>
-		</div>
+	<nav class="level-tabs" aria-label={t('deck.chooseLevel')}>
+		{#each data.levels as level (level.level)}<a
+				href={resolve('/deck_list', {}) + '?level=' + level.level}
+				class:current={level.level === data.level}
+				class:done={level.status === 'completed'}
+				aria-current={level.level === data.level ? 'page' : undefined}
+				><small>{String(level.level).padStart(2, '0')}</small><span lang="ja">{level.japanese}</span
+				></a
+			>{/each}
+	</nav>
 
-		<table class="deck-table">
-			<thead>
-				<tr>
-					<th scope="col">Deck Title</th>
-					<th scope="col">Cards</th>
-					<th scope="col">Status</th>
-					<th scope="col" class="text-right">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each filteredDecks as deck (deck.id)}
-					<tr>
-						<td class="font-semibold">{deck.title}</td>
-						<td class="text-muted">{deck.cardCount} cards</td>
-						<td>
-							<span class="status-pill">Active</span>
-						</td>
-						<td class="actions-cell text-right">
-							<button class="link-btn">Edit</button>
-							<button class="link-btn danger">Delete</button>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+	<section class="deck-head">
+		<div>
+			<p class="study-eyebrow">
+				{t('deck.level')}
+				{String(data.level).padStart(2, '0')} · {current.difficulty}
+			</p>
+			<h2>{current.name} <span lang="ja">{current.japanese}</span></h2>
+			<p class="study-muted">{current.description}</p>
+		</div>
+		<div class="deck-facts">
+			<div><strong>{data.count}</strong><small>{t('deck.wordsInDeck')}</small></div>
+			<div><strong>10</strong><small>{t('deck.drawnPerQuiz')}</small></div>
+			<div>
+				<strong class={'status ' + current.status}>{t(`status.${current.status}`)}</strong><small
+					>{current.attempts
+						? t('deck.bestScore', { score: current.bestScore })
+						: t('deck.notAttempted')}</small
+				>
+			</div>
+		</div>
+	</section>
+
+	<div class="deck-actions">
+		<input
+			type="search"
+			placeholder={t('deck.search')}
+			aria-label={t('deck.searchLabel')}
+			bind:value={search}
+		/>
+		<a class="study-button" href={resolve('/quiz/[level]', { level: String(data.level) })}
+			>{t('deck.quizThisLevel')} <span aria-hidden="true">↗</span></a
+		>
 	</div>
-</main>
+
+	{#if data.count === 0}
+		<p class="deck-empty">{t('deck.empty')}</p>
+	{:else if words.length === 0}
+		<p class="deck-empty">{t('deck.noMatch', { term: search })}</p>
+	{:else}
+		<ol class="word-list" aria-label={'Vocabulary for level ' + data.level}>
+			{#each words as word, index (word.id)}<li>
+					<span class="word-index">{String(index + 1).padStart(2, '0')}</span>
+					<span class="word-japanese" lang="ja">{word.japanese}</span>
+					<span class="word-reading" lang="ja">{word.reading}</span>
+					<span class="word-meaning">{word.meaning}</span>
+				</li>{/each}
+		</ol>
+		<p class="study-muted deck-note">
+			{t('deck.showing', { shown: words.length, total: data.count })}
+		</p>
+	{/if}
+</StudyShell>
 
 <style>
-	.page-container {
-		max-width: 1000px;
-		margin: 0 auto;
-		padding: var(--spacing-xl) var(--spacing-2xl);
+	.level-tabs {
+		display: grid;
+		grid-template-columns: repeat(10, 1fr);
+		gap: 6px;
+		margin: 35px 0 30px;
 	}
-
-	.page-header {
+	.level-tabs a {
+		display: grid;
+		gap: 3px;
+		justify-items: center;
+		padding: 13px 4px;
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-solid) var(--color-border);
+		font-family: var(--font-display);
+		font-size: var(--font-size-body);
+		font-weight: var(--font-weight-bold);
+		text-decoration: none;
+	}
+	.level-tabs small {
+		font-size: var(--font-size-caption);
+		letter-spacing: 1px;
+		color: var(--color-text-faint);
+	}
+	.level-tabs a.done {
+		background: var(--color-success-soft);
+		box-shadow: var(--shadow-solid) var(--color-border-strong);
+	}
+	.level-tabs a.current {
+		background: var(--color-primary);
+		color: var(--color-on-primary);
+		box-shadow: var(--shadow-solid) var(--color-primary-shadow);
+	}
+	.level-tabs a.current small {
+		color: var(--color-primary-soft);
+	}
+	.deck-head {
 		display: flex;
+		flex-wrap: wrap;
+		gap: 25px;
 		justify-content: space-between;
-		align-items: center;
-		margin-bottom: var(--spacing-xl);
+		align-items: end;
+		padding: 26px 30px;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
 	}
-
-	.page-header h1 {
-		margin: 0;
-		font-size: var(--font-size-h1);
-		color: var(--color-text);
+	.deck-head h2 span {
+		margin-left: 8px;
+		color: var(--color-primary);
+		font-size: var(--font-size-h3);
 	}
-
-	.subtitle {
-		margin: var(--spacing-xs) 0 0 0;
+	.deck-facts {
+		display: flex;
+		gap: 30px;
+	}
+	.deck-facts div {
+		display: grid;
+		gap: 3px;
+	}
+	.deck-facts strong {
+		font-family: var(--font-display);
+		font-size: 30px;
+		font-weight: var(--font-weight-bold);
+	}
+	.deck-facts small {
+		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
 	}
-
-	.table-container {
+	.status {
+		font-size: 13px !important;
+	}
+	.status.completed {
+		color: var(--color-success);
+	}
+	.status.attempted {
+		color: var(--color-text-secondary);
+	}
+	.deck-actions {
+		display: flex;
+		gap: 14px;
+		align-items: center;
+		margin: 26px 0 18px;
+	}
+	.deck-actions input {
+		flex: 1;
+		min-width: 0;
+		min-height: 56px;
+		padding: 14px 22px;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-full);
 		background: var(--color-surface);
-		border: 1px solid var(--color-border);
+		font: inherit;
+		font-size: var(--font-size-body);
+	}
+	.deck-actions input:focus {
+		border-color: var(--color-primary);
+		outline: none;
+	}
+	.word-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
 		border-radius: var(--radius-lg);
+		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
 		overflow: hidden;
 	}
-
-	.table-actions {
-		padding: var(--spacing-md);
-		border-bottom: 1px solid var(--color-border);
+	.word-list li {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+		gap: 14px;
+		align-items: baseline;
+		padding: 16px 24px;
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
-
-	.search-input {
-		width: 100%;
-		max-width: 300px;
-		padding: var(--spacing-sm) var(--spacing-md);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		font-family: var(--font-family);
-		font-size: var(--font-size-small);
+	.word-list li:last-child {
+		border-bottom: 0;
 	}
-
-	.deck-table {
-		width: 100%;
-		border-collapse: collapse;
-		text-align: left;
-		font-size: var(--font-size-small);
+	.word-list li:nth-child(even) {
+		background: var(--color-surface-sunken);
 	}
-
-	.deck-table th {
-		background: var(--color-background);
-		padding: var(--spacing-md);
-		color: var(--color-text-secondary);
-		font-weight: var(--font-weight-semibold);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.deck-table td {
-		padding: var(--spacing-md);
-		border-bottom: 1px solid var(--color-border);
-		color: var(--color-text);
-	}
-
-	.deck-table tr:last-child td {
-		border-bottom: none;
-	}
-
-	.font-semibold {
-		font-weight: var(--font-weight-semibold);
-	}
-
-	.text-muted {
-		color: var(--color-text-secondary);
-	}
-
-	.text-right {
-		text-align: right;
-	}
-
-	.status-pill {
-		display: inline-block;
-		padding: 2px var(--spacing-sm);
-		background: var(--color-success);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-full);
+	.word-index {
+		color: var(--color-text-faint);
 		font-size: var(--font-size-caption);
-		color: var(--color-surface);
+		font-weight: var(--font-weight-semibold);
 	}
-
-	.actions-cell {
-		display: flex;
-		justify-content: flex-end;
-		gap: var(--spacing-md);
+	.word-japanese {
+		font-family: var(--font-display);
+		font-size: 24px;
+		font-weight: var(--font-weight-bold);
 	}
-
-	.link-btn {
-		background: none;
-		border: none;
+	.word-reading {
 		color: var(--color-primary);
-		font-weight: var(--font-weight-medium);
-		cursor: pointer;
-		padding: 0;
+		font-size: var(--font-size-body);
 	}
-
-	.link-btn.danger {
-		color: var(--color-error);
+	.word-meaning {
+		font-size: var(--font-size-body);
+		overflow-wrap: anywhere;
 	}
-
-	.link-btn:hover {
-		text-decoration: underline;
+	.deck-empty {
+		padding: 44px;
+		border-radius: var(--radius-lg);
+		border: 2px dashed var(--color-border-strong);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-body);
+		text-align: center;
+	}
+	.deck-note {
+		margin-top: 18px;
+		font-size: var(--font-size-caption);
+	}
+	@media (max-width: 800px) {
+		.level-tabs {
+			grid-template-columns: repeat(5, 1fr);
+		}
+		.deck-facts {
+			gap: 20px;
+		}
+	}
+	@media (max-width: 550px) {
+		.deck-actions {
+			flex-direction: column;
+			align-items: stretch;
+		}
+		.word-list li {
+			grid-template-columns: 26px minmax(0, 1fr);
+			gap: 4px 10px;
+			row-gap: 2px;
+		}
+		.word-reading,
+		.word-meaning {
+			grid-column: 2;
+		}
 	}
 </style>

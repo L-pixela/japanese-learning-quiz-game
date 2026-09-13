@@ -58,7 +58,7 @@
 		width: var(--circle-size);
 		height: var(--circle-size);
 		border-radius: 50%;
-		background: #fbf7ec;
+		background: var(--color-surface-sunken);
 		display: flex;
 		align-items: center;
 		justify-content: center;

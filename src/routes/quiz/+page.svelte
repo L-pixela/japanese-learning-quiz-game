@@ -1,39 +1,40 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
-	import { STATUS_LABELS } from '$lib/levels'
+	import { STATUSES } from '$lib/levels'
+	import { t } from '$lib/i18n.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	let completed = $derived(data.levels.filter((level) => level.status === 'completed').length)
 </script>
 
-<svelte:head><title>The vocabulary path · TanTore</title></svelte:head>
+<svelte:head><title>Quiz · TanTore</title></svelte:head>
 <StudyShell>
 	<div class="study-heading">
 		<div>
-			<p class="study-eyebrow">Practice / 練習</p>
-			<h1>Your vocabulary path.</h1>
-			<p class="study-muted">Ten stops, from familiar words to new ideas. Begin anywhere.</p>
+			<p class="study-eyebrow">{t('quiz.eyebrow')}</p>
+			<h1>{t('quiz.title')}</h1>
+			<p class="study-muted">{t('quiz.lead')}</p>
 		</div>
 		<span class="study-stamp" lang="ja">学びの道</span>
 	</div>
 	<div class="map-overview">
 		<div>
 			<strong>{completed}<span> / 10</span></strong>
-			<p>levels completed</p>
+			<p>{t('quiz.levelsCompleted')}</p>
 		</div>
 		<div class="map-progress">
 			<progress value={completed} max="10" aria-label="Levels completed"></progress>
-			<p>10 questions per quiz · 1 point per correct answer · 6 correct to pass</p>
+			<p>{t('quiz.rules')}</p>
 		</div>
 	</div>
 	<div class="legend" aria-label="Level status legend">
-		{#each Object.entries(STATUS_LABELS) as [status, label] (status)}<span
-				class={'study-pill ' + status}><span aria-hidden="true">●</span>{label}</span
+		{#each STATUSES as status (status)}<span class={'study-pill ' + status}
+				><span aria-hidden="true">●</span>{t(`status.${status}`)}</span
 			>{/each}
 	</div>
 	<div class="level-path">
-		{#each [{ name: 'Easy', range: '01 — 03', label: 'Build your foundation', japanese: '基礎' }, { name: 'Medium', range: '04 — 07', label: 'Broaden your world', japanese: '成長' }, { name: 'Hard', range: '08 — 10', label: 'Find the finer meaning', japanese: '挑戦' }] as group (group.name)}
+		{#each [{ name: 'Easy', range: '01 to 03', label: 'Build your foundation', japanese: '基礎' }, { name: 'Medium', range: '04 to 07', label: 'Broaden your world', japanese: '成長' }, { name: 'Hard', range: '08 to 10', label: 'Find the finer meaning', japanese: '挑戦' }] as group (group.name)}
 			<section class="level-group">
 				<div class="group-heading">
 					<span lang="ja">{group.japanese}</span>
@@ -49,7 +50,7 @@
 							><div class="tile-top">
 								<span class="level-number">{String(level.level).padStart(2, '0')}</span><span
 									class={'study-pill ' + level.status}
-									>{level.status === 'completed' ? '✓ ' : ''}{STATUS_LABELS[level.status]}</span
+									>{level.status === 'completed' ? '✓ ' : ''}{t(`status.${level.status}`)}</span
 								>
 							</div>
 							<span class="tile-japanese" lang="ja">{level.japanese}</span>
@@ -67,9 +68,6 @@
 			</section>
 		{/each}
 	</div>
-	<p class="study-muted map-note">
-		A completed level stays completed. Come back whenever you want a fresh set of words.
-	</p>
 </StudyShell>
 
 <style>
@@ -77,37 +75,43 @@
 		display: flex;
 		gap: 35px;
 		align-items: center;
-		border-block: 1px solid #d9d9cb;
-		padding: 25px 0;
+		padding: 26px 30px;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
 	}
 	.map-overview strong {
-		font-size: 35px;
-		font-weight: 500;
+		font-family: var(--font-display);
+		font-size: 40px;
+		font-weight: var(--font-weight-bold);
 	}
 	.map-overview strong span {
-		font-size: 19px;
-		color: #818575;
+		font-size: 20px;
+		color: var(--color-text-faint);
 	}
 	.map-overview p {
-		font-size: 11px;
-		color: #62695f;
+		font-size: var(--font-size-caption);
+		color: var(--color-text-secondary);
 		margin: 7px 0 0;
 	}
 	.map-progress {
 		flex: 1;
 	}
 	progress {
-		width: 100%;
-		height: 6px;
-		accent-color: #37664d;
-		border: 0;
 		display: block;
+		width: 100%;
+		height: 14px;
+		border: 0;
+		border-radius: var(--radius-full);
+		accent-color: var(--color-success);
 	}
 	progress::-webkit-progress-bar {
-		background: #dedfd3;
+		border-radius: var(--radius-full);
+		background: var(--color-border-subtle);
 	}
 	progress::-webkit-progress-value {
-		background: #37664d;
+		border-radius: var(--radius-full);
+		background: var(--color-success);
 	}
 	.legend {
 		display: flex;
@@ -118,7 +122,7 @@
 	.level-group {
 		position: relative;
 		padding: 0 0 38px 30px;
-		border-left: 1px solid #c9cdbc;
+		border-left: 2px dashed var(--color-border-strong);
 	}
 	.group-heading {
 		display: flex;
@@ -130,8 +134,8 @@
 		content: '';
 		width: 9px;
 		height: 9px;
-		background: #aa4235;
-		border: 4px solid #f5f2e9;
+		background: var(--color-primary);
+		border: 4px solid var(--color-background);
 		box-sizing: content-box;
 		position: absolute;
 		left: -9px;
@@ -139,16 +143,21 @@
 		border-radius: 50%;
 	}
 	.group-heading > span {
-		font-family: 'Yu Mincho', serif;
-		font-size: 30px;
-		color: #848b79;
-		letter-spacing: 3px;
+		display: grid;
+		place-items: center;
+		width: 58px;
+		height: 58px;
+		border-radius: var(--radius-md);
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
+		font-family: var(--font-display);
+		font-size: 26px;
+		font-weight: var(--font-weight-bold);
 	}
 	.group-heading p {
 		margin: 0 0 4px;
 	}
 	.group-heading h2 {
-		font-size: 20px;
 		margin: 0;
 	}
 	.level-grid {
@@ -158,27 +167,26 @@
 	}
 	.level-tile {
 		display: block;
+		padding: 22px;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-solid) var(--color-border);
 		text-decoration: none;
-		background: #fcfaf3;
-		border: 1px solid #d4d7c9;
-		border-top: 3px solid #a8afa1;
-		padding: 18px;
-		border-radius: 3px;
 		transition:
-			transform 150ms ease,
-			border-color 150ms ease;
+			transform var(--duration-base) var(--ease-standard),
+			box-shadow var(--duration-base) var(--ease-standard);
 	}
 	.level-tile:hover {
-		transform: translateY(-3px);
-		border-color: #aa4235;
+		transform: translateY(-4px);
+		box-shadow: 0 8px 0 var(--color-primary);
 	}
 	.level-tile.completed {
-		border-top-color: #37664d;
-		background: #f0f4e9;
+		background: var(--color-success-soft);
+		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.level-tile.attempted {
-		border-top-color: #c6a03e;
-		background: #fbf6e5;
+		background: var(--color-warning-soft);
+		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.tile-top {
 		display: flex;
@@ -187,39 +195,42 @@
 		gap: 8px;
 	}
 	.level-number {
-		font-size: 14px;
-		color: #62695f;
+		font-size: var(--font-size-small);
+		color: var(--color-text-secondary);
 	}
 	.tile-top .study-pill {
-		font-size: 9px;
+		font-size: var(--font-size-caption);
 		padding: 4px 6px;
 	}
 	.tile-japanese {
 		display: block;
-		font-family: 'Yu Mincho', serif;
-		color: #6b7966;
-		font-size: 30px;
-		margin: 25px 0 12px;
+		margin: 24px 0 12px;
+		color: var(--color-primary);
+		font-family: var(--font-display);
+		font-size: 34px;
+		font-weight: var(--font-weight-bold);
 	}
 	.level-tile h3 {
 		margin-bottom: 7px;
-		font-size: 17px;
+		font-size: var(--font-size-body);
 	}
 	.level-tile p {
-		color: #62695f;
-		font-size: 11px;
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-caption);
 		min-height: 34px;
 	}
 	.tile-bottom {
-		border-top: 1px solid #d9d9cb;
-		padding-top: 14px;
 		display: flex;
 		justify-content: space-between;
-		font-size: 10px;
+		margin-top: 16px;
+		padding-top: 14px;
+		border-top: 1px solid var(--color-border);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-semibold);
 	}
 	.tile-bottom > span:last-child {
-		color: #aa4235;
-		font-size: 16px;
+		color: var(--color-primary);
+		font-size: var(--font-size-body);
 	}
 	.map-note {
 		margin-left: 30px;

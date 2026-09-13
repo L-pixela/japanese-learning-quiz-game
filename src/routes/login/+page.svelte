@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
+	import { t } from '$lib/i18n.svelte'
 	import RegisterTextField from '$lib/components/RegisterTextField.svelte'
+	import JapanScene from '$lib/components/JapanScene.svelte'
 
 	let username = $state('')
 	let password = $state('')
@@ -71,6 +73,7 @@
 
 		<div class="login-layout">
 			<aside class="rank-panel" aria-label="TanTore rank preview">
+				<div class="panel-scene"><JapanScene scene="fuji" /></div>
 				<div class="preview">
 					<div class="starter-rank">
 						<div class="rank-emblem" aria-hidden="true">
@@ -78,11 +81,8 @@
 						</div>
 						<div>
 							<p class="caption">今日の練習</p>
-							<h1 id="login-title">Welcome back to practice</h1>
-							<p class="intro">
-								Keep your streak going, review your vocabulary, and grow your food rank one session
-								at a time.
-							</p>
+							<h1 id="login-title">{t('auth.loginTitle')}</h1>
+							<p class="intro">{t('auth.loginIntro')}</p>
 						</div>
 					</div>
 				</div>
@@ -91,13 +91,13 @@
 			<form class="login-form" onsubmit={handleSubmit} novalidate>
 				<div class="form-title">
 					<p class="caption">ログイン</p>
-					<h2>Log in <span class="japanese-label">ログイン</span></h2>
+					<h2>{t('auth.login')}</h2>
 				</div>
 
 				<RegisterTextField
 					id="username"
 					bind:value={username}
-					label="Username / ユーザー名"
+					label={t('auth.username')}
 					name="username"
 					autocomplete="username"
 					error={usernameError}
@@ -106,7 +106,7 @@
 				<RegisterTextField
 					id="password"
 					bind:value={password}
-					label="Password / パスワード"
+					label={t('auth.password')}
 					name="password"
 					type="password"
 					autocomplete="current-password"
@@ -119,13 +119,12 @@
 				{/if}
 
 				<button type="submit" disabled={isSubmitting}>
-					{isSubmitting ? 'Logging in... / ログイン中...' : 'Log in / ログイン'}
+					{isSubmitting ? t('auth.loggingIn') : t('auth.login')}
 				</button>
 
 				<p class="register-link">
-					New to TanTore? / 初めてですか？ <a href={resolve('/register', {})}
-						>Create an account / アカウントを作成</a
-					>
+					{t('auth.noAccount')}
+					<a href={resolve('/register', {})}>{t('auth.createAccount')}</a>
 				</p>
 			</form>
 		</div>
@@ -141,11 +140,11 @@
 	}
 
 	.login-shell {
-		width: min(100%, 58rem);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
+		width: min(100%, 60rem);
+		border-radius: var(--radius-xl);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-lg);
+		overflow: hidden;
 	}
 
 	.site-header p {
@@ -166,21 +165,21 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.35rem;
-		border-right: 1px solid var(--color-border-subtle);
-		padding: 2rem;
-		background:
-			linear-gradient(135deg, rgba(198, 75, 107, 0.06), transparent 42%),
-			repeating-linear-gradient(
-				-45deg,
-				rgba(183, 172, 134, 0.16) 0,
-				rgba(183, 172, 134, 0.16) 1px,
-				transparent 1px,
-				transparent 11px
-			),
-			var(--rank-badge-background);
+		padding: 2.4rem;
+		background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+		color: var(--color-on-primary);
+		overflow: hidden;
+	}
+	.panel-scene {
+		position: absolute;
+		inset: auto -20% -12% -20%;
+		height: 62%;
+		opacity: 0.45;
 	}
 
 	.preview {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex: 1;
 		flex-direction: column;
@@ -197,36 +196,32 @@
 		place-items: center;
 		width: 6.2rem;
 		height: 6.2rem;
-		border: 4px solid #b7ac86;
-		border-radius: 999px;
-		background: #fffaf0;
-		box-shadow:
-			inset 0 0 0 5px #ffffff,
-			0 8px 18px rgba(68, 47, 25, 0.14);
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.18);
+		box-shadow: inset 0 0 0 4px rgba(255, 248, 236, 0.35);
 	}
 
 	.rank-emblem span {
-		color: #b7ac86;
-		font-size: 2.4rem;
+		color: var(--color-on-primary);
+		font-family: var(--font-display);
+		font-size: 2.6rem;
 		font-weight: 900;
 	}
 
 	.intro {
 		margin: 0;
-		color: #625746;
-		font-size: 0.98rem;
-		line-height: 1.7;
+		color: rgba(255, 248, 236, 0.92);
+		font-size: var(--font-size-body);
+		line-height: var(--line-height-relaxed);
 	}
 
 	.login-form {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 1rem;
-		padding: clamp(1.5rem, 4vw, 3rem);
-		background:
-			linear-gradient(var(--color-paper-line) 1px, transparent 1px), var(--color-surface-raised);
-		background-size: 100% 3.2rem;
+		gap: 1.1rem;
+		padding: clamp(1.6rem, 4vw, 3rem);
+		background: var(--color-surface);
 	}
 
 	.form-title {
@@ -234,10 +229,18 @@
 	}
 
 	.caption {
-		margin: 0 0 0.45rem;
-		color: var(--color-accent);
-		font-size: 0.78rem;
-		font-weight: 900;
+		display: inline-block;
+		margin: 0 0 0.6rem;
+		padding: 6px 14px;
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.2);
+		color: var(--color-on-primary);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-bold);
+	}
+	.login-form .caption {
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
 	}
 
 	h1,
@@ -247,28 +250,34 @@
 	}
 
 	h1 {
-		margin-bottom: 0.85rem;
-		color: var(--color-text);
-		font-size: 2.45rem;
-		line-height: 1.02;
+		margin-bottom: 0.9rem;
+		color: var(--color-on-primary);
+		font-family: var(--font-display);
+		font-size: var(--font-size-h1);
+		font-weight: var(--font-weight-bold);
+		line-height: var(--line-height-tight);
 	}
 
 	h2 {
 		margin-bottom: 0;
-		font-size: 1.85rem;
+		font-family: var(--font-display);
+		font-size: var(--font-size-h2);
+		font-weight: var(--font-weight-bold);
 		line-height: 1.1;
 	}
 
 	button {
-		min-height: 3.1rem;
-		border: 1px solid var(--color-primary-active);
-		border-radius: 6px;
+		min-height: 3.4rem;
+		border: 0;
+		border-radius: var(--radius-full);
 		background: var(--color-primary);
-		color: var(--color-surface);
+		color: var(--color-on-primary);
 		font: inherit;
+		font-family: var(--font-display);
+		font-size: var(--font-size-body);
 		font-weight: 900;
 		cursor: pointer;
-		box-shadow: 0 4px 0 var(--color-primary-active);
+		box-shadow: var(--shadow-solid) var(--color-primary-active);
 		transition:
 			transform 120ms ease,
 			box-shadow 120ms ease,
@@ -305,7 +314,7 @@
 	}
 
 	.register-link a {
-		color: var(--color-accent);
+		color: var(--color-primary);
 		font-weight: 900;
 		text-decoration: none;
 	}
@@ -325,9 +334,7 @@
 		}
 
 		.rank-panel {
-			border-right: 0;
-			border-bottom: 1px solid var(--color-border-subtle);
-			padding: 1.35rem;
+			padding: 1.6rem;
 		}
 
 		h1 {

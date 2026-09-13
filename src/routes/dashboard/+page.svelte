@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
+	import JapanScene from '$lib/components/JapanScene.svelte'
+	import RankBadge from '$lib/components/rank_badge.svelte'
+	import { getRankFromStreak, getRankProgress } from '$lib/components/ranks'
+	import { t } from '$lib/i18n.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
-	const rankNames: Record<string, string> = {
-		shiragohan: '白ご飯 · Shiragohan',
-		umeboshi: '梅干し · Umeboshi',
-		mentaiko: '明太子 · Mentaiko',
-		wasabi: 'わさび · Wasabi',
-		'ichimi-togarashi': '一味唐辛子 · Ichimi',
-		'gekikara-kimchi': '激辛キムチ · Gekikara',
-		hinotama: '火の玉 · Hinotama',
-	}
-	let completed = $derived(data.levels.filter((level) => level.status === 'completed').length)
-	let next = $derived(data.levels.find((level) => level.status !== 'completed') ?? data.levels[0])
+
+	// Badges are earned by keeping a daily streak, so the next one is a number
+	// of practice days away.
+	let badge = $derived(getRankFromStreak(data.user.streak))
+	let toNext = $derived(getRankProgress(data.user.streak))
 </script>
 
 <svelte:head
@@ -25,299 +23,371 @@
 <StudyShell>
 	<div class="study-heading">
 		<div>
-			<p class="study-eyebrow">Your study desk / 学びの時間</p>
-			<h1>Welcome back, {data.user.username}.</h1>
-			<p class="study-muted">
-				A few words today. A little further tomorrow.{#if data.user.university}
-					<span class="university">{data.user.university}</span>{/if}
-			</p>
+			<p class="study-eyebrow">{t('dashboard.eyebrow')}</p>
+			<h1>{t('dashboard.welcome', { name: data.user.username })}</h1>
+			<p class="study-muted">{t('dashboard.lead')}</p>
 		</div>
 		<span class="study-stamp" lang="ja" aria-hidden="true">日々精進</span>
 	</div>
 	<section class="study-metrics" aria-label="Your learning summary">
 		<div class="study-metric">
-			<small>Total points</small><strong>{data.user.points.toLocaleString()}</strong><span
-				>Every correct answer counts</span
-			>
+			<small>{t('dashboard.totalPoints')}</small><strong>{data.user.points.toLocaleString()}</strong
+			><span>{t('dashboard.totalPointsHint')}</span>
 		</div>
 		<div class="study-metric">
-			<small>Current streak</small><strong>{data.user.streak}<span> days</span></strong><span
-				>Keep your daily rhythm</span
-			>
+			<small>{t('dashboard.streak')}</small><strong
+				>{data.user.streak}<span> {t('dashboard.streakDays')}</span></strong
+			><span>{t('dashboard.streakHint')}</span>
 		</div>
 		<div class="study-metric">
-			<small>Current rank</small><strong
-				class="rank-icon"
-				role="img"
-				aria-label={(rankNames[data.user.rank] ?? data.user.rank) + ' rank badge'}
-				>{(rankNames[data.user.rank] ?? '学')[0]}</strong
-			><span class="rank-label">{rankNames[data.user.rank] ?? data.user.rank}</span>
+			<small>{t('dashboard.rank')}</small>
+			<RankBadge streak={data.user.streak} size="md" />
 		</div>
 		<div class="study-metric">
-			<small>Leaderboard position</small><strong>{data.position ? '#' + data.position : '—'}</strong
-			><span>Among all learners</span>
+			<small>{t('dashboard.position')}</small><strong
+				>{data.position ? '#' + data.position : '·'}</strong
+			><span>{t('dashboard.positionHint')}</span>
 		</div>
 	</section>
 	<section class="practice-hero">
 		<div class="hero-copy">
-			<p class="study-eyebrow">Vocabulary practice / 単語の稽古</p>
-			<h2>Small steps.<br />Lasting knowledge.</h2>
-			<p>
-				Find your rhythm with ten Japanese words.<br />Choose a level, take a breath, and begin.
-			</p>
+			<p class="study-eyebrow">{t('dashboard.heroEyebrow')}</p>
+			<h2>{t('dashboard.heroTitle')}</h2>
+			<p>{t('dashboard.heroLead')}</p>
 			<a class="study-button" href={resolve('/quiz', {})}
-				>Start Quiz <span aria-hidden="true">↗</span></a
+				>{t('dashboard.startQuiz')} <span aria-hidden="true">↗</span></a
 			>
 			<div class="hero-meta">
-				<span>10 questions</span><span>6 correct to pass</span><span>N4 → N3</span>
+				<span>{t('dashboard.metaQuestions')}</span><span>{t('dashboard.metaPass')}</span><span
+					>{t('dashboard.metaRange')}</span
+				>
 			</div>
 		</div>
-		<div class="hero-art" aria-hidden="true">
-			<div class="sun"></div>
-			<div class="mountain mountain-back"></div>
-			<div class="mountain"></div>
-			<div class="art-caption" lang="ja">一日一歩<span>ONE STEP, EVERY DAY</span></div>
-			<div class="art-seal">学</div>
+		<div class="hero-art">
+			<JapanScene scene="fuji" />
+			<span class="art-caption" lang="ja">一日一歩</span>
 		</div>
 	</section>
-	<div class="bottom-grid">
-		<section class="study-panel journey">
-			<div class="section-line">
-				<h2>Your path</h2>
-				<span>{completed} / 10 complete</span>
+	<section class="board" aria-label="Leaderboard">
+		<div class="board-head">
+			<div>
+				<p class="study-eyebrow">{t('dashboard.boardEyebrow')}</p>
+				<h2>{t('dashboard.boardTitle')}</h2>
 			</div>
-			<div class="mini-path" aria-label={completed + ' of 10 levels completed'}>
-				{#each data.levels as level (level.level)}<a
-						href={resolve('/quiz/[level]', { level: String(level.level) })}
-						class:done={level.status === 'completed'}
-						class:attempted={level.status === 'attempted'}
-						aria-label={'Level ' + level.level + ': ' + level.status.replace('_', ' ')}
-						>{level.status === 'completed' ? '✓' : level.level}</a
-					>{/each}
+			<span class="board-position"
+				>{data.position
+					? t('dashboard.yourPosition', { n: data.position })
+					: t('dashboard.unranked')}</span
+			>
+		</div>
+		<div class="rank-status">
+			<RankBadge streak={data.user.streak} size="sm" />
+			<div class="rank-status-text">
+				<strong><span lang="ja">{badge.nameJp}</span> · {badge.name}</strong>
+				<small>{t('rank.earnedAt', { n: badge.minStreak })}</small>
 			</div>
-			<p class="study-muted">
-				{completed === 10
-					? 'The whole path is yours. Return to any level to keep practicing.'
-					: 'Up next: Level ' + next.level + ' · ' + next.name}
-			</p>
-			<a class="text-link" href={resolve('/quiz', {})}>Explore the level map <span>→</span></a>
-		</section>
-		<section class="study-panel">
-			<div class="section-line">
-				<h2>Alongside you</h2>
-				<span>TOP LEARNERS</span>
-			</div>
-			<ol class="leaders">
-				{#each data.leaderboard as learner (learner.id)}<li>
-						<span class="position">{String(learner.position).padStart(2, '0')}</span><span
-							>{learner.username}{learner.id === data.user.id ? ' (you)' : ''}</span
-						><span>{learner.points.toLocaleString()} <small>pt</small></span>
-					</li>{/each}
-			</ol>
-		</section>
-	</div>
+			{#if toNext}
+				<div class="rank-next">
+					<div class="rank-bar" aria-hidden="true">
+						<span style={'width: ' + Math.round(toNext.fraction * 100) + '%'}></span>
+					</div>
+					<small
+						>{t('rank.next')}: {toNext.next.name} · {t('rank.daysToGo', {
+							n: toNext.daysToNext,
+						})}</small
+					>
+				</div>
+			{:else}
+				<small class="rank-top">{t('rank.top')}</small>
+			{/if}
+		</div>
+		<div class="board-columns" aria-hidden="true">
+			<span>#</span><span>{t('dashboard.colLearner')}</span><span
+				>{t('dashboard.colUniversity')}</span
+			><span>{t('profile.rank')}</span><span>{t('dashboard.colPoints')}</span>
+		</div>
+		<ol class="board-list">
+			{#each data.leaderboard as learner (learner.id)}<li
+					class:you={learner.id === data.user.id}
+					class:podium={learner.position <= 3}
+				>
+					<span class="board-rank">{String(learner.position).padStart(2, '0')}</span>
+					<span class="board-name"
+						>{learner.username}{#if learner.id === data.user.id}<em>{t('dashboard.you')}</em
+							>{/if}</span
+					>
+					<span class="board-university">{learner.university ?? '·'}</span>
+					<span class="board-badge"><RankBadge streak={learner.streak} size="sm" /></span>
+					<span class="board-points"
+						><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
+					>
+				</li>{/each}
+		</ol>
+	</section>
 	<a class="deck-link" href={resolve('/deck_list', {})}
-		><span>Prefer your own vocabulary?</span> Browse your decks <span aria-hidden="true">↗</span></a
+		><span>{t('dashboard.deckLink')}</span>
+		{t('dashboard.browseDecks')}
+		<span aria-hidden="true">↗</span></a
 	>
 </StudyShell>
 
 <style>
-	.university {
-		display: inline-block;
-		margin-left: 8px;
-		font-size: 12px;
-	}
-	.rank-icon {
-		color: #aa4235;
-		font-family: 'Yu Mincho', serif;
-		font-size: 22px;
-		width: 35px;
-		height: 35px;
-		border: 1px solid currentColor;
-		border-radius: 50%;
-		text-align: center;
-		line-height: 33px;
-		margin-bottom: 4px;
-	}
-	.rank-label {
-		font-size: 11px !important;
-	}
 	.practice-hero {
 		display: grid;
 		grid-template-columns: 1.15fr 1fr;
-		border: 1px solid #d9d9cb;
-		background: #eeeee1;
+		min-height: 360px;
+		border-radius: var(--radius-xl);
+		background: var(--panel-dark);
+		box-shadow: var(--shadow-md);
 		overflow: hidden;
-		min-height: 350px;
 	}
 	.hero-copy {
-		padding: 40px;
 		position: relative;
 		z-index: 1;
+		padding: clamp(24px, 3.2vw, 48px);
+		color: var(--on-panel-dark);
+	}
+	.hero-copy :global(.study-eyebrow) {
+		background: rgba(251, 247, 236, 0.18);
+		color: var(--on-panel-dark);
+	}
+	.hero-copy h2,
+	.hero-copy > p:not(.study-eyebrow) {
+		white-space: pre-line;
 	}
 	.hero-copy h2 {
-		font-family: Georgia, 'Yu Mincho', serif;
-		font-size: clamp(36px, 4.4vw, 54px);
-		line-height: 1.08;
-		letter-spacing: -2px;
-		margin-bottom: 20px;
+		margin-bottom: 18px;
+		font-size: var(--font-size-display);
+		line-height: 1.05;
+		letter-spacing: -1.5px;
 	}
 	.hero-copy > p:not(.study-eyebrow) {
-		font-size: 14px;
-		line-height: 1.8;
-		color: #62695f;
-		margin-bottom: 24px;
+		margin-bottom: 26px;
+		font-size: var(--font-size-body);
+		line-height: var(--line-height-relaxed);
+		color: var(--on-panel-dark-muted);
+	}
+	.hero-copy :global(.study-button) {
+		background: var(--color-accent);
+		color: var(--panel-dark-deep) !important;
+		box-shadow: var(--shadow-solid) rgba(0, 0, 0, 0.28);
+	}
+	.hero-copy :global(.study-button:hover) {
+		background: var(--color-surface-sunken);
 	}
 	.hero-meta {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 16px;
-		font-size: 10px;
-		color: #62695f;
-		margin-top: 22px;
+		gap: 10px;
+		margin-top: 26px;
+	}
+	.hero-meta span {
+		padding: 7px 14px;
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.16);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-semibold);
 	}
 	.hero-art {
 		position: relative;
 		min-height: 300px;
-		overflow: hidden;
-		background-image: repeating-linear-gradient(90deg, transparent 0 49px, #d7d8c94d 49px 50px);
-	}
-	.sun {
-		position: absolute;
-		width: 160px;
-		height: 160px;
-		border-radius: 50%;
-		background: #bc5845;
-		top: 50px;
-		left: 30%;
-	}
-	.mountain {
-		position: absolute;
-		width: 440px;
-		height: 270px;
-		bottom: -70px;
-		left: -30px;
-		background: #466452;
-		clip-path: polygon(0 100%, 49% 0, 100% 100%);
-	}
-	.mountain-back {
-		left: 150px;
-		bottom: -40px;
-		background: #a3b09a;
 	}
 	.art-caption {
 		position: absolute;
-		right: 35px;
-		top: 35px;
+		top: 28px;
+		right: 28px;
+		color: var(--on-panel-dark);
+		font-family: var(--font-display);
+		font-size: 24px;
+		letter-spacing: 8px;
 		writing-mode: vertical-rl;
-		font-family: 'Yu Mincho', serif;
-		letter-spacing: 9px;
-		font-size: 22px;
+		text-shadow: 0 2px 10px rgba(20, 25, 17, 0.3);
 	}
-	.art-caption span {
-		font-family: sans-serif;
-		font-size: 8px;
-		letter-spacing: 2px;
-		margin-right: 13px;
+	.board {
+		margin-top: 30px;
+		/* Extra side padding leaves room for the highlighted row to sit inside
+		   the rounded corners instead of bleeding into them. */
+		padding: 30px clamp(20px, 2.4vw, 34px) 24px;
+		border-radius: var(--radius-lg);
+		background: var(--panel-dark);
+		color: var(--on-panel-dark);
+		box-shadow: var(--shadow-md);
+		overflow: hidden;
 	}
-	.art-seal {
-		position: absolute;
-		left: 20px;
-		bottom: 25px;
-		border: 1px solid #f9f5e2;
-		color: #f9f5e2;
-		padding: 4px 8px;
-		font-family: serif;
-	}
-	.bottom-grid {
-		display: grid;
-		grid-template-columns: 1.15fr 1fr;
-		gap: 24px;
-		margin-top: 24px;
-	}
-	.section-line {
+	.board-head {
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
-		gap: 10px;
+		gap: 12px;
+		flex-wrap: wrap;
 	}
-	.section-line h2 {
-		font-size: 22px;
+	.board-head h2 {
+		color: var(--on-panel-dark);
 	}
-	.section-line > span {
-		font-size: 10px;
-		color: #62695f;
+	.board :global(.study-eyebrow) {
+		background: rgba(251, 247, 236, 0.16);
+		color: var(--on-panel-dark);
 	}
-	.mini-path {
-		display: flex;
-		gap: 7px;
-		margin: 12px 0 20px;
+	.board-position {
+		padding: 9px 16px;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+		color: var(--panel-dark-deep);
+		font-size: var(--text-sm);
+		font-weight: var(--font-weight-bold);
 	}
-	.mini-path a {
+	.board-columns,
+	.board-list li {
 		display: grid;
-		place-items: center;
-		width: 32px;
-		height: 34px;
-		border: 1px solid #cdd0c5;
-		background: #e9e9e1;
-		text-decoration: none;
-		font-size: 11px;
+		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px auto;
+		grid-template-areas: 'rank name university badge points';
+		gap: 14px;
+		align-items: center;
 	}
-	.mini-path a.done {
-		background: #37664d;
-		border-color: #37664d;
-		color: white;
-	}
-	.mini-path a.attempted {
-		background: #efdb92;
-		border-color: #b49b48;
-	}
-	.text-link {
+	.board-badge {
+		grid-area: badge;
 		display: flex;
-		justify-content: space-between;
-		font-size: 12px;
-		text-decoration: none;
-		border-top: 1px solid #d9d9cb;
-		padding-top: 16px;
+		justify-content: center;
 	}
-	.leaders {
+	.rank-status {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		flex-wrap: wrap;
+		margin-top: 20px;
+		padding: 14px 16px;
+		border-radius: var(--radius-md);
+		background: rgba(251, 247, 236, 0.1);
+	}
+	.rank-status-text strong {
+		display: block;
+		font-size: var(--text-base);
+	}
+	.rank-status-text span {
+		color: var(--on-panel-dark-muted);
+		font-weight: var(--font-weight-medium);
+	}
+	.rank-status small,
+	.rank-top {
+		color: var(--on-panel-dark-muted);
+		font-size: var(--text-sm);
+	}
+	.rank-next {
+		flex: 1;
+		min-width: 200px;
+	}
+	.rank-bar {
+		height: 10px;
+		margin-bottom: 6px;
+		border-radius: var(--radius-full);
+		background: rgba(251, 247, 236, 0.18);
+		overflow: hidden;
+	}
+	.rank-bar span {
+		display: block;
+		height: 100%;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+	}
+	.board-rank {
+		grid-area: rank;
+	}
+	.board-name {
+		grid-area: name;
+	}
+	.board-university {
+		grid-area: university;
+	}
+	.board-points {
+		grid-area: points;
+	}
+	.board-columns {
+		margin-top: 22px;
+		padding: 0 12px 12px;
+		border-bottom: 1px solid rgba(251, 247, 236, 0.22);
+		color: var(--on-panel-dark-muted);
+		font-size: var(--text-sm);
+		font-weight: var(--font-weight-semibold);
+	}
+	.board-columns > span:last-child,
+	.board-points {
+		text-align: right;
+	}
+	.board-list {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	}
-	.leaders li {
-		display: grid;
-		grid-template-columns: 25px minmax(0, 1fr) auto;
-		gap: 10px;
-		padding: 9px 0;
-		border-bottom: 1px solid #e6e6dc;
-		font-size: 12px;
+	.board-list li {
+		padding: 16px 12px;
+		border-bottom: 1px solid rgba(251, 247, 236, 0.12);
+		font-size: var(--text-base);
+		font-weight: var(--font-weight-medium);
 	}
-	.leaders .position,
-	.leaders small {
-		color: #858779;
-		font-size: 10px;
+	.board-list li:last-child {
+		border-bottom: 0;
 	}
-	.leaders li > span {
+	.board-rank {
+		padding-left: 10px;
+		border-left: 4px solid transparent;
+		color: var(--on-panel-dark-muted);
+		font-family: var(--font-display);
+		font-size: var(--text-base);
+	}
+	/* Top three get the accent; everyone else stays quiet. */
+	.podium .board-rank {
+		color: var(--color-accent);
+		border-left-color: var(--color-accent);
+	}
+	.board-name {
 		overflow-wrap: anywhere;
+	}
+	.board-name em {
+		margin-left: 8px;
+		padding: 3px 10px;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+		color: var(--panel-dark-deep);
+		font-size: var(--text-xs);
+		font-style: normal;
+		font-weight: var(--font-weight-bold);
+	}
+	.board-university {
+		color: var(--on-panel-dark-muted);
+		font-size: var(--text-sm);
+		overflow-wrap: anywhere;
+	}
+	.board-points {
+		color: var(--on-panel-dark);
+		font-family: var(--font-display);
+		font-size: var(--text-lg);
+		font-weight: var(--font-weight-bold);
+	}
+	.board-points small {
+		margin-left: 5px;
+		color: var(--on-panel-dark-muted);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-medium);
+	}
+	.you {
+		border-radius: var(--radius-md);
+		background: rgba(251, 247, 236, 0.14);
+		box-shadow: inset 4px 0 0 var(--color-accent);
 	}
 	.deck-link {
 		display: flex;
 		gap: 8px;
 		justify-content: end;
 		margin-top: 26px;
-		font-size: 12px;
+		font-size: var(--font-size-caption);
 		text-decoration: none;
 	}
 	.deck-link > span:first-child {
-		color: #62695f;
+		color: var(--color-text-secondary);
 	}
 	@media (max-width: 800px) {
 		.hero-copy {
 			padding: 28px;
-		}
-		.bottom-grid {
-			grid-template-columns: 1fr;
 		}
 	}
 	@media (max-width: 550px) {
@@ -327,16 +397,31 @@
 		.hero-art {
 			min-height: 210px;
 		}
-		.sun {
-			top: 10px;
-			width: 120px;
-			height: 120px;
+		.art-caption {
+			font-size: 18px;
+			letter-spacing: 5px;
 		}
-		.hero-meta {
-			gap: 12px;
+		.board {
+			padding: 22px 18px 6px;
 		}
-		.mini-path {
-			gap: 4px;
+		.board-columns,
+		.board-list li {
+			grid-template-columns: 30px minmax(0, 1fr) auto;
+			gap: 2px 10px;
+		}
+		/* Narrow screens: university and badge drop to a second line. */
+		.board-list li {
+			grid-template-areas: 'rank name points' '. university badge';
+		}
+		.board-badge {
+			justify-content: flex-end;
+		}
+		.board-columns {
+			grid-template-areas: 'rank name points';
+		}
+		.board-columns > span:nth-child(3),
+		.board-columns > span:nth-child(4) {
+			display: none;
 		}
 		.deck-link {
 			flex-wrap: wrap;

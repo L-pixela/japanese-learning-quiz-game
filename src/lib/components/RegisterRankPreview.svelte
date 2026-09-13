@@ -8,7 +8,7 @@
 
 <div class="preview">
 	<div class="starter-rank">
-		<div class="rank-emblem" style:--rank-color="#b7ac86" aria-hidden="true">
+		<div class="rank-emblem" style:--rank-color="var(--color-border-strong)" aria-hidden="true">
 			<span>米</span>
 		</div>
 		<div>
@@ -35,50 +35,49 @@
 		gap: 1.25rem;
 	}
 
+	/* The preview sits on the matcha auth panel, so everything reads in the on-primary ink. */
 	.rank-emblem {
 		display: grid;
 		place-items: center;
 		width: 6.2rem;
 		height: 6.2rem;
-		border: 4px solid var(--rank-color);
-		border-radius: 999px;
-		background: #fffaf0;
-		box-shadow:
-			inset 0 0 0 5px #ffffff,
-			0 8px 18px rgba(68, 47, 25, 0.14);
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.18);
+		box-shadow: inset 0 0 0 4px rgba(255, 248, 236, 0.35);
 	}
 
 	.rank-emblem span {
-		color: var(--rank-color);
-		font-size: 2.4rem;
+		color: var(--color-on-primary);
+		font-family: var(--font-display);
+		font-size: 2.6rem;
 		font-weight: 900;
 	}
 
 	.caption {
-		margin: 0 0 0.45rem;
-		color: #9c3d4f;
-		font-size: 0.78rem;
-		font-weight: 900;
+		display: inline-block;
+		margin: 0 0 0.6rem;
+		padding: 6px 14px;
+		border-radius: var(--radius-full);
+		background: rgba(255, 248, 236, 0.2);
+		color: var(--color-on-primary);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-bold);
 	}
 
 	h1 {
-		margin: 0 0 0.85rem;
-		color: #29231c;
-		font-size: 2.45rem;
-		line-height: 1.02;
+		margin: 0 0 0.9rem;
+		color: var(--color-on-primary);
+		font-family: var(--font-display);
+		font-size: var(--font-size-h1);
+		font-weight: var(--font-weight-bold);
+		line-height: var(--line-height-tight);
 		letter-spacing: 0;
 	}
 
 	.intro {
 		margin: 0;
-		color: #625746;
-		font-size: 0.98rem;
-		line-height: 1.7;
-	}
-
-	@media (max-width: 760px) {
-		h1 {
-			font-size: 2.05rem;
-		}
+		color: rgba(255, 248, 236, 0.92);
+		font-size: var(--font-size-body);
+		line-height: var(--line-height-relaxed);
 	}
 </style>

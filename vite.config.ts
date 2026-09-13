@@ -27,6 +27,7 @@ export default defineConfig({
 			provider: 'v8',
 			reporter: ['text', 'lcov'],
 			reportsDirectory: './coverage',
+			reportOnFailure: true,
 			include: ['src/**/*.{js,ts,svelte}'],
 			exclude: [
 				'src/**/*.{test,spec}.{js,ts}',
