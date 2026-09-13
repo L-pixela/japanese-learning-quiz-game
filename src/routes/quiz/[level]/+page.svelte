@@ -171,7 +171,7 @@
 			>
 				<div class="result-art">
 					<img
-						src={result.passed ? '/team/bunleap.webp' : '/team/sovathanak.webp'}
+						src={result.passed ? '/team/pass.png' : '/team/fail.png'}
 						alt=""
 						aria-hidden="true"
 					/>
