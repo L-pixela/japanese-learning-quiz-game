@@ -128,5 +128,7 @@ export const PATCH: RequestHandler = async ({ locals, platform, request }) => {
 		bio: user.bio,
 	})
 
+	if (!saved) return json({ error: 'user not found' }, { status: 404 })
+
 	return json({ profile: saved }, { headers: { 'Cache-Control': 'no-store' } })
 }

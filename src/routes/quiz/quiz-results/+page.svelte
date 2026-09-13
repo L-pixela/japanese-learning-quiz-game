@@ -31,7 +31,7 @@
 				<p class="study-eyebrow">
 					Level {String(result.level).padStart(2, '0')} · {result.difficulty}
 				</p>
-				<h2>{LEVELS[result.level - 1].name}</h2>
+				<h2>{LEVELS.find((l) => l.level === result.level)?.name ?? `Level ${result.level}`}</h2>
 				<div
 					class="score-circle"
 					class:passed={result.passed}

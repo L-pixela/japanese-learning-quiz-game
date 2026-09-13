@@ -25,6 +25,42 @@ describe('/api/profile', () => {
 		expect((await PATCH(event(db.d1, { phone: '012' }, false))).status).toBe(401)
 	})
 
+	it('returns 404 when the session user no longer exists', async () => {
+		const ghostEvent = {
+			locals: { user: { id: 'ghost' } },
+			platform: { env: { DB: db.d1 } },
+			request: { json: async () => ({ phone: '012' }) },
+		} as RequestEvent
+		expect((await PATCH(ghostEvent)).status).toBe(404)
+	})
+
+	it('GET returns 404 when the session user no longer exists', async () => {
+		const ghostEvent = {
+			locals: { user: { id: 'ghost' } },
+			platform: { env: { DB: db.d1 } },
+		} as RequestEvent
+		expect((await GET(ghostEvent)).status).toBe(404)
+	})
+
+	it('rejects a body that is not a JSON object', async () => {
+		expect((await PATCH(event(db.d1, null))).status).toBe(400)
+		expect((await PATCH(event(db.d1, 'nope'))).status).toBe(400)
+	})
+
+	it('rejects a non-string, non-null field value', async () => {
+		const response = await PATCH(event(db.d1, { phone: 12345 }))
+		expect(response.status).toBe(400)
+		const data = (await response.json()) as { error: string }
+		expect(data.error).toBe('phone must be text')
+	})
+
+	it('rejects a non-string avatar value', async () => {
+		const response = await PATCH(event(db.d1, { avatar: 12345 }))
+		expect(response.status).toBe(400)
+		const data = (await response.json()) as { error: string }
+		expect(data.error).toBe('avatar must be text')
+	})
+
 	it('returns the profile with standing and an empty history', async () => {
 		const body = (await (await GET(event(db.d1))).json()) as {
 			profile: { username: string; points: number; rank: string; phone: string | null }
@@ -58,6 +94,13 @@ describe('/api/profile', () => {
 	it('clears a field when given an empty string', async () => {
 		await PATCH(event(db.d1, { phone: '012' }))
 		await PATCH(event(db.d1, { phone: '   ' }))
+		const body = (await (await GET(event(db.d1))).json()) as { profile: { phone: null } }
+		expect(body.profile.phone).toBeNull()
+	})
+
+	it('clears a field when given null directly', async () => {
+		await PATCH(event(db.d1, { phone: '012' }))
+		await PATCH(event(db.d1, { phone: null }))
 		const body = (await (await GET(event(db.d1))).json()) as { profile: { phone: null } }
 		expect(body.profile.phone).toBeNull()
 	})

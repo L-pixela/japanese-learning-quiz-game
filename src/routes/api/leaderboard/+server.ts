@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit'
 import { getDb } from '$lib/server/db'
 import { user } from '$lib/server/db/schema'
 import { DEFAULT_LEADERBOARD_PAGE_SIZE, MAX_LEADERBOARD_PAGE_SIZE } from '$lib/server/leaderboard'
-import { asc, desc, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, lt, or, sql } from 'drizzle-orm'
 import type { RequestHandler } from './$types'
 
 /**
@@ -84,10 +84,38 @@ export const GET: RequestHandler = async ({ url, platform, locals }) => {
 	const leaderboard = rows.map((row, i) => ({ position: offset + i + 1, ...row }))
 
 	if (url.searchParams.get('withPosition') === 'true') {
-		const rows = await db.all<{ position: number }>(
-			sql`SELECT position FROM (SELECT id, row_number() OVER (ORDER BY points DESC, streak DESC, created_at ASC, id ASC) AS position FROM user) WHERE id = ${userId}`,
-		)
-		return json({ leaderboard, page, pageSize, position: rows[0]?.position ?? null })
+		const [self] = await db
+			.select({ points: user.points, streak: user.streak, createdAt: user.createdAt, id: user.id })
+			.from(user)
+			.where(eq(user.id, userId))
+
+		let position: number | null = null
+		if (self) {
+			const selfCreatedAt = self.createdAt ?? new Date(0)
+			const [{ ahead }] = await db
+				.select({ ahead: sql<number>`count(*)` })
+				.from(user)
+				.where(
+					or(
+						gt(user.points, self.points),
+						and(eq(user.points, self.points), gt(user.streak, self.streak)),
+						and(
+							eq(user.points, self.points),
+							eq(user.streak, self.streak),
+							lt(user.createdAt, selfCreatedAt),
+						),
+						and(
+							eq(user.points, self.points),
+							eq(user.streak, self.streak),
+							eq(user.createdAt, selfCreatedAt),
+							lt(user.id, self.id),
+						),
+					),
+				)
+			position = ahead + 1
+		}
+
+		return json({ leaderboard, page, pageSize, position })
 	}
 	return json({ leaderboard, page, pageSize })
 }

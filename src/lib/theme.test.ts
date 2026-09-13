@@ -59,6 +59,18 @@ describe('theme store', () => {
 		expect(documentMock.documentElement.setAttribute).not.toHaveBeenCalled()
 	})
 
+	it('set() does not throw when localStorage is undefined', () => {
+		vi.stubGlobal('localStorage', undefined)
+		expect(() => theme.set('dark')).not.toThrow()
+		expect(theme.current).toBe('dark')
+	})
+
+	it('set() does not throw when document is undefined', () => {
+		vi.stubGlobal('document', undefined)
+		expect(() => theme.set('dark')).not.toThrow()
+		expect(theme.current).toBe('dark')
+	})
+
 	it.each([
 		['light', 'dark'],
 		['dark', 'system'],

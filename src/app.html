@@ -18,7 +18,9 @@
 				if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
 				var l = localStorage.getItem('tantore-lang')
 				if (l === 'ja' || l === 'en') document.documentElement.lang = l
-			} catch (e) {}
+			} catch (e) {
+				/* localStorage may be unavailable (e.g. privacy mode) — fall back to default theme/lang */
+			}
 		</script>
 		%sveltekit.head%
 	</head>
