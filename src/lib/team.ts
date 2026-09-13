@@ -1,4 +1,5 @@
-// Replace image with '/team/your-file.webp' after adding artwork to static/team/.
+// Katakana (japanese) is the primary display name; romaji (name) is the secondary line.
+// Drop artwork into static/team/ and point image at '/team/your-file.webp'.
 // Keep image null to show the intentional portrait placeholder.
 export const team: Array<{
 	role: string
@@ -10,43 +11,43 @@ export const team: Array<{
 	{
 		role: 'Team Leader',
 		name: 'Thay Bunleap',
-		japanese: 'ブンリープ',
+		japanese: 'タイ・ブンリープ',
 		contribution: 'Backend & infrastructure design',
-		image: null,
+		image: '/team/bunleap.webp',
 	},
 	{
 		role: 'Sub Leader',
 		name: 'Sin Phourivath',
-		japanese: 'プリワート',
+		japanese: 'シン・プリワット',
 		contribution: 'Backend development',
-		image: null,
+		image: '/team/phourivath.webp',
 	},
 	{
 		role: 'Member',
 		name: 'Saphorn Thida',
 		japanese: 'サポーン・ティダ',
 		contribution: 'Frontend development',
-		image: null,
+		image: '/team/thida.webp',
 	},
 	{
 		role: 'Member',
 		name: 'Ouk Sreysor',
-		japanese: 'オク．スレソ',
+		japanese: 'オク・スレイソー',
 		contribution: 'Frontend development',
-		image: null,
+		image: '/team/sreysor.webp',
 	},
 	{
 		role: 'Member',
 		name: 'Phon Sovatanak',
-		japanese: 'ポンソヴァタナク',
+		japanese: 'ポン・ソヴァタナク',
 		contribution: 'Backend development',
-		image: null,
+		image: '/team/sovathanak.webp',
 	},
 	{
 		role: 'Member',
 		name: 'Tang Sonika',
-		japanese: 'ソニカ',
+		japanese: 'タン・ソニカ',
 		contribution: 'Frontend development',
-		image: null,
+		image: '/team/sonika.webp',
 	},
 ]
