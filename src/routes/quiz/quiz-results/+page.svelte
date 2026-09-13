@@ -148,7 +148,7 @@
 		padding: 35px;
 	}
 	.score-circle {
-		--ring: var(--color-gold);
+		--ring: var(--status-caution);
 		width: 215px;
 		height: 215px;
 		display: grid;

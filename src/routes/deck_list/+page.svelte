@@ -178,7 +178,10 @@
 		color: var(--color-success);
 	}
 	.status.attempted {
-		color: var(--color-text-secondary);
+		color: var(--status-caution);
+	}
+	.status.not_started {
+		color: var(--status-neutral);
 	}
 	.deck-actions {
 		display: flex;

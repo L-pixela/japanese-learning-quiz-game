@@ -185,7 +185,7 @@
 		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.level-tile.attempted {
-		background: var(--color-warning-soft);
+		background: var(--status-caution-soft);
 		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.tile-top {
