@@ -78,6 +78,12 @@
 	--color-disabled-text: #a2a891;
 	--color-focus-ring: #546b41;
 
+	/* --- Quiz status: gray/yellow/green traffic-light for not_started/attempted/completed --- */
+	--status-neutral: #6f6f66;
+	--status-neutral-soft: #e7e5da;
+	--status-caution: #8a6d1f;
+	--status-caution-soft: #fbe9b8;
+
 	/* --- Always-dark panels (leaderboard, hero, result banner). These two
 	   never invert, so text on them is readable in either theme. --- */
 	--panel-dark: #35452a;
@@ -216,6 +222,11 @@
 		--color-disabled-bg: #3b4634;
 		--color-disabled-text: #7d8a6d;
 		--color-focus-ring: #dcccac;
+
+		--status-neutral: #a9ac9f;
+		--status-neutral-soft: #3a3d35;
+		--status-caution: #e3c568;
+		--status-caution-soft: #4a3f1a;
 
 		--panel-dark: #2c3a23;
 		--panel-dark-deep: #222d1b;

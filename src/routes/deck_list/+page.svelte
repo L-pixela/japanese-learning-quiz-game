@@ -164,7 +164,7 @@
 	}
 	.deck-facts strong {
 		font-family: var(--font-display);
-		font-size: 30px;
+		font-size: clamp(20px, 3.3vw, 30px);
 		font-weight: var(--font-weight-bold);
 	}
 	.deck-facts small {
@@ -178,7 +178,10 @@
 		color: var(--color-success);
 	}
 	.status.attempted {
-		color: var(--color-text-secondary);
+		color: var(--status-caution);
+	}
+	.status.not_started {
+		color: var(--status-neutral);
 	}
 	.deck-actions {
 		display: flex;
@@ -231,7 +234,7 @@
 	}
 	.word-japanese {
 		font-family: var(--font-display);
-		font-size: 24px;
+		font-size: clamp(18px, 2.7vw, 24px);
 		font-weight: var(--font-weight-bold);
 	}
 	.word-reading {

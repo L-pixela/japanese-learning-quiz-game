@@ -25,6 +25,7 @@ const dictionary = {
 	'nav.brandTagline': ['Word training', '単語トレーニング'],
 	'nav.language': ['Language', '言語'],
 	'nav.theme': ['Theme', 'テーマ'],
+	'nav.menu': ['Menu', 'メニュー'],
 	'theme.light': ['Light', 'ライト'],
 	'theme.dark': ['Dark', 'ダーク'],
 	'theme.system': ['System', 'システム'],
@@ -61,8 +62,6 @@ const dictionary = {
 	'dashboard.colUniversity': ['University', '大学'],
 	'dashboard.colPoints': ['Points', 'ポイント'],
 	'dashboard.you': ['you', 'あなた'],
-	'dashboard.deckLink': ['Prefer your own vocabulary?', '自分の単語帳を見ますか？'],
-	'dashboard.browseDecks': ['Browse your decks', '単語帳を開く'],
 
 	'quiz.eyebrow': ['Quiz', 'クイズ'],
 	'quiz.title': ['Choose your quiz.', 'クイズを選ぶ。'],
@@ -118,7 +117,7 @@ const dictionary = {
 	'status.attempted': ['Keep practicing', '練習中'],
 	'status.completed': ['Completed', '完了'],
 
-	'team.eyebrow': ['The people behind the practice', '制作チーム'],
+	'team.eyebrow': ['CADT 1st Batch, Team 4', 'CADT 第1期, チーム4'],
 	'team.title': ['Made together.\nFor the way we learn.', 'みんなで作りました。\n学びのかたちを。'],
 	'team.lead': ['The people building TanTore.', 'TanToreを作るメンバーです。'],
 	'team.together': ['Learning together. Building together.', '共に学び、共に作る。'],

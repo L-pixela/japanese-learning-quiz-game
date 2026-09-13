@@ -101,34 +101,31 @@
 				<small class="rank-top">{t('rank.top')}</small>
 			{/if}
 		</div>
-		<div class="board-columns" aria-hidden="true">
-			<span>#</span><span>{t('dashboard.colLearner')}</span><span
-				>{t('dashboard.colUniversity')}</span
-			><span>{t('profile.rank')}</span><span>{t('dashboard.colPoints')}</span>
+		<div class="board-table">
+			<div class="board-columns" aria-hidden="true">
+				<span>#</span><span>{t('dashboard.colLearner')}</span><span
+					>{t('dashboard.colUniversity')}</span
+				><span>{t('profile.rank')}</span><span>{t('dashboard.colPoints')}</span>
+			</div>
+			<ol class="board-list">
+				{#each data.leaderboard as learner (learner.id)}<li
+						class:you={learner.id === data.user.id}
+						class:podium={learner.position <= 3}
+					>
+						<span class="board-rank">{String(learner.position).padStart(2, '0')}</span>
+						<span class="board-name"
+							>{learner.username}{#if learner.id === data.user.id}<em>{t('dashboard.you')}</em
+								>{/if}</span
+						>
+						<span class="board-university">{learner.university ?? '·'}</span>
+						<span class="board-badge"><RankBadge streak={learner.streak} size="sm" /></span>
+						<span class="board-points"
+							><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
+						>
+					</li>{/each}
+			</ol>
 		</div>
-		<ol class="board-list">
-			{#each data.leaderboard as learner (learner.id)}<li
-					class:you={learner.id === data.user.id}
-					class:podium={learner.position <= 3}
-				>
-					<span class="board-rank">{String(learner.position).padStart(2, '0')}</span>
-					<span class="board-name"
-						>{learner.username}{#if learner.id === data.user.id}<em>{t('dashboard.you')}</em
-							>{/if}</span
-					>
-					<span class="board-university">{learner.university ?? '·'}</span>
-					<span class="board-badge"><RankBadge streak={learner.streak} size="sm" /></span>
-					<span class="board-points"
-						><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
-					>
-				</li>{/each}
-		</ol>
 	</section>
-	<a class="deck-link" href={resolve('/deck_list', {})}
-		><span>{t('dashboard.deckLink')}</span>
-		{t('dashboard.browseDecks')}
-		<span aria-hidden="true">↗</span></a
-	>
 </StudyShell>
 
 <style>
@@ -236,10 +233,23 @@
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-bold);
 	}
+	.board-table {
+		display: grid;
+		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px minmax(60px, max-content);
+	}
+	.board-columns,
+	.board-list {
+		grid-column: 1 / -1;
+	}
+	.board-list {
+		display: grid;
+		grid-template-columns: subgrid;
+	}
 	.board-columns,
 	.board-list li {
 		display: grid;
-		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px auto;
+		grid-template-columns: subgrid;
+		grid-column: 1 / -1;
 		grid-template-areas: 'rank name university badge points';
 		gap: 14px;
 		align-items: center;
@@ -374,17 +384,6 @@
 		background: rgba(251, 247, 236, 0.14);
 		box-shadow: inset 4px 0 0 var(--color-accent);
 	}
-	.deck-link {
-		display: flex;
-		gap: 8px;
-		justify-content: end;
-		margin-top: 26px;
-		font-size: var(--font-size-caption);
-		text-decoration: none;
-	}
-	.deck-link > span:first-child {
-		color: var(--color-text-secondary);
-	}
 	@media (max-width: 800px) {
 		.hero-copy {
 			padding: 28px;
@@ -404,9 +403,11 @@
 		.board {
 			padding: 22px 18px 6px;
 		}
+		.board-table {
+			grid-template-columns: 30px minmax(0, 1fr) auto;
+		}
 		.board-columns,
 		.board-list li {
-			grid-template-columns: 30px minmax(0, 1fr) auto;
 			gap: 2px 10px;
 		}
 		/* Narrow screens: university and badge drop to a second line. */
@@ -422,10 +423,6 @@
 		.board-columns > span:nth-child(3),
 		.board-columns > span:nth-child(4) {
 			display: none;
-		}
-		.deck-link {
-			flex-wrap: wrap;
-			justify-content: start;
 		}
 	}
 </style>

@@ -82,11 +82,11 @@
 	}
 	.map-overview strong {
 		font-family: var(--font-display);
-		font-size: 40px;
+		font-size: clamp(26px, 4.4vw, 40px);
 		font-weight: var(--font-weight-bold);
 	}
 	.map-overview strong span {
-		font-size: 20px;
+		font-size: clamp(14px, 2.2vw, 20px);
 		color: var(--color-text-faint);
 	}
 	.map-overview p {
@@ -151,7 +151,7 @@
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
 		font-family: var(--font-display);
-		font-size: 26px;
+		font-size: clamp(18px, 2.9vw, 26px);
 		font-weight: var(--font-weight-bold);
 	}
 	.group-heading p {
@@ -185,7 +185,7 @@
 		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.level-tile.attempted {
-		background: var(--color-warning-soft);
+		background: var(--status-caution-soft);
 		box-shadow: var(--shadow-solid) var(--color-border-strong);
 	}
 	.tile-top {
@@ -207,7 +207,7 @@
 		margin: 24px 0 12px;
 		color: var(--color-primary);
 		font-family: var(--font-display);
-		font-size: 34px;
+		font-size: clamp(22px, 3.8vw, 34px);
 		font-weight: var(--font-weight-bold);
 	}
 	.level-tile h3 {
