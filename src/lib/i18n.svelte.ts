@@ -62,6 +62,7 @@ const dictionary = {
 	'dashboard.colUniversity': ['University', '大学'],
 	'dashboard.colPoints': ['Points', 'ポイント'],
 	'dashboard.you': ['you', 'あなた'],
+	'dashboard.viewProfile': ["View {name}'s profile", '{name}さんのプロフィールを見る'],
 
 	'quiz.eyebrow': ['Quiz', 'クイズ'],
 	'quiz.title': ['Choose your quiz.', 'クイズを選ぶ。'],
@@ -142,6 +143,10 @@ const dictionary = {
 
 	'profile.eyebrow': ['Your profile', 'プロフィール'],
 	'profile.title': ['Your profile', 'プロフィール'],
+	'profile.publicEyebrow': ['Learner profile', '学習者プロフィール'],
+	'profile.publicTitle': ['Learner profile', '学習者プロフィール'],
+	'profile.backToLeaderboard': ['Back to leaderboard', '順位表に戻る'],
+	'profile.about': ['About this learner', 'この学習者について'],
 	'profile.edit': ['Edit profile', 'プロフィールを編集'],
 	'profile.save': ['Save changes', '保存する'],
 	'profile.saving': ['Saving…', '保存中…'],
