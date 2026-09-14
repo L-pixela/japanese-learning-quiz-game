@@ -97,7 +97,11 @@
 						<span class="close-card" aria-hidden="true">×</span>
 						<p class="study-eyebrow">Built for TanTore</p>
 						<h2>{member.name}</h2>
-						<p>{member.summary}</p>
+						<ul class="member-summary">
+							{#each member.highlights as item, highlightIndex (highlightIndex)}
+								<li>{item}</li>
+							{/each}
+						</ul>
 					</div>
 				</div>
 			</button>{/each}
@@ -184,11 +188,23 @@
 		margin: 10px 0 14px;
 		font-size: var(--font-size-h3);
 	}
-	.member-back p:last-child {
+	.member-summary {
 		margin: 0;
+		padding-left: 1.4rem;
+		list-style: disc;
+		list-style-position: outside;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-small);
 		line-height: var(--line-height-relaxed);
+	}
+	.member-summary li {
+		display: list-item;
+	}
+	.member-summary li + li {
+		margin-top: 8px;
+	}
+	.member-summary li::marker {
+		color: var(--color-primary);
 	}
 	.close-card {
 		position: absolute;
