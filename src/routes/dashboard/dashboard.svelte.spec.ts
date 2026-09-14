@@ -52,4 +52,10 @@ describe('Dashboard', () => {
 		await expect.element(page.getByText('Sreysor', { exact: true })).toBeInTheDocument()
 		await expect.element(page.getByText('·', { exact: true })).toBeInTheDocument()
 	})
+	it('links each leaderboard entry to that learner profile', async () => {
+		render(Dashboard, { data })
+		await expect
+			.element(page.getByRole('link', { name: "View Phourivath's profile" }))
+			.toHaveAttribute('href', '/profile/u2')
+	})
 })
