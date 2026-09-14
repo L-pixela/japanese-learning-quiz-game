@@ -1,10 +1,32 @@
 <script lang="ts">
+	import { onMount } from 'svelte'
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { team } from '$lib/team'
 	import { t } from '$lib/i18n.svelte'
 
 	// Fall back to the portrait placeholder if the artwork file is missing.
 	let failed = $state<Record<string, boolean>>({})
+	let activeMember = $state<string | null>(null)
+
+	function toggleMember(name: string) {
+		activeMember = activeMember === name ? null : name
+	}
+
+	onMount(() => {
+		const closeOnOutsideClick = (event: MouseEvent) => {
+			if (!(event.target as Element).closest('.member')) activeMember = null
+		}
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') activeMember = null
+		}
+
+		document.addEventListener('click', closeOnOutsideClick)
+		document.addEventListener('keydown', closeOnEscape)
+		return () => {
+			document.removeEventListener('click', closeOnOutsideClick)
+			document.removeEventListener('keydown', closeOnEscape)
+		}
+	})
 </script>
 
 <svelte:head
@@ -28,40 +50,57 @@
 		<span class="edition">TANTORE / TEAM NOTES</span>
 	</div>
 	<section class="team-grid" aria-label="Team members">
-		{#each team as member, index (member.name)}<article class="member">
-				<div class="portrait">
-					{#if member.image && !failed[member.name]}<img
-							src={member.image}
-							alt={member.japanese + ' anime profile portrait'}
-							onerror={() => (failed[member.name] = true)}
-						/>{:else}<div
-							class="portrait-frame"
-							aria-label={'Profile image placeholder for ' + member.japanese}
-						>
-							<svg viewBox="0 0 120 140" fill="none" aria-hidden="true"
-								><path
-									d="M24 124c2-26 18-38 36-38s34 12 36 38M39 63c0-22 9-34 21-34s21 12 21 34-10 29-21 29-21-7-21-29Z"
-									stroke="currentColor"
-									stroke-width="1.2"
-								/><path
-									d="M35 67c-7-31 9-49 25-49 23 0 33 24 24 51l-8-25-12 11-8-13-18 25Z"
-									fill="currentColor"
-									opacity=".17"
-								/><path
-									d="M15 15h18M15 15v18M105 15H87M105 15v18M15 125h18M15 125v-18M105 125H87M105 125v-18"
-									stroke="currentColor"
-									opacity=".4"
-								/></svg
-							><span>{t('team.portraitPending')}</span>
-						</div>{/if}<span class="member-index">{String(index + 1).padStart(2, '0')}</span>
+		{#each team as member, index (member.name)}<button
+				class:flipped={activeMember === member.name}
+				class="member"
+				type="button"
+				aria-label={`Show ${member.name}'s contribution`}
+				aria-pressed={activeMember === member.name}
+				onclick={() => toggleMember(member.name)}
+			>
+				<div class="member-flipper">
+					<div class="member-front">
+						<div class="portrait">
+							{#if member.image && !failed[member.name]}<img
+									src={member.image}
+									alt={member.japanese + ' anime profile portrait'}
+									onerror={() => (failed[member.name] = true)}
+								/>{:else}<div
+									class="portrait-frame"
+									aria-label={'Profile image placeholder for ' + member.japanese}
+								>
+									<svg viewBox="0 0 120 140" fill="none" aria-hidden="true"
+										><path
+											d="M24 124c2-26 18-38 36-38s34 12 36 38M39 63c0-22 9-34 21-34s21 12 21 34-10 29-21 29-21-7-21-29Z"
+											stroke="currentColor"
+											stroke-width="1.2"
+										/><path
+											d="M35 67c-7-31 9-49 25-49 23 0 33 24 24 51l-8-25-12 11-8-13-18 25Z"
+											fill="currentColor"
+											opacity=".17"
+										/><path
+											d="M15 15h18M15 15v18M105 15H87M105 15v18M15 125h18M15 125v-18M105 125H87M105 125v-18"
+											stroke="currentColor"
+											opacity=".4"
+										/></svg
+									><span>{t('team.portraitPending')}</span>
+								</div>{/if}<span class="member-index">{String(index + 1).padStart(2, '0')}</span>
+						</div>
+						<div class="member-info">
+							<p class="study-eyebrow">{member.role}</p>
+							<h2 lang="ja">{member.japanese}</h2>
+							<p class="member-en">{member.name}</p>
+							<p class="contribution">{member.contribution}</p>
+						</div>
+					</div>
+					<div class="member-back" aria-hidden={activeMember !== member.name}>
+						<span class="close-card" aria-hidden="true">×</span>
+						<p class="study-eyebrow">Built for TanTore</p>
+						<h2>{member.name}</h2>
+						<p>{member.summary}</p>
+					</div>
 				</div>
-				<div class="member-info">
-					<p class="study-eyebrow">{member.role}</p>
-					<h2 lang="ja">{member.japanese}</h2>
-					<p class="member-en">{member.name}</p>
-					<p class="contribution">{member.contribution}</p>
-				</div>
-			</article>{/each}
+			</button>{/each}
 	</section>
 	<div class="team-note">
 		<span lang="ja">ありがとう</span>
@@ -104,11 +143,65 @@
 		gap: 25px;
 	}
 	.member {
+		position: relative;
+		padding: 0;
+		border: 0;
+		color: inherit;
+		font: inherit;
+		text-align: left;
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
 		overflow: hidden;
+		perspective: 1100px;
 		transition: transform var(--duration-base) var(--ease-standard);
+	}
+	.member-flipper {
+		display: grid;
+		height: 100%;
+		transform-style: preserve-3d;
+		transition: transform 650ms var(--ease-standard);
+	}
+	.member.flipped .member-flipper {
+		transform: rotateY(180deg);
+	}
+	.member-front,
+	.member-back {
+		grid-area: 1 / 1;
+		backface-visibility: hidden;
+	}
+	.member-back {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 30px;
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
+		transform: rotateY(180deg);
+	}
+	.member-back h2 {
+		margin: 10px 0 14px;
+		font-size: var(--font-size-h3);
+	}
+	.member-back p:last-child {
+		margin: 0;
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-small);
+		line-height: var(--line-height-relaxed);
+	}
+	.close-card {
+		position: absolute;
+		top: 14px;
+		right: 18px;
+		color: var(--color-primary);
+		font-family: var(--font-display);
+		font-size: 28px;
+		line-height: 1;
+	}
+	.member:focus-visible {
+		outline: 3px solid var(--color-accent);
+		outline-offset: 4px;
 	}
 	.member:hover {
 		transform: translateY(-4px);
