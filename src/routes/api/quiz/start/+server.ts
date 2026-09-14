@@ -4,10 +4,21 @@ import { getDb, requireDb } from '$lib/server/db'
 import { quizAttempt, word } from '$lib/server/db/schema'
 import type { RequestHandler } from './$types'
 
+function secureRandomInt(maxExclusive: number): number {
+	const range = 2 ** 32
+	const limit = range - (range % maxExclusive)
+	const values = new Uint32Array(1)
+
+	do crypto.getRandomValues(values)
+	while (values[0] >= limit)
+
+	return values[0] % maxExclusive
+}
+
 function shuffle<T>(items: T[]): T[] {
 	const result = [...items]
 	for (let i = result.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1))
+		const j = secureRandomInt(i + 1)
 		;[result[i], result[j]] = [result[j], result[i]]
 	}
 	return result
