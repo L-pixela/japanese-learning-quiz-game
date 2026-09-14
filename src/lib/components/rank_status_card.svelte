@@ -2,7 +2,7 @@
 	import RankBadge from '$lib/components/rank_badge.svelte'
 	import Points from '$lib/components/points.svelte'
 	import StreakCount from '$lib/components/streak_count.svelte'
-	import { getRankFromStreak } from '$lib/components/ranks'
+	import { getRankFromPoints } from '$lib/components/ranks'
 
 	type Props = {
 		streak: number
@@ -11,7 +11,7 @@
 
 	let { streak, points }: Props = $props()
 
-	let rank = $derived(getRankFromStreak(streak))
+	let rank = $derived(getRankFromPoints(points))
 </script>
 
 <div class="status-banner">

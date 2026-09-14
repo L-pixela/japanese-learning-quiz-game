@@ -6,6 +6,7 @@ import { scryptSync } from 'node:crypto'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 describe('POST /api/login', () => {

@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { findCardWithDeckOwner } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
 import { parseCardFields } from '$lib/server/validation/card'
@@ -16,7 +16,7 @@ export const PUT: RequestHandler = async ({ request, params, platform, locals })
 
 	const { front, back } = parsed
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const existing = await findCardWithDeckOwner(db, params.id)
 
@@ -44,7 +44,7 @@ export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const existing = await findCardWithDeckOwner(db, params.id)
 

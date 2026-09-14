@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { getRankFromStreak, type RankTier } from './ranks'
+	import { getRankFromPoints, type RankTier } from './ranks'
 
 	type Size = 'sm' | 'md' | 'lg'
 
 	type Props = {
-		streak?: number
+		points?: number
 		rank?: RankTier
 		size?: Size
 		showLabel?: boolean
 	}
 
-	let { streak = 0, rank, size = 'md', showLabel = false }: Props = $props()
+	let { points = 0, rank, size = 'md', showLabel = false }: Props = $props()
 
-	let resolvedRank = $derived(rank ?? getRankFromStreak(streak))
+	let resolvedRank = $derived(rank ?? getRankFromPoints(points))
 
 	const SIZES: Record<Size, { circle: number; img: number; ring: number }> = {
 		sm: { circle: 28, img: 15, ring: 2 },

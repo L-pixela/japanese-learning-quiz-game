@@ -5,6 +5,7 @@ import { getDb } from '$lib/server/db'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 describe('/api/decks', () => {

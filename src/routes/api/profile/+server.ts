@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { and, desc, eq } from 'drizzle-orm'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { quizAttempt, user } from '$lib/server/db/schema'
 import type { RequestHandler } from './$types'
 
@@ -40,7 +40,7 @@ function avatarError(value: unknown): string | null {
  */
 export const GET: RequestHandler = async ({ locals, platform }) => {
 	if (!locals.user) return json({ error: 'unauthorized' }, { status: 401 })
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const [profile] = await db
 		.select({
@@ -116,7 +116,7 @@ export const PATCH: RequestHandler = async ({ locals, platform, request }) => {
 	if (Object.keys(updates).length === 0)
 		return json({ error: 'no editable fields provided' }, { status: 400 })
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 	const [saved] = await db.update(user).set(updates).where(eq(user.id, locals.user.id)).returning({
 		id: user.id,
 		username: user.username,

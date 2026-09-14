@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { requireDeckOwnership } from '$lib/server/db/queries'
 import { deck } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ params, platform, locals }) => {
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId, 'access')
 	if (!ownership.ok) {
@@ -34,7 +34,7 @@ export const PUT: RequestHandler = async ({ request, params, platform, locals })
 		return json({ error: 'title is required' }, { status: 400 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId, 'edit')
 	if (!ownership.ok) {
@@ -53,7 +53,7 @@ export const DELETE: RequestHandler = async ({ params, platform, locals }) => {
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId, 'delete')
 	if (!ownership.ok) {

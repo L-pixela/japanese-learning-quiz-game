@@ -6,6 +6,7 @@ import { MAX_LEADERBOARD_PAGE_SIZE } from '$lib/server/leaderboard'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 function mockOrderedDb(rows: any[]) {

@@ -23,6 +23,7 @@ function mockDeckLookupThenCards(deckRows: any[], cards: any[]) {
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 describe('/api/decks/[id]/cards', () => {

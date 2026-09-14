@@ -3,14 +3,14 @@
 	import RankBadge from '$lib/components/rank_badge.svelte'
 
 	type Props = {
-		streak: number
+		points: number
 		title?: string
 		description?: string
 		compact?: boolean
 	}
 
 	let {
-		streak,
+		points,
 		title = 'Your current rank / 現在のランク',
 		description = 'Keep practicing to grow your rank. / 練習を続けてランクを上げましょう。',
 		compact = false,
@@ -25,7 +25,7 @@
 					<span class="metric-label">CURRENT RANK / 現在のランク</span>
 					<h2 id="current-rank-title">{title}</h2>
 				</div>
-				<RankBadge {streak} size="md" showLabel />
+				<RankBadge {points} size="md" showLabel />
 			</div>
 			<p>{description}</p>
 		</section>

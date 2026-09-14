@@ -69,24 +69,20 @@ export async function saveQuizScore(
 	now = new Date(),
 ) {
 	const timestamp = Math.floor(now.getTime() / 1000)
-	const pending =
-		'EXISTS (SELECT 1 FROM quiz_attempt WHERE id = ? AND user_id = ? AND submitted_at IS NULL)'
-	const streak =
-		"CASE WHEN date(last_quiz_at, 'unixepoch') = date(?, 'unixepoch') THEN streak WHEN date(last_quiz_at, 'unixepoch') = date(?, 'unixepoch', '-1 day') THEN streak + 1 ELSE 1 END"
 	await d1.batch([
 		d1
 			.prepare(
-				`UPDATE user SET points = points + ?, streak = ${streak}, last_quiz_at = ? WHERE id = ? AND ${pending}`,
+				`UPDATE user SET points = points + ?, streak = CASE WHEN date(last_quiz_at, 'unixepoch') = date(?, 'unixepoch') THEN streak WHEN date(last_quiz_at, 'unixepoch') = date(?, 'unixepoch', '-1 day') THEN streak + 1 ELSE 1 END, last_quiz_at = ? WHERE id = ? AND EXISTS (SELECT 1 FROM quiz_attempt WHERE id = ? AND user_id = ? AND submitted_at IS NULL)`,
 			)
 			.bind(score, timestamp, timestamp, timestamp, userId, attemptId, userId),
 		d1
 			.prepare(
-				`UPDATE user SET rank = CASE WHEN streak >= 100 THEN 'hinotama' WHEN streak >= 60 THEN 'gekikara-kimchi' WHEN streak >= 30 THEN 'ichimi-togarashi' WHEN streak >= 14 THEN 'wasabi' WHEN streak >= 7 THEN 'mentaiko' WHEN streak >= 3 THEN 'umeboshi' ELSE 'shiragohan' END WHERE id = ? AND ${pending}`,
+				`UPDATE user SET rank = CASE WHEN points >= 80 THEN 'hinotama' WHEN points >= 60 THEN 'gekikara-kimchi' WHEN points >= 40 THEN 'ichimi-togarashi' WHEN points >= 30 THEN 'wasabi' WHEN points >= 20 THEN 'mentaiko' WHEN points >= 10 THEN 'umeboshi' ELSE 'shiragohan' END WHERE id = ? AND EXISTS (SELECT 1 FROM quiz_attempt WHERE id = ? AND user_id = ? AND submitted_at IS NULL)`,
 			)
 			.bind(userId, attemptId, userId),
 		d1
 			.prepare(
-				`INSERT INTO user_level_progress (user_id, level, status, best_score, attempts, updated_at) SELECT ?, ?, ?, ?, 1, ? WHERE ${pending} ON CONFLICT(user_id, level) DO UPDATE SET status = CASE WHEN user_level_progress.status = 'completed' OR excluded.status = 'completed' THEN 'completed' ELSE 'attempted' END, best_score = max(user_level_progress.best_score, excluded.best_score), attempts = user_level_progress.attempts + 1, updated_at = excluded.updated_at`,
+				`INSERT INTO user_level_progress (user_id, level, status, best_score, attempts, updated_at) SELECT ?, ?, ?, ?, 1, ? WHERE EXISTS (SELECT 1 FROM quiz_attempt WHERE id = ? AND user_id = ? AND submitted_at IS NULL) ON CONFLICT(user_id, level) DO UPDATE SET status = CASE WHEN user_level_progress.status = 'completed' OR excluded.status = 'completed' THEN 'completed' ELSE 'attempted' END, best_score = max(user_level_progress.best_score, excluded.best_score), attempts = user_level_progress.attempts + 1, updated_at = excluded.updated_at`,
 			)
 			.bind(
 				userId,

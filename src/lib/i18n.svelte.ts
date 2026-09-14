@@ -167,8 +167,8 @@ const dictionary = {
 
 	'rank.yourBadge': ['Your badge', 'あなたのバッジ'],
 	'rank.next': ['Next badge', '次のバッジ'],
-	'rank.daysToGo': ['{n} more days of practice', 'あと{n}日の練習'],
-	'rank.earnedAt': ['{n}-day streak', '{n}日連続'],
+	'rank.pointsToGo': ['{n} more points to go', 'あと{n}ポイント'],
+	'rank.earnedAt': ['{n}+ points', '{n}ポイント以上'],
 	'rank.top': ['Highest badge reached', '最高ランク達成'],
 
 	'profile.photo': ['Profile photo', 'プロフィール写真'],

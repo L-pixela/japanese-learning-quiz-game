@@ -6,6 +6,7 @@ import { mockSelect } from '$lib/server/db/mock-db'
 
 vi.mock('$lib/server/db', () => ({
 	getDb: vi.fn(),
+	requireDb: vi.fn(),
 }))
 
 describe('/api/decks/[id]', () => {

@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { requireDeckOwnership } from '$lib/server/db/queries'
 import { card } from '$lib/server/db/schema'
 import { parseCardFields } from '$lib/server/validation/card'
@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ request, params, platform, locals }
 
 	const { front, back } = parsed
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId!, 'add cards to')
 	if (!ownership.ok) {
@@ -35,7 +35,7 @@ export const GET: RequestHandler = async ({ params, platform, locals }) => {
 		return json({ error: 'unauthorized' }, { status: 401 })
 	}
 
-	const db = getDb(platform!.env.DB)
+	const db = getDb(requireDb(platform))
 
 	const ownership = await requireDeckOwnership(db, params.id, userId, 'access')
 	if (!ownership.ok) {

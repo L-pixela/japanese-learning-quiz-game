@@ -32,7 +32,9 @@ describe('Dashboard', () => {
 		await expect
 			.element(page.getByLabelText('Your learning summary').getByText('42', { exact: true }))
 			.toBeInTheDocument()
-		await expect.element(page.getByText('梅干し · Umeboshi', { exact: true })).toBeInTheDocument()
+		await expect
+			.element(page.getByText('一味唐辛子 · Ichimi Togarashi', { exact: true }))
+			.toBeInTheDocument()
 	})
 	it('puts quiz practice first', async () => {
 		render(Dashboard, { data })

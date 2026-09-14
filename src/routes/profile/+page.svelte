@@ -153,7 +153,7 @@
 		</div>
 		<div class="study-metric">
 			<small>{t('profile.rank')}</small>
-			<RankBadge streak={data.profile.streak} size="md" />
+			<RankBadge points={data.profile.points} size="md" />
 		</div>
 	</section>
 

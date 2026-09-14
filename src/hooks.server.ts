@@ -1,4 +1,4 @@
-import { getDb } from '$lib/server/db'
+import { getDb, requireDb } from '$lib/server/db'
 import { session, user } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
 import type { Handle } from '@sveltejs/kit'
@@ -12,7 +12,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event)
 	}
 
-	const db = getDb(event.platform!.env.DB)
+	const db = getDb(requireDb(event.platform))
 
 	const sessions = await db
 		.select({
