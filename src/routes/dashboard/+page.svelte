@@ -112,16 +112,22 @@
 						class:you={learner.id === data.user.id}
 						class:podium={learner.position <= 3}
 					>
-						<span class="board-rank">{String(learner.position).padStart(2, '0')}</span>
-						<span class="board-name"
-							>{learner.username}{#if learner.id === data.user.id}<em>{t('dashboard.you')}</em
-								>{/if}</span
+						<a
+							class="board-entry"
+							href={resolve('/profile/[id]', { id: learner.id })}
+							aria-label={t('dashboard.viewProfile', { name: learner.username })}
 						>
-						<span class="board-university">{learner.university ?? '·'}</span>
-						<span class="board-badge"><RankBadge points={learner.points} size="sm" /></span>
-						<span class="board-points"
-							><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
-						>
+							<span class="board-rank">{String(learner.position).padStart(2, '0')}</span>
+							<span class="board-name"
+								>{learner.username}{#if learner.id === data.user.id}<em>{t('dashboard.you')}</em
+									>{/if}</span
+							>
+							<span class="board-university">{learner.university ?? '·'}</span>
+							<span class="board-badge"><RankBadge points={learner.points} size="sm" /></span>
+							<span class="board-points"
+								><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
+							>
+						</a>
 					</li>{/each}
 			</ol>
 		</div>
@@ -246,7 +252,7 @@
 		grid-template-columns: subgrid;
 	}
 	.board-columns,
-	.board-list li {
+	.board-entry {
 		display: grid;
 		grid-template-columns: subgrid;
 		grid-column: 1 / -1;
@@ -325,10 +331,20 @@
 		margin: 0;
 	}
 	.board-list li {
-		padding: 16px 12px;
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-column: 1 / -1;
 		border-bottom: 1px solid rgba(251, 247, 236, 0.12);
+	}
+	.board-entry {
+		padding: 16px 12px;
 		font-size: var(--text-base);
 		font-weight: var(--font-weight-medium);
+		text-decoration: none;
+		transition: background var(--duration-fast) var(--ease-standard);
+	}
+	.board-entry:hover {
+		background: rgba(251, 247, 236, 0.08);
 	}
 	.board-list li:last-child {
 		border-bottom: 0;
@@ -403,11 +419,11 @@
 			grid-template-columns: 40px minmax(0, 1fr) 92px;
 		}
 		.board-columns,
-		.board-list li {
+		.board-entry {
 			gap: 2px 10px;
 		}
 		/* Narrow screens: university and badge drop to a second line. */
-		.board-list li {
+		.board-entry {
 			grid-template-areas: 'rank name points' '. university badge';
 		}
 		.board-columns {
