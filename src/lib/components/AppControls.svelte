@@ -5,13 +5,22 @@
 
 	// Both preferences live in localStorage, so they can only be read once the
 	// component is in the browser.
+	let systemIsDark = $state(false)
+
 	onMount(() => {
 		i18n.hydrate()
 		theme.hydrate()
+
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+		const syncSystemTheme = () => (systemIsDark = mediaQuery.matches)
+		syncSystemTheme()
+		mediaQuery.addEventListener('change', syncSystemTheme)
+
+		return () => mediaQuery.removeEventListener('change', syncSystemTheme)
 	})
 
 	let isJa = $derived(i18n.current === 'ja')
-	let isDark = $derived(theme.current === 'dark')
+	let isDark = $derived(theme.current === 'dark' || (theme.current === 'system' && systemIsDark))
 
 	function toggleLang() {
 		i18n.set(isJa ? 'en' : 'ja')
