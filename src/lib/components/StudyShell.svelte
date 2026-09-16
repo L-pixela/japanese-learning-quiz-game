@@ -10,7 +10,6 @@
 	const links = [
 		{ href: '/dashboard', key: 'nav.overview' },
 		{ href: '/quiz', key: 'nav.quiz' },
-		{ href: '/deck_list', key: 'nav.decks' },
 		{ href: '/team', key: 'nav.team' },
 		{ href: '/profile', key: 'nav.profile' },
 	] as const

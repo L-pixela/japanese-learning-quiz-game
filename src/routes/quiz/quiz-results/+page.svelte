@@ -6,6 +6,12 @@
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	let result = $derived(data.result)
+
+	// Attempts recorded before answers were stored have no breakdown to show.
+	let review = $derived((result?.review ?? []).map((item, index) => ({ ...item, index })))
+	let missed = $derived(review.filter((item) => !item.correct))
+	let mistakesOnly = $state(false)
+	let shown = $derived(mistakesOnly ? missed : review)
 </script>
 
 <svelte:head><title>Your quiz results · TanTore</title></svelte:head>
@@ -69,6 +75,60 @@
 				</section>
 			</div>
 		</div>
+		{#if review.length}
+			<section class="review study-panel">
+				<div class="review-head">
+					<div>
+						<p class="study-eyebrow">Question log / 復習</p>
+						<h2>
+							{missed.length === 0
+								? 'A clean sheet — all ten correct.'
+								: missed.length === 1
+									? 'One word to look at again.'
+									: missed.length + ' words to look at again.'}
+						</h2>
+					</div>
+					<div class="review-filter" role="group" aria-label="Filter questions">
+						<button type="button" class:on={!mistakesOnly} onclick={() => (mistakesOnly = false)}>
+							All {review.length}
+						</button>
+						<button
+							type="button"
+							class:on={mistakesOnly}
+							disabled={missed.length === 0}
+							onclick={() => (mistakesOnly = true)}
+						>
+							Mistakes {missed.length}
+						</button>
+					</div>
+				</div>
+				<ol class="review-list">
+					{#each shown as item (item.index)}
+						<li class={item.correct ? 'ok' : 'bad'}>
+							<span class="q-num">{String(item.index + 1).padStart(2, '0')}</span>
+							<div class="q-body">
+								<p class="q-word">
+									<span lang="ja">{item.japanese}</span><small lang="ja">{item.reading}</small>
+								</p>
+								<div class="q-answers">
+									<span class="q-answer correct">
+										<small>Correct answer</small>{item.options[item.correctIndex]}
+									</span>
+									{#if !item.correct}
+										<span class="q-answer wrong">
+											<small>You chose</small>{item.chosenIndex === null
+												? 'No answer'
+												: item.options[item.chosenIndex]}
+										</span>
+									{/if}
+								</div>
+							</div>
+							<span class="q-mark">{item.correct ? '✓' : '×'}</span>
+						</li>
+					{/each}
+				</ol>
+			</section>
+		{/if}
 		<div class="study-actions">
 			{#if result.passed && result.level < 10}<a
 					class="study-button"
@@ -260,6 +320,147 @@
 		}
 		.dashboard-link {
 			margin-left: 0;
+		}
+	}
+
+	/* ---------- Question log ---------- */
+	.review {
+		margin-top: 30px;
+	}
+	.review-head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 16px;
+		flex-wrap: wrap;
+		margin-bottom: var(--spacing-lg);
+	}
+	.review-head h2 {
+		margin: 0;
+	}
+	.review-filter {
+		display: flex;
+		gap: 6px;
+		padding: 5px;
+		border-radius: var(--radius-full);
+		background: var(--color-surface-sunken);
+	}
+	.review-filter button {
+		min-height: 44px;
+		padding: 9px 18px;
+		border: 0;
+		border-radius: var(--radius-full);
+		background: none;
+		color: var(--color-text-secondary);
+		font: inherit;
+		font-size: var(--text-sm);
+		font-weight: var(--font-weight-semibold);
+		white-space: nowrap;
+		cursor: pointer;
+	}
+	.review-filter button.on {
+		background: var(--color-primary);
+		color: var(--color-on-primary);
+	}
+	.review-filter button:disabled {
+		opacity: 0.45;
+		cursor: default;
+	}
+	.review-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 10px;
+	}
+	.review-list li {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 14px;
+		align-items: center;
+		padding: 16px 18px;
+		border-radius: var(--radius-md);
+		background: var(--color-surface-sunken);
+		/* A color bar carries the verdict at a glance; the ✓/× carries it for
+		   anyone who cannot see the color. */
+		border-left: 5px solid var(--color-success);
+	}
+	.review-list li.bad {
+		border-left-color: var(--color-danger);
+	}
+	.q-num {
+		color: var(--color-text-faint);
+		font-family: var(--font-display);
+		font-size: var(--text-base);
+		font-weight: var(--font-weight-bold);
+	}
+	.q-body {
+		min-width: 0;
+	}
+	.q-word {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		flex-wrap: wrap;
+		margin: 0 0 8px;
+		font-family: var(--font-display);
+		font-size: var(--text-lg);
+		font-weight: var(--font-weight-bold);
+	}
+	.q-word small {
+		color: var(--color-text-secondary);
+		font-family: var(--font-body);
+		font-size: var(--text-sm);
+		font-weight: var(--font-weight-medium);
+	}
+	.q-answers {
+		display: flex;
+		gap: 10px 22px;
+		flex-wrap: wrap;
+	}
+	.q-answer {
+		font-size: var(--text-base);
+		font-weight: var(--font-weight-semibold);
+		overflow-wrap: anywhere;
+	}
+	.q-answer small {
+		display: block;
+		margin-bottom: 2px;
+		color: var(--color-text-faint);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+	}
+	.q-answer.correct {
+		color: var(--color-success);
+	}
+	.q-answer.wrong {
+		color: var(--color-danger);
+		text-decoration: line-through;
+		text-decoration-thickness: 1px;
+	}
+	.q-mark {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: var(--radius-full);
+		background: var(--color-success);
+		color: var(--color-on-primary);
+		font-size: var(--text-base);
+		font-weight: var(--font-weight-bold);
+	}
+	.bad .q-mark {
+		background: var(--color-danger);
+	}
+	@media (max-width: 540px) {
+		.review-list li {
+			padding: 14px;
+			gap: 10px;
+		}
+		.q-answers {
+			gap: 8px 16px;
 		}
 	}
 </style>

@@ -115,11 +115,21 @@
 	}
 
 	let passed = $derived(data.history.filter((attempt) => attempt.score >= 6).length)
+
+	// Two gaps matter to a learner: the rung directly above, and the summit.
+	// Ties are possible because equal points are split by streak, so clamp at
+	// zero and say so rather than printing "0 points to go".
+	let toNext = $derived(data.nextUp ? Math.max(0, data.nextUp.points - data.profile.points) : null)
+	let toFirst = $derived(
+		data.leaderPoints === null ? null : Math.max(0, data.leaderPoints - data.profile.points),
+	)
+	// Only worth repeating the summit line when it is a different target.
+	let showFirst = $derived(data.position !== null && data.position > 2 && toFirst !== null)
 </script>
 
 <svelte:head><title>{t('profile.title')} · TanTore</title></svelte:head>
 <StudyShell>
-	<div class="study-heading">
+	<div class="study-heading profile-heading">
 		<div class="identity">
 			{#if data.profile.avatar}
 				<img class="avatar" src={data.profile.avatar} alt="" />
@@ -128,13 +138,13 @@
 					>{(data.profile.displayName || data.profile.username).slice(0, 1).toUpperCase()}</span
 				>
 			{/if}
-			<div>
+			<div class="identity-text">
 				<p class="study-eyebrow">{t('profile.eyebrow')}</p>
 				<h1>{data.profile.displayName || data.profile.username}</h1>
-				<p class="study-muted">@{data.profile.username}</p>
+				<p class="handle">@{data.profile.username}</p>
 			</div>
 		</div>
-		<button class="study-button secondary" onclick={signOut}>{t('auth.signOut')}</button>
+		<button class="study-button danger" onclick={signOut}>{t('auth.signOut')}</button>
 	</div>
 
 	<section class="study-metrics" aria-label={t('profile.eyebrow')}>
@@ -155,6 +165,34 @@
 			<small>{t('profile.rank')}</small>
 			<RankBadge points={data.profile.points} size="md" />
 		</div>
+	</section>
+
+	<section class="climb">
+		<div class="climb-copy">
+			<p class="study-eyebrow">{t('profile.climbEyebrow')}</p>
+			{#if data.position === null}
+				<strong>{t('profile.unranked')}</strong>
+			{:else if data.position === 1}
+				<strong>{t('profile.atTop')}</strong>
+			{:else if data.nextUp}
+				<strong>
+					{#if toNext === 0}
+						{t('profile.tiedWith', { position: data.nextUp.position })}
+					{:else}
+						{t('profile.toPosition', {
+							n: (toNext ?? 0).toLocaleString(),
+							position: data.nextUp.position,
+						})}
+					{/if}
+				</strong>
+				{#if showFirst}
+					<small>{t('profile.toFirst', { n: (toFirst ?? 0).toLocaleString() })}</small>
+				{/if}
+			{/if}
+		</div>
+		<a class="study-button" href={resolve('/dashboard', {}) + '#leaderboard'}>
+			{t('profile.viewLeaderboard')} <span aria-hidden="true">↗</span>
+		</a>
 	</section>
 
 	{#if message}<p class="notice" role="status">{message}</p>{/if}
@@ -299,11 +337,67 @@
 </StudyShell>
 
 <style>
+	.profile-heading {
+		align-items: center;
+		flex-wrap: wrap;
+	}
 	.identity {
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-md);
 		min-width: 0;
+		/* Grow to fill the row, but wrap the sign-out button onto its own line
+		   before the name starts breaking mid-word. */
+		flex: 1 1 320px;
+	}
+	.identity-text {
+		min-width: 0;
+	}
+	/* The page default spaces these for full-width headings; beside an 84px
+	   photo the three lines need to read as one block. */
+	.identity-text .study-eyebrow {
+		margin-bottom: 10px;
+	}
+	.identity-text h1 {
+		margin-bottom: 4px;
+		font-size: var(--text-2xl);
+		overflow-wrap: break-word;
+	}
+	.handle {
+		margin: 0;
+		color: var(--color-text-secondary);
+		font-size: var(--text-base);
+	}
+	.climb {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-md);
+		flex-wrap: wrap;
+		margin-bottom: var(--spacing-lg);
+		padding: 20px clamp(18px, 2.4vw, 26px);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
+	}
+	.climb-copy {
+		min-width: 0;
+		flex: 1 1 260px;
+	}
+	.climb-copy .study-eyebrow {
+		margin-bottom: 10px;
+	}
+	.climb-copy strong {
+		display: block;
+		font-family: var(--font-display);
+		font-size: var(--text-lg);
+		font-weight: var(--font-weight-bold);
+	}
+	.climb-copy small {
+		display: block;
+		margin-top: 6px;
+		color: var(--color-text-secondary);
+		font-size: var(--text-sm);
 	}
 	.avatar {
 		width: 84px;
@@ -499,6 +593,16 @@
 	@media (max-width: 540px) {
 		.details {
 			grid-template-columns: 1fr;
+		}
+		.avatar {
+			width: 64px;
+			height: 64px;
+		}
+		.identity-text h1 {
+			font-size: var(--text-xl);
+		}
+		.climb :global(.study-button) {
+			width: 100%;
 		}
 	}
 </style>

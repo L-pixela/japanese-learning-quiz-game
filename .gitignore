@@ -11,6 +11,11 @@ node_modules
 # OS
 .DS_Store
 Thumbs.db
+backup.sql
+backup-split.sql
+split-sql.mjs
+find-big-field.mjs
+find-long-line.mjs
 
 # Env
 .env

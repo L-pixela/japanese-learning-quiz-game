@@ -97,7 +97,9 @@
 						<span class="close-card" aria-hidden="true">×</span>
 						<p class="study-eyebrow">Built for TanTore</p>
 						<h2>{member.name}</h2>
-						<p>{member.summary}</p>
+						<ul class="member-work">
+							{#each member.summary as item (item)}<li>{item}</li>{/each}
+						</ul>
 					</div>
 				</div>
 			</button>{/each}
@@ -175,6 +177,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		min-height: 0;
 		padding: 30px;
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
@@ -184,11 +187,33 @@
 		margin: 10px 0 14px;
 		font-size: var(--font-size-h3);
 	}
-	.member-back p:last-child {
+	/* One line per deliverable, scanned rather than read. The card is a fixed
+	   size, so a long list scrolls instead of overflowing the face. */
+	.member-work {
 		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 9px;
+		overflow-y: auto;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-small);
-		line-height: var(--line-height-relaxed);
+		line-height: var(--line-height-normal);
+		text-align: left;
+	}
+	.member-work li {
+		position: relative;
+		padding-left: 20px;
+	}
+	.member-work li::before {
+		content: '';
+		position: absolute;
+		top: 0.55em;
+		left: 0;
+		width: 7px;
+		height: 7px;
+		border-radius: var(--radius-full);
+		background: var(--color-primary);
 	}
 	.close-card {
 		position: absolute;

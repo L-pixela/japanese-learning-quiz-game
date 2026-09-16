@@ -20,8 +20,10 @@ export const POST: RequestHandler = async ({ request, platform, locals }) => {
 	const score = gradeAnswers(attempt.questions, body.answers)
 	if (score === null)
 		return json({ error: 'Provide exactly 10 answer indices from 0 to 3' }, { status: 400 })
+	// gradeAnswers has already proved this is 10 integers in 0..3.
+	const answers = body.answers as number[]
 	if (!attempt.submittedAt)
-		await saveQuizScore(d1, locals.user.id, attempt.id, attempt.level, score)
+		await saveQuizScore(d1, locals.user.id, attempt.id, attempt.level, score, answers)
 	return json(await getQuizResult(d1, locals.user.id, attempt.id), {
 		headers: { 'Cache-Control': 'no-store' },
 	})

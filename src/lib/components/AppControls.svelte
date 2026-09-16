@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte'
 	import { i18n, t } from '$lib/i18n.svelte'
 	import { theme } from '$lib/theme.svelte'
+	import { audio } from '$lib/audio.svelte'
 
 	// Both preferences live in localStorage, so they can only be read once the
 	// component is in the browser.
@@ -10,13 +11,25 @@
 	onMount(() => {
 		i18n.hydrate()
 		theme.hydrate()
+		audio.hydrate()
 
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 		const syncSystemTheme = () => (systemIsDark = mediaQuery.matches)
 		syncSystemTheme()
 		mediaQuery.addEventListener('change', syncSystemTheme)
 
-		return () => mediaQuery.removeEventListener('change', syncSystemTheme)
+		// Browsers block audio until the visitor has interacted with the page,
+		// so the very first gesture is what actually opens the context. Once
+		// unlocked these listeners have nothing left to do.
+		const unlock = () => audio.unlock()
+		window.addEventListener('pointerdown', unlock, { once: true })
+		window.addEventListener('keydown', unlock, { once: true })
+
+		return () => {
+			mediaQuery.removeEventListener('change', syncSystemTheme)
+			window.removeEventListener('pointerdown', unlock)
+			window.removeEventListener('keydown', unlock)
+		}
 	})
 
 	let isJa = $derived(i18n.current === 'ja')
@@ -27,6 +40,10 @@
 	}
 	function toggleTheme() {
 		theme.set(isDark ? 'light' : 'dark')
+	}
+
+	function soundLabel(name: 'nav.music' | 'nav.sfx', on: boolean) {
+		return t(name) + ': ' + t(on ? 'sound.on' : 'sound.off')
 	}
 </script>
 
@@ -45,6 +62,36 @@
 		<span class="thumb" aria-hidden="true"></span>
 		<span class="face face-a" aria-hidden="true">EN</span>
 		<span class="face face-b" aria-hidden="true">日本語</span>
+	</button>
+
+	<button
+		type="button"
+		class="switch sound"
+		class:on={audio.music}
+		role="switch"
+		aria-checked={audio.music}
+		aria-label={soundLabel('nav.music', audio.music)}
+		title={t('nav.music')}
+		onclick={() => audio.setMusic(!audio.music)}
+	>
+		<span class="thumb" aria-hidden="true"></span>
+		<span class="face face-a" aria-hidden="true">♪̸</span>
+		<span class="face face-b" aria-hidden="true">♪</span>
+	</button>
+
+	<button
+		type="button"
+		class="switch sound"
+		class:on={audio.sfx}
+		role="switch"
+		aria-checked={audio.sfx}
+		aria-label={soundLabel('nav.sfx', audio.sfx)}
+		title={t('nav.sfx')}
+		onclick={() => audio.setSfx(!audio.sfx)}
+	>
+		<span class="thumb" aria-hidden="true"></span>
+		<span class="face face-a" aria-hidden="true">🔇</span>
+		<span class="face face-b" aria-hidden="true">🔊</span>
 	</button>
 
 	<button
@@ -68,6 +115,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-sm);
+		flex-wrap: wrap;
 		flex-shrink: 0;
 	}
 	.switch {
@@ -88,7 +136,8 @@
 	.lang {
 		grid-template-columns: 48px 62px;
 	}
-	.theme {
+	.theme,
+	.sound {
 		grid-template-columns: 40px 40px;
 	}
 	.face {
@@ -125,11 +174,17 @@
 		width: 62px;
 		transform: translateX(48px);
 	}
-	.theme .thumb {
+	.theme .thumb,
+	.sound .thumb {
 		width: 40px;
 	}
-	.theme.on .thumb {
+	.theme.on .thumb,
+	.sound.on .thumb {
 		transform: translateX(40px);
+	}
+	/* Emoji ignore `color`, so the covered side is marked by weight instead. */
+	.sound .face {
+		font-size: var(--text-sm);
 	}
 	.switch:focus-visible {
 		outline: 3px solid var(--color-focus-ring);

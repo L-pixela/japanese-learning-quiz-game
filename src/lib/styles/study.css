@@ -10,13 +10,38 @@
 	--brand: var(--color-primary);
 	--accent: var(--color-accent);
 	min-height: 100vh;
+	/* dvh tracks the mobile browser's collapsing address bar; the vh above is
+	   the fallback for anything that does not know the unit. */
+	min-height: 100dvh;
 	padding: clamp(8px, 1.2vw, 20px);
+	/* Paint behind a notch, but keep content clear of it. */
+	padding-left: max(clamp(8px, 1.2vw, 20px), env(safe-area-inset-left));
+	padding-right: max(clamp(8px, 1.2vw, 20px), env(safe-area-inset-right));
+	padding-bottom: max(clamp(8px, 1.2vw, 20px), env(safe-area-inset-bottom));
 	color: var(--ink);
 	font-family: var(--font-body);
 	font-size: var(--text-base);
 }
 .study-app * {
 	box-sizing: border-box;
+}
+/* A safety net, not a substitute for fixing a layout: nothing inside the app
+   may push the page sideways on a narrow screen. */
+.study-app {
+	max-width: 100%;
+	overflow-x: clip;
+}
+/* Media keeps its aspect ratio instead of forcing the page wider. */
+.study-app img,
+.study-app svg,
+.study-app video {
+	max-width: 100%;
+}
+/* Tables, code and anything genuinely wide scroll inside their own box. */
+.study-scroll-x {
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 }
 .study-app a {
 	color: inherit;
@@ -234,6 +259,17 @@
 .study-button.secondary:hover {
 	background: var(--color-surface-sunken);
 }
+/* Destructive actions — the documented use for --color-danger. Red enough to
+   read as a warning, not so heavy it competes with the page's primary action. */
+.study-button.danger {
+	background: var(--color-surface);
+	color: var(--color-danger) !important;
+	box-shadow: var(--shadow-solid) var(--color-danger);
+}
+.study-button.danger:hover {
+	background: var(--color-danger);
+	color: var(--color-on-primary) !important;
+}
 .study-actions {
 	display: flex;
 	gap: var(--spacing-md);
@@ -416,6 +452,39 @@
 	.study-panel,
 	.study-metric {
 		padding: 18px;
+	}
+}
+@media (max-width: 360px) {
+	.study-main {
+		padding: 16px 12px 26px;
+	}
+	.study-panel,
+	.study-metric {
+		padding: 16px 14px;
+	}
+	.study-nav {
+		padding: 10px 12px;
+	}
+	.study-brand small {
+		display: none;
+	}
+	.study-footer {
+		padding: 14px 16px;
+		font-size: var(--text-xs);
+	}
+}
+/* Coarse pointers need a real target, whatever the viewport width. */
+@media (pointer: coarse) {
+	.study-app a,
+	.study-app button,
+	.study-app label,
+	.study-app [role='switch'] {
+		touch-action: manipulation;
+	}
+	.study-nav nav a {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
 	}
 }
 /* Very wide desktop: stop the content stretching to unreadable line lengths. */
