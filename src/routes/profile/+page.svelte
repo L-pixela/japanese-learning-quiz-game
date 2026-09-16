@@ -582,6 +582,7 @@
 		color: var(--color-primary);
 	}
 	.h-score small {
+		margin-left: 3px;
 		color: var(--color-text-faint);
 		font-size: var(--text-sm);
 	}

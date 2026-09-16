@@ -122,8 +122,10 @@ describe('user_level_progress and quiz scoring', () => {
 		const result = await getQuizResult(db.d1, 'u1', 'r')
 		expect(result?.review).toHaveLength(10)
 		expect(result?.review?.[0]).toEqual({
+			type: 'meaning',
 			japanese: 'word0',
 			reading: 'reading0',
+			meaning: null,
 			options: ['right', 'wrong', 'c', 'd'],
 			correctIndex: 0,
 			chosenIndex: 1,

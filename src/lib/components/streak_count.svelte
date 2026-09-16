@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte'
 	type Size = 'sm' | 'md' | 'lg'
 
 	type Props = {
@@ -14,7 +15,7 @@
 <div class="streak streak--{size}" class:streak--active={isActive}>
 	<span class="streak-icon" aria-hidden="true">🔥</span>
 	<span class="streak-value">{streak}</span>
-	<span class="streak-label">day streak</span>
+	<span class="streak-label">{t('nav.dayStreak')}</span>
 </div>
 
 <style>

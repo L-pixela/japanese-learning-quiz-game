@@ -2,7 +2,9 @@
 	import { onMount } from 'svelte'
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { team } from '$lib/team'
-	import { t } from '$lib/i18n.svelte'
+	import { i18n, t } from '$lib/i18n.svelte'
+
+	let isJa = $derived(i18n.current === 'ja')
 
 	// Fall back to the portrait placeholder if the artwork file is missing.
 	let failed = $state<Record<string, boolean>>({})
@@ -30,7 +32,7 @@
 </script>
 
 <svelte:head
-	><title>The people behind TanTore</title><meta
+	><title>{t('team.peopleBehind')} · TanTore</title><meta
 		name="description"
 		content="Meet the student team building TanTore, a Japanese vocabulary practice app."
 	/></svelte:head
@@ -47,14 +49,14 @@
 	<div class="team-intro">
 		<span lang="ja">共に学び、共に作る。</span>
 		<p>{t('team.together')}</p>
-		<span class="edition">TANTORE / TEAM NOTES</span>
+		<span class="edition">TanTore / {t('team.notes')}</span>
 	</div>
-	<section class="team-grid" aria-label="Team members">
+	<section class="team-grid" aria-label={t('a11y.teamMembers')}>
 		{#each team as member, index (member.name)}<button
 				class:flipped={activeMember === member.name}
 				class="member"
 				type="button"
-				aria-label={`Show ${member.name}'s contribution`}
+				aria-label={t('team.showContribution', { name: member.name })}
 				aria-pressed={activeMember === member.name}
 				onclick={() => toggleMember(member.name)}
 			>
@@ -87,15 +89,15 @@
 								</div>{/if}<span class="member-index">{String(index + 1).padStart(2, '0')}</span>
 						</div>
 						<div class="member-info">
-							<p class="study-eyebrow">{member.role}</p>
+							<p class="study-eyebrow">{isJa ? member.roleJa : member.role}</p>
 							<h2 lang="ja">{member.japanese}</h2>
 							<p class="member-en">{member.name}</p>
-							<p class="contribution">{member.contribution}</p>
+							<p class="contribution">{isJa ? member.contributionJa : member.contribution}</p>
 						</div>
 					</div>
 					<div class="member-back" aria-hidden={activeMember !== member.name}>
 						<span class="close-card" aria-hidden="true">×</span>
-						<p class="study-eyebrow">Built for TanTore</p>
+						<p class="study-eyebrow">{t('team.builtFor')}</p>
 						<h2>{member.name}</h2>
 						<ul class="member-work">
 							{#each member.summary as item (item)}<li>{item}</li>{/each}

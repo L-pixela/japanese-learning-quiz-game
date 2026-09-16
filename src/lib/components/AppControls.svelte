@@ -9,8 +9,6 @@
 	let systemIsDark = $state(false)
 
 	onMount(() => {
-		i18n.hydrate()
-		theme.hydrate()
 		audio.hydrate()
 
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')

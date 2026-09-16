@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte'
 	type Props = {
 		titleId?: string
 	}
@@ -12,12 +13,9 @@
 			<span>米</span>
 		</div>
 		<div>
-			<p class="caption">今日の始まり</p>
-			<h1 id={titleId}>Create your study account</h1>
-			<p class="intro">
-				Build Anki-style vocab decks, review every day, and let your food rank grow with your
-				streak.
-			</p>
+			<p class="caption">{t('auth.todayBegins')}</p>
+			<h1 id={titleId}>{t('auth.registerTitle')}</h1>
+			<p class="intro">{t('auth.registerIntro')}</p>
 		</div>
 	</div>
 </div>

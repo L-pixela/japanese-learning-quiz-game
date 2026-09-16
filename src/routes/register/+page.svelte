@@ -16,23 +16,23 @@
 
 	const usernameError = $derived(
 		submitted && username.trim().length === 0
-			? 'Choose a username.'
+			? t('auth.chooseUsername')
 			: submitted && username.trim().length < 3
-				? 'Username needs at least 3 characters.'
+				? t('auth.usernameTooShort')
 				: '',
 	)
 	const passwordError = $derived(
 		submitted && password.length === 0
-			? 'Create a password.'
+			? t('auth.createPassword')
 			: submitted && password.length < 8
-				? 'Password needs at least 8 characters.'
+				? t('auth.passwordTooShort')
 				: '',
 	)
 	const confirmPasswordError = $derived(
 		submitted && confirmPassword.length === 0
-			? 'Confirm your password.'
+			? t('auth.confirmYourPassword')
 			: submitted && password !== confirmPassword
-				? 'Passwords do not match.'
+				? t('auth.passwordsDiffer')
 				: '',
 	)
 	const isValid = $derived(!usernameError && !passwordError && !confirmPasswordError)
@@ -61,14 +61,14 @@
 				const data = (await response.json()) as { error?: string }
 				serverError =
 					data.error === 'username already taken'
-						? 'That username is already taken.'
-						: 'Unable to create account right now.'
+						? t('auth.usernameTaken')
+						: t('auth.registerFailed')
 				return
 			}
 
 			await goto(resolve('/login', {}))
 		} catch {
-			serverError = 'Unable to connect. Please try again.'
+			serverError = t('auth.connectionFailed')
 		} finally {
 			isSubmitting = false
 		}
@@ -78,15 +78,15 @@
 <main class="register-page">
 	<section class="register-shell" aria-labelledby="register-title">
 		<header class="site-header">
-			<a class="brand-mark" href={resolve('/', {})} aria-label="TanTore home">
+			<a class="brand-mark" href={resolve('/', {})} aria-label={t('a11y.home')}>
 				<span class="brand-seal">単</span>
 				<span>TanTore</span>
 			</a>
-			<p>単語トレーニング / Word training</p>
+			<p>{t('auth.tagline')}</p>
 		</header>
 
 		<div class="register-layout">
-			<aside class="rank-panel" aria-label="TanTore rank preview">
+			<aside class="rank-panel" aria-label={t('auth.rankPreview')}>
 				<div class="panel-scene"><JapanScene scene="torii" /></div>
 				<RegisterRankPreview titleId="register-title" />
 			</aside>
@@ -236,7 +236,7 @@
 		font-family: var(--font-display);
 		font-size: var(--font-size-h2);
 		font-weight: var(--font-weight-bold);
-		line-height: 1.1;
+		line-height: var(--line-height-tight);
 		letter-spacing: 0;
 	}
 
@@ -276,7 +276,7 @@
 
 	.server-error {
 		margin: 0;
-		color: var(--color-danger, #c64b6b);
+		color: var(--color-danger);
 		font-weight: 700;
 		font-size: 0.9rem;
 	}

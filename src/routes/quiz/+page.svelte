@@ -2,13 +2,19 @@
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { STATUSES } from '$lib/levels'
-	import { t } from '$lib/i18n.svelte'
+	import { t, levelName, levelDesc, difficultyLabel } from '$lib/i18n.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	let completed = $derived(data.levels.filter((level) => level.status === 'completed').length)
+
+	const GROUPS = [
+		{ name: 'Easy', range: '01 to 03', japanese: '基礎' },
+		{ name: 'Medium', range: '04 to 07', japanese: '成長' },
+		{ name: 'Hard', range: '08 to 10', japanese: '挑戦' },
+	] as const
 </script>
 
-<svelte:head><title>Quiz · TanTore</title></svelte:head>
+<svelte:head><title>{t('nav.quiz')} · TanTore</title></svelte:head>
 <StudyShell>
 	<div class="study-heading">
 		<div>
@@ -24,23 +30,23 @@
 			<p>{t('quiz.levelsCompleted')}</p>
 		</div>
 		<div class="map-progress">
-			<progress value={completed} max="10" aria-label="Levels completed"></progress>
+			<progress value={completed} max="10" aria-label={t('a11y.levelsCompleted')}></progress>
 			<p>{t('quiz.rules')}</p>
 		</div>
 	</div>
-	<div class="legend" aria-label="Level status legend">
+	<div class="legend" aria-label={t('a11y.levelLegend')}>
 		{#each STATUSES as status (status)}<span class={'study-pill ' + status}
 				><span aria-hidden="true">●</span>{t(`status.${status}`)}</span
 			>{/each}
 	</div>
 	<div class="level-path">
-		{#each [{ name: 'Easy', range: '01 to 03', label: 'Build your foundation', japanese: '基礎' }, { name: 'Medium', range: '04 to 07', label: 'Broaden your world', japanese: '成長' }, { name: 'Hard', range: '08 to 10', label: 'Find the finer meaning', japanese: '挑戦' }] as group (group.name)}
+		{#each GROUPS as group (group.name)}
 			<section class="level-group">
 				<div class="group-heading">
 					<span lang="ja">{group.japanese}</span>
 					<div>
-						<p class="study-eyebrow">{group.name} / {group.range}</p>
-						<h2>{group.label}</h2>
+						<p class="study-eyebrow">{difficultyLabel(group.name)} / {group.range}</p>
+						<h2>{t(`group.${group.name}`)}</h2>
 					</div>
 				</div>
 				<div class="level-grid">
@@ -54,13 +60,16 @@
 								>
 							</div>
 							<span class="tile-japanese" lang="ja">{level.japanese}</span>
-							<h3>{level.name}</h3>
-							<p>{level.description}</p>
+							<h3>{levelName(level.level)}</h3>
+							<p>{levelDesc(level.level)}</p>
 							<div class="tile-bottom">
 								<span
 									>{level.attempts
-										? 'Best ' + level.bestScore + '/10 · ' + level.attempts + ' attempts'
-										: '10 questions'}</span
+										? t('quiz.tileBest', {
+												score: level.bestScore,
+												attempts: level.attempts,
+											})
+										: t('quiz.tileQuestions')}</span
 								><span aria-hidden="true">↗</span>
 							</div></a
 						>{/each}

@@ -1,15 +1,17 @@
 <script lang="ts">
 	import { untrack } from 'svelte'
+	import { SvelteSet } from 'svelte/reactivity'
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
-	import { t } from '$lib/i18n.svelte'
+	import { t, levelName, difficultyLabel } from '$lib/i18n.svelte'
 	import { sfx } from '$lib/audio.svelte'
+	import type { Question } from '$lib/quiz-types'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	type Quiz = {
 		attemptId: string
-		questions: Array<{ japanese: string; reading: string; options: string[] }>
+		questions: Question[]
 	}
 	type QuizResult = {
 		attemptId: string
@@ -32,6 +34,15 @@
 	// the learner chooses when to be tested — the two halves of the same page.
 	let started = $state(false)
 	let search = $state('')
+	/** Covers the English so the list doubles as a self-test; tap to reveal. */
+	let hideMeanings = $state(false)
+	const revealed = new SvelteSet<string>()
+
+	function toggleReveal(id: string) {
+		if (revealed.has(id)) revealed.delete(id)
+		else revealed.add(id)
+		sfx('tick')
+	}
 	let words = $derived(
 		data.words.filter((word) => {
 			const term = search.trim().toLowerCase()
@@ -69,7 +80,7 @@
 				return
 			}
 			const started = (await response.json()) as Quiz & { error?: string }
-			if (!response.ok) throw new Error(started.error ?? 'Unable to start quiz.')
+			if (!response.ok) throw new Error(started.error ?? t('quiz.startFailed'))
 			quiz = started
 			current = 0
 			answers = Array(10).fill(-1)
@@ -94,7 +105,7 @@
 				return
 			}
 			const graded = (await response.json()) as QuizResult & { error?: string }
-			if (!response.ok) throw new Error(graded.error ?? 'Unable to save your answers.')
+			if (!response.ok) throw new Error(graded.error ?? t('quiz.saveFailed'))
 			// Submit already returns the graded result, so the summary opens without a round trip.
 			result = graded
 			sfx(graded.passed ? 'pass' : 'fail')
@@ -120,6 +131,7 @@
 		// A new level always opens on its words, never mid-quiz.
 		started = false
 		search = ''
+		revealed.clear()
 	})
 	async function nextQuiz() {
 		await goto(resolve('/quiz/[level]', { level: String(data.level.level + 1) }))
@@ -135,7 +147,8 @@
 <StudyShell>
 	<div class="quiz-top">
 		<a href={resolve('/quiz', {})}>← {t('level.allLevels')}</a><span
-			>Level {String(data.level.level).padStart(2, '0')} · {data.level.difficulty}</span
+			>{t('deck.level')}
+			{String(data.level.level).padStart(2, '0')} · {difficultyLabel(data.level.difficulty)}</span
 		>
 	</div>
 
@@ -144,7 +157,7 @@
 		<section class="level-intro" id="words">
 			<div class="intro-copy">
 				<p class="study-eyebrow">{t('level.stepStudy')}</p>
-				<h1>{data.level.name} <span lang="ja">{data.level.japanese}</span></h1>
+				<h1>{levelName(data.level.level)} <span lang="ja">{data.level.japanese}</span></h1>
 				<p class="study-muted">{t('level.studyLead', { count: data.count })}</p>
 			</div>
 			<div class="intro-facts">
@@ -175,6 +188,18 @@
 				aria-label={t('deck.searchLabel')}
 				bind:value={search}
 			/>
+			<button
+				type="button"
+				class="study-button secondary cover-toggle"
+				aria-pressed={hideMeanings}
+				onclick={() => {
+					hideMeanings = !hideMeanings
+					revealed.clear()
+					sfx('tick')
+				}}
+			>
+				{hideMeanings ? t('deck.showMeanings') : t('deck.hideMeanings')}
+			</button>
 		</div>
 
 		{#if data.count === 0}
@@ -182,12 +207,18 @@
 		{:else if words.length === 0}
 			<p class="deck-empty">{t('deck.noMatch', { term: search })}</p>
 		{:else}
-			<ol class="word-list" aria-label={'Vocabulary for level ' + data.level.level}>
+			<ol class="word-list" aria-label={t('a11y.vocabularyFor', { level: data.level.level })}>
 				{#each words as word, index (word.id)}<li>
 						<span class="word-index">{String(index + 1).padStart(2, '0')}</span>
 						<span class="word-japanese" lang="ja">{word.japanese}</span>
 						<span class="word-reading" lang="ja">{word.reading}</span>
-						<span class="word-meaning">{word.meaning}</span>
+						{#if hideMeanings && !revealed.has(word.id)}
+							<button type="button" class="word-cover" onclick={() => toggleReveal(word.id)}>
+								{t('deck.tapToReveal')}
+							</button>
+						{:else}
+							<span class="word-meaning">{word.meaning}</span>
+						{/if}
 					</li>{/each}
 			</ol>
 			<p class="study-muted deck-note">
@@ -208,21 +239,30 @@
 		</nav>
 	{:else}
 		<section class="quiz-sheet">
-			<p class="study-eyebrow">{data.level.name} / {data.level.japanese}</p>
+			<p class="study-eyebrow">{levelName(data.level.level)} / {data.level.japanese}</p>
 			{#if quiz && question}
 				<div class="question-meta">
 					<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span><span
 						>{t('quiz.chooseMeaning')}</span
 					>
 				</div>
-				<progress value={current + 1} max="10" aria-label="Question progress"></progress>
+				<progress value={current + 1} max="10" aria-label={t('a11y.questionProgress')}></progress>
 				<div class="word-prompt" aria-live="polite">
-					<p lang="ja">{question.reading}</p>
-					<h1 lang="ja">{question.japanese}</h1>
-					<span>{t('quiz.whatMeans')}</span>
+					<span class="ask-type">{t(`ask.${question.type}`)}</span>
+					{#if question.type === 'word'}
+						<h1 class="prompt-en">{question.meaning}</h1>
+					{:else}
+						{#if question.reading && question.reading !== question.japanese}
+							<p lang="ja">{question.reading}</p>
+						{/if}
+						<h1 lang="ja">{question.japanese}</h1>
+					{/if}
+					<span>{t(`ask.${question.type}Hint`)}</span>
 				</div>
 				<fieldset disabled={busy}>
-					<legend class="sr-only">Answer for {question.japanese}</legend>
+					<legend class="sr-only"
+						>{t('a11y.answerFor', { word: question.japanese ?? question.meaning ?? '' })}</legend
+					>
 					<div class="options">
 						{#each question.options as option, index (current + ':' + index)}<label
 								class:selected={answers[current] === index}
@@ -233,7 +273,7 @@
 									bind:group={answers[current]}
 									onchange={() => sfx('select')}
 								/><span class="option-letter">{String.fromCharCode(65 + index)}</span><span
-									>{option}</span
+									lang={question.type === 'meaning' ? 'en' : 'ja'}>{option}</span
 								></label
 							>{/each}
 					</div>
@@ -561,9 +601,10 @@
 		font-family: var(--font-display);
 		font-size: clamp(21px, 3.6vw, 32px);
 		font-weight: var(--font-weight-bold);
-		letter-spacing: -1px;
+		letter-spacing: 0.5px;
 	}
 	.result-stats strong span {
+		margin-left: 4px;
 		font-size: var(--font-size-body);
 		color: var(--color-text-faint);
 	}
@@ -572,7 +613,7 @@
 		margin-top: 4px;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-caption);
-		line-height: 1.4;
+		line-height: var(--line-height-snug);
 	}
 	.result-actions {
 		display: grid;
@@ -835,5 +876,53 @@
 		.word-meaning {
 			grid-column: 2 / -1;
 		}
+	}
+
+	.ask-type {
+		display: inline-block;
+		margin-bottom: 16px;
+		padding: 6px 14px;
+		border-radius: var(--radius-full);
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+	}
+	/* An English prompt needs the body face and a smaller size — the display
+	   face is sized for two or three kanji, not a phrase. */
+	.prompt-en {
+		font-family: var(--font-body) !important;
+		font-size: clamp(26px, 4.6vw, 40px) !important;
+		line-height: var(--line-height-tight);
+	}
+
+	.cover-toggle {
+		flex-shrink: 0;
+		min-height: 56px;
+	}
+	.cover-toggle[aria-pressed='true'] {
+		background: var(--color-primary);
+		color: var(--color-on-primary) !important;
+		box-shadow: var(--shadow-solid) var(--color-primary-shadow);
+	}
+	/* Sits in the meaning column so revealing a row never shifts the layout. */
+	.word-cover {
+		width: 100%;
+		min-height: 40px;
+		padding: 8px 14px;
+		border: 1px dashed var(--color-border-strong);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-sunken);
+		color: var(--color-text-faint);
+		font: inherit;
+		font-size: var(--font-size-caption);
+		text-align: left;
+		cursor: pointer;
+	}
+	.word-cover:hover {
+		border-style: solid;
+		color: var(--color-primary);
 	}
 </style>

@@ -167,6 +167,15 @@ const dictionary = {
 	'profile.ranking': ['Ranking', '順位'],
 	'profile.streak': ['Streak', '連続日数'],
 	'profile.history': ['Quiz history', 'クイズ履歴'],
+	'ask.meaning': ['Meaning', '意味'],
+	'ask.meaningHint': ['What does this word mean?', 'この単語の意味は？'],
+	'ask.word': ['Recall', '思い出す'],
+	'ask.wordHint': ['Which word means this?', 'これに当たる単語は？'],
+	'ask.reading': ['Reading', '読み方'],
+	'ask.readingHint': ['How is this read?', 'この読み方は？'],
+	'deck.hideMeanings': ['Hide meanings', '意味を隠す'],
+	'deck.showMeanings': ['Show meanings', '意味を表示'],
+	'deck.tapToReveal': ['Tap to reveal', 'タップして表示'],
 	'level.stepStudy': ['Step 1 · Study the words', 'ステップ1・単語を覚える'],
 	'level.stepQuiz': ['Step 2 · Take the quiz', 'ステップ2・クイズに挑戦'],
 	'level.startQuiz': ['Start the quiz', 'クイズを始める'],
@@ -177,6 +186,154 @@ const dictionary = {
 	'level.allLevels': ['All levels', 'レベル一覧'],
 	'level.backToStudy': ['Back to the words', '単語に戻る'],
 	'level.yourBest': ['Your best', 'ベスト'],
+	// ---- Results page ----
+	'results.title': ['Your quiz results', 'クイズ結果'],
+	'results.eyebrow': ['Practice complete', 'おつかれさま'],
+	'results.passedTitle': ['One step further.', 'また一歩前へ。'],
+	'results.failedTitle': ['Every attempt is progress.', '挑戦はすべて前進。'],
+	'results.passedLead': [
+		'You passed this level. Take that feeling into the next one.',
+		'このレベルに合格しました。その調子で次へ進みましょう。',
+	],
+	'results.failedLead': [
+		'A few more words to get familiar with. You can try again anytime.',
+		'もう少し慣れたい単語があります。いつでも再挑戦できます。',
+	],
+	'results.correctAnswers': ['Correct answers', '正解数'],
+	'results.passed': ['Passed', '合格'],
+	'results.notPassed': ['Not passed this time', '今回は不合格'],
+	'results.passMark': ['Pass mark: 6 out of 10', '合格ライン：10問中6問'],
+	'results.pointsEarned': ['Points earned', '獲得ポイント'],
+	'results.totalPoints': ['{n} total points', '合計{n}ポイント'],
+	'results.streakDays': ['{n}-day streak', '{n}日連続'],
+	'results.milestone': ['A shared milestone', 'みんなの記録'],
+	'results.completedThisLevel': ['have completed this level', 'がこのレベルを突破'],
+	'results.completionDetail': [
+		'{done} of {total} registered learners have passed Level {level}.',
+		'登録者{total}人のうち{done}人がレベル{level}に合格しています。',
+	],
+	'results.countedOnce': [
+		'Each learner counts once, however many times they practice.',
+		'何回練習しても、1人につき1回として数えます。',
+	],
+	'results.questionLog': ['Question log', '復習'],
+	'results.cleanSheet': ['A clean sheet. All ten correct.', '全問正解です。'],
+	'results.oneToReview': ['One word to look at again.', '見直したい単語が1つあります。'],
+	'results.manyToReview': ['{n} words to look at again.', '見直したい単語が{n}つあります。'],
+	'results.filterAll': ['All {n}', 'すべて{n}'],
+	'results.filterMistakes': ['Mistakes {n}', '間違い{n}'],
+	'results.correctAnswer': ['Correct answer', '正解'],
+	'results.youChose': ['You chose', 'あなたの解答'],
+	'results.noAnswer': ['No answer', '未回答'],
+	'results.nextLevel': ['Next level', '次のレベル'],
+	'results.practiceAgain': ['Practice again', 'もう一度練習'],
+	'results.backToPath': ['Back to the path', 'レベル一覧へ'],
+	'results.studyDesk': ['Your study desk', 'ホーム'],
+	'results.emptyEyebrow': ['Your next chapter', '次の一歩'],
+	'results.emptyTitle': ['A little practice comes first.', 'まずは練習から。'],
+	'results.emptyLead': [
+		'Finish a level quiz to see your score and progress here.',
+		'クイズを終えると、ここに結果と進捗が表示されます。',
+	],
+	'results.chooseLevel': ['Choose a level', 'レベルを選ぶ'],
+
+	// ---- Screen-reader labels ----
+	'nav.pts': ['PTS', 'ポイント'],
+	'nav.dayStreak': ['day streak', '日連続'],
+	'quiz.saveFailed': ['Unable to save your answers.', '解答を保存できませんでした。'],
+	'quiz.startFailed': ['Unable to start the quiz.', 'クイズを開始できませんでした。'],
+	// ---- Level titles (data, looked up by number) ----
+	'levelName.1': ['First steps', 'はじめの一歩'],
+	'levelName.2': ['Daily life', '暮らしのことば'],
+	'levelName.3': ['Around town', '街へ出る'],
+	'levelName.4': ['New horizons', '広がる世界'],
+	'levelName.5': ['The bridge', '橋をわたる'],
+	'levelName.6': ['Discovery', '発見'],
+	'levelName.7': ['Connections', 'つながり'],
+	'levelName.8': ['Going deeper', 'より深く'],
+	'levelName.9': ['The challenge', '挑戦'],
+	'levelName.10': ['The summit', '頂上へ'],
+	'levelDesc.1': ['Everyday N4 words', '日常で使うN4単語'],
+	'levelDesc.2': ['Home, routines & people', '家・習慣・人'],
+	'levelDesc.3': ['Getting out & about', '外出とおでかけ'],
+	'levelDesc.4': ['Building your N4 foundation', 'N4の土台づくり'],
+	'levelDesc.5': ['Upper N4 vocabulary', 'N4上級の単語'],
+	'levelDesc.6': ['Your first N3 words', 'はじめてのN3単語'],
+	'levelDesc.7': ['Ideas & relationships', '考えと人間関係'],
+	'levelDesc.8': ['More nuanced N3 vocabulary', 'ニュアンスのあるN3単語'],
+	'levelDesc.9': ['Abstract ideas & expression', '抽象的な考えと表現'],
+	'levelDesc.10': ['Put your N3 knowledge to work', 'N3の力を試す'],
+	'difficulty.Easy': ['Easy', 'やさしい'],
+	'difficulty.Medium': ['Medium', 'ふつう'],
+	'difficulty.Hard': ['Hard', 'むずかしい'],
+	'group.Easy': ['Build your foundation', '基礎をつくる'],
+	'group.Medium': ['Broaden your world', '世界を広げる'],
+	'group.Hard': ['Find the finer meaning', '細かな意味をつかむ'],
+	'quiz.tileQuestions': ['10 questions', '全10問'],
+	'quiz.tileBest': ['Best {score}/10 · {attempts} attempts', 'ベスト{score}/10・{attempts}回'],
+	'team.roleTeamLeader': ['Team Leader', 'チームリーダー'],
+	'team.roleSubLeader': ['Sub Leader', 'サブリーダー'],
+	'team.roleMember': ['Member', 'メンバー'],
+
+	'a11y.mainNav': ['Main navigation', 'メインナビゲーション'],
+	'a11y.learningSummary': ['Your learning summary', '学習サマリー'],
+	'a11y.leaderboard': ['Leaderboard', '順位表'],
+	'a11y.levelsCompleted': ['Levels completed', '完了したレベル'],
+	'a11y.levelLegend': ['Level status legend', 'レベル状態の凡例'],
+	'a11y.questionProgress': ['Question progress', '問題の進捗'],
+	'a11y.answerFor': ['Answer for {word}', '{word}の解答'],
+	'a11y.teamMembers': ['Team members', 'チームメンバー'],
+	'a11y.scoreByType': ['Score by question type', '出題形式別の成績'],
+	'a11y.filterQuestions': ['Filter questions', '問題をしぼり込む'],
+	'a11y.vocabularyFor': ['Vocabulary for level {level}', 'レベル{level}の単語'],
+	'a11y.home': ['TanTore home', 'TanTore ホーム'],
+
+	// ---- Team page ----
+	'team.peopleBehind': ['The people behind TanTore', 'TanToreを作った人たち'],
+	'team.notes': ['Team notes', 'チームノート'],
+	'team.builtFor': ['Built for TanTore', 'TanToreのために'],
+	'team.showContribution': ["Show {name}'s contribution", '{name}さんの担当を見る'],
+
+	// ---- Auth messages ----
+	'auth.enterUsername': ['Enter your username.', 'ユーザー名を入力してください。'],
+	'auth.usernameTooShort': [
+		'Username needs at least 3 characters.',
+		'ユーザー名は3文字以上で入力してください。',
+	],
+	'auth.enterPassword': ['Enter your password.', 'パスワードを入力してください。'],
+	'auth.passwordTooShort': [
+		'Password needs at least 8 characters.',
+		'パスワードは8文字以上で入力してください。',
+	],
+	'auth.wrongCredentials': [
+		'Username or password is incorrect.',
+		'ユーザー名またはパスワードが違います。',
+	],
+	'auth.loginFailed': ['Unable to log in right now.', '現在ログインできません。'],
+	'auth.connectionFailed': [
+		'Unable to connect. Please try again.',
+		'接続できません。もう一度お試しください。',
+	],
+	'auth.chooseUsername': ['Choose a username.', 'ユーザー名を決めてください。'],
+	'auth.createPassword': ['Create a password.', 'パスワードを設定してください。'],
+	'auth.confirmYourPassword': ['Confirm your password.', 'パスワードを再入力してください。'],
+	'auth.passwordsDiffer': ['Passwords do not match.', 'パスワードが一致しません。'],
+	'auth.usernameTaken': ['That username is already taken.', 'このユーザー名は使用されています。'],
+	'auth.registerFailed': [
+		'Unable to create account right now.',
+		'現在アカウントを作成できません。',
+	],
+	'auth.registerTitle': ['Create your study account', '学習アカウントを作成'],
+	'auth.registerIntro': [
+		'Build Anki-style vocab decks, review every day, and let your food rank grow with your streak.',
+		'単語帳を作って毎日復習し、連続記録でフードランクを育てましょう。',
+	],
+	'auth.todayBegins': ['Today begins', '今日の始まり'],
+	'auth.showPassword': ['Show password', 'パスワードを表示'],
+	'auth.hidePassword': ['Hide password', 'パスワードを隠す'],
+	'auth.rankPreview': ['TanTore rank preview', 'TanTore ランクのプレビュー'],
+	'auth.tagline': ['Word training', '単語トレーニング'],
+
 	'result.reviewAnswers': ['Review your answers', '答えを見直す'],
 	'profile.climbEyebrow': ['Climbing', '順位を上げる'],
 	'profile.viewLeaderboard': ['View leaderboard', '順位表を見る'],
@@ -245,6 +402,9 @@ class I18n {
 	/** Look up a key, substituting {placeholders} from `values`. */
 	t(key: Key, values?: Record<string, string | number>): string {
 		const entry = dictionary[key]
+		// Some keys are assembled at runtime (`levelName.${n}`). A missing one
+		// should show the key, not crash the page.
+		if (!entry) return key
 		const text = (this.current === 'ja' ? entry[1] : entry[0]) || entry[0]
 		if (!values) return text
 		return text.replace(/\{(\w+)\}/g, (whole, name: string) =>
@@ -254,6 +414,17 @@ class I18n {
 }
 
 export const i18n = new I18n()
+
+/** Level copy is data keyed by number, so these build the key for you. */
+export function levelName(level: number): string {
+	return i18n.t(`levelName.${level}` as Key)
+}
+export function levelDesc(level: number): string {
+	return i18n.t(`levelDesc.${level}` as Key)
+}
+export function difficultyLabel(difficulty: string): string {
+	return i18n.t(`difficulty.${difficulty}` as Key)
+}
 
 /** Shorthand so markup reads `{t('nav.quiz')}`. */
 export function t(key: Key, values?: Record<string, string | number>): string {

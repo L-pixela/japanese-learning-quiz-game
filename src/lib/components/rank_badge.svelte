@@ -86,7 +86,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		line-height: 1.2;
+		line-height: var(--line-height-tight);
 	}
 
 	.rank-badge-name {
@@ -96,6 +96,6 @@
 
 	.rank-badge-jp {
 		font-size: 0.7rem;
-		color: #6b6656;
+		color: var(--color-text-secondary);
 	}
 </style>

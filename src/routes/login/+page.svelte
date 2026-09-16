@@ -13,16 +13,16 @@
 
 	const usernameError = $derived(
 		submitted && username.trim().length === 0
-			? 'Enter your username.'
+			? t('auth.enterUsername')
 			: submitted && username.trim().length < 3
-				? 'Username needs at least 3 characters.'
+				? t('auth.usernameTooShort')
 				: '',
 	)
 	const passwordError = $derived(
 		submitted && password.length === 0
-			? 'Enter your password.'
+			? t('auth.enterPassword')
 			: submitted && password.length < 8
-				? 'Password needs at least 8 characters.'
+				? t('auth.passwordTooShort')
 				: '',
 	)
 	const isValid = $derived(!usernameError && !passwordError)
@@ -46,15 +46,13 @@
 			if (!response.ok) {
 				const data = (await response.json()) as { error?: string }
 				serverError =
-					data.error === 'invalid credentials'
-						? 'Username or password is incorrect.'
-						: 'Unable to log in right now.'
+					data.error === 'invalid credentials' ? t('auth.wrongCredentials') : t('auth.loginFailed')
 				return
 			}
 
 			await goto(resolve('/dashboard', {}))
 		} catch {
-			serverError = 'Unable to connect. Please try again.'
+			serverError = t('auth.connectionFailed')
 		} finally {
 			isSubmitting = false
 		}
@@ -64,15 +62,15 @@
 <main class="login-page">
 	<section class="login-shell" aria-labelledby="login-title">
 		<header class="site-header">
-			<a class="brand-mark" href={resolve('/', {})} aria-label="TanTore home">
+			<a class="brand-mark" href={resolve('/', {})} aria-label={t('a11y.home')}>
 				<span class="brand-seal">単</span>
 				<span>TanTore</span>
 			</a>
-			<p>単語トレーニング / Word training</p>
+			<p>{t('auth.tagline')}</p>
 		</header>
 
 		<div class="login-layout">
-			<aside class="rank-panel" aria-label="TanTore rank preview">
+			<aside class="rank-panel" aria-label={t('auth.rankPreview')}>
 				<div class="panel-scene"><JapanScene scene="fuji" /></div>
 				<div class="preview">
 					<div class="starter-rank">
@@ -263,7 +261,7 @@
 		font-family: var(--font-display);
 		font-size: var(--font-size-h2);
 		font-weight: var(--font-weight-bold);
-		line-height: 1.1;
+		line-height: var(--line-height-tight);
 	}
 
 	button {
