@@ -877,7 +877,6 @@
 			grid-column: 2 / -1;
 		}
 	}
-
 	.ask-type {
 		display: inline-block;
 		margin-bottom: 16px;

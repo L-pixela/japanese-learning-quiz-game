@@ -333,7 +333,6 @@ const dictionary = {
 	'auth.hidePassword': ['Hide password', 'パスワードを隠す'],
 	'auth.rankPreview': ['TanTore rank preview', 'TanTore ランクのプレビュー'],
 	'auth.tagline': ['Word training', '単語トレーニング'],
-
 	'result.reviewAnswers': ['Review your answers', '答えを見直す'],
 	'profile.climbEyebrow': ['Climbing', '順位を上げる'],
 	'profile.viewLeaderboard': ['View leaderboard', '順位表を見る'],

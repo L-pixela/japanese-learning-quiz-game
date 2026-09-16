@@ -16,9 +16,9 @@
 	let byType = $derived(
 		QUESTION_TYPES.map((type) => {
 			const items = review.filter((item) => item.type === type)
-			return { type, total: items.length, right: items.filter((i) => i.correct).length }
-		}).filter((row) => row.total > 0),
-	)
+				return { type, total: items.length, right: items.filter((i) => i.correct).length }
+			}).filter((row) => row.total > 0),
+		)
 	let mistakesOnly = $state(false)
 	let shown = $derived(mistakesOnly ? missed : review)
 </script>
