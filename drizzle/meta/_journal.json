@@ -57,6 +57,13 @@
       "when": 1789297064462,
       "tag": "0007_cultured_christian_walker",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1789491503908,
+      "tag": "0008_bizarre_genesis",
+      "breakpoints": true
     }
   ]
 }

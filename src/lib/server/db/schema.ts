@@ -117,6 +117,10 @@ export const quizAttempt = sqliteTable(
 				Array<{ japanese: string; reading: string; options: string[]; correctIndex: number }>
 			>()
 			.notNull(),
+		// The indices the learner picked, in question order. Kept alongside the
+		// questions so the results screen can show what went wrong, not just how
+		// many. Null for attempts started before this column existed.
+		answers: text('answers', { mode: 'json' }).$type<number[]>(),
 		score: integer('score'),
 		createdAt: integer('created_at', { mode: 'timestamp' })
 			.notNull()

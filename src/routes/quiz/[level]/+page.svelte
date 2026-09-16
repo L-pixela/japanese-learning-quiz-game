@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { onMount, untrack } from 'svelte'
+	import { untrack } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import { t } from '$lib/i18n.svelte'
+	import { sfx } from '$lib/audio.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	type Quiz = {
@@ -11,6 +12,7 @@
 		questions: Array<{ japanese: string; reading: string; options: string[] }>
 	}
 	type QuizResult = {
+		attemptId: string
 		level: number
 		score: number
 		passed: boolean
@@ -25,6 +27,34 @@
 	let busy = $state(false)
 	let error = $state('')
 	let question = $derived(quiz?.questions[current])
+
+	// The quiz no longer opens by itself. A level begins on its word list, and
+	// the learner chooses when to be tested — the two halves of the same page.
+	let started = $state(false)
+	let search = $state('')
+	let words = $derived(
+		data.words.filter((word) => {
+			const term = search.trim().toLowerCase()
+			return (
+				!term ||
+				word.japanese.includes(term) ||
+				word.reading.includes(term) ||
+				word.meaning.toLowerCase().includes(term)
+			)
+		}),
+	)
+
+	async function beginQuiz() {
+		started = true
+		sfx('select')
+		await start()
+	}
+
+	function backToStudy() {
+		started = false
+		quiz = null
+		error = ''
+	}
 	async function start() {
 		busy = true
 		error = ''
@@ -67,6 +97,7 @@
 			if (!response.ok) throw new Error(graded.error ?? 'Unable to save your answers.')
 			// Submit already returns the graded result, so the summary opens without a round trip.
 			result = graded
+			sfx(graded.passed ? 'pass' : 'fail')
 		} catch (e) {
 			error =
 				e instanceof Error
@@ -76,9 +107,7 @@
 			busy = false
 		}
 	}
-	onMount(() => {
-		void start()
-	})
+
 	// "Next quiz" only changes the route param, so the component is reused.
 	// Watch the level and deal a fresh set of words whenever it moves.
 	let loadedLevel = untrack(() => data.level.level)
@@ -88,13 +117,16 @@
 		loadedLevel = level
 		result = null
 		quiz = null
-		void start()
+		// A new level always opens on its words, never mid-quiz.
+		started = false
+		search = ''
 	})
 	async function nextQuiz() {
 		await goto(resolve('/quiz/[level]', { level: String(data.level.level + 1) }))
 	}
 	function retry() {
 		result = null
+		started = true
 		void start()
 	}
 </script>
@@ -102,64 +134,147 @@
 <svelte:head><title>Level {data.level.level} · TanTore</title></svelte:head>
 <StudyShell>
 	<div class="quiz-top">
-		<a href={resolve('/quiz', {})}>← {t('quiz.backToMap')}</a><span
+		<a href={resolve('/quiz', {})}>← {t('level.allLevels')}</a><span
 			>Level {String(data.level.level).padStart(2, '0')} · {data.level.difficulty}</span
 		>
 	</div>
-	<section class="quiz-sheet">
-		<p class="study-eyebrow">{data.level.name} / {data.level.japanese}</p>
-		{#if quiz && question}
-			<div class="question-meta">
-				<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span><span
-					>{t('quiz.chooseMeaning')}</span
-				>
+
+	{#if !started}
+		<!-- Step 1. The words, and the decision to be tested on them. -->
+		<section class="level-intro" id="words">
+			<div class="intro-copy">
+				<p class="study-eyebrow">{t('level.stepStudy')}</p>
+				<h1>{data.level.name} <span lang="ja">{data.level.japanese}</span></h1>
+				<p class="study-muted">{t('level.studyLead', { count: data.count })}</p>
 			</div>
-			<progress value={current + 1} max="10" aria-label="Question progress"></progress>
-			<div class="word-prompt" aria-live="polite">
-				<p lang="ja">{question.reading}</p>
-				<h1 lang="ja">{question.japanese}</h1>
-				<span>{t('quiz.whatMeans')}</span>
-			</div>
-			<fieldset disabled={busy}>
-				<legend class="sr-only">Answer for {question.japanese}</legend>
-				<div class="options">
-					{#each question.options as option, index (current + ':' + index)}<label
-							class:selected={answers[current] === index}
-							><input
-								type="radio"
-								name={'question-' + current}
-								value={index}
-								bind:group={answers[current]}
-							/><span class="option-letter">{String.fromCharCode(65 + index)}</span><span
-								>{option}</span
-							></label
-						>{/each}
+			<div class="intro-facts">
+				<div><strong>{data.count}</strong><small>{t('deck.wordsInDeck')}</small></div>
+				<div><strong>10</strong><small>{t('deck.drawnPerQuiz')}</small></div>
+				<div>
+					<strong>{data.progress?.attempts ? data.progress.bestScore + '/10' : '—'}</strong><small
+						>{t('level.yourBest')}</small
+					>
 				</div>
-			</fieldset>
-			<div class="quiz-controls">
-				<button
-					class="study-button secondary"
-					disabled={current === 0 || busy}
-					onclick={() => current--}>← {t('quiz.back')}</button
-				><span>{t('quiz.answered', { done: answers.filter((answer) => answer >= 0).length })}</span
-				>{#if current < 9}<button
-						class="study-button"
-						disabled={answers[current] < 0 || busy}
-						onclick={() => current++}>{t('quiz.next')} →</button
-					>{:else}<button
-						class="study-button"
-						disabled={busy || answers.some((answer) => answer < 0)}
-						onclick={submit}>{busy ? t('quiz.saving') : t('quiz.finish') + ' ↗'}</button
-					>{/if}
 			</div>
-		{:else}<div class="loading">
-				<h1>{busy ? t('quiz.opening') : t('quiz.ready')}</h1>
-				<p class="study-muted">{t('quiz.readyLead')}</p>
-				{#if !busy}<button class="study-button" onclick={start}>{t('quiz.tryAgain')}</button>{/if}
-			</div>{/if}
-		{#if error}<p class="study-error" role="alert">{error}</p>{/if}
-	</section>
-	<p class="quiz-note">{t('quiz.note')}</p>
+		</section>
+
+		<div class="level-start">
+			<div>
+				<p class="study-eyebrow">{t('level.stepQuiz')}</p>
+				<p class="study-muted">{t('quiz.rules')}</p>
+			</div>
+			<button class="study-button" onclick={beginQuiz} disabled={busy}>
+				{t('level.startQuiz')} <span aria-hidden="true">↗</span>
+			</button>
+		</div>
+
+		<div class="deck-actions">
+			<input
+				type="search"
+				placeholder={t('deck.search')}
+				aria-label={t('deck.searchLabel')}
+				bind:value={search}
+			/>
+		</div>
+
+		{#if data.count === 0}
+			<p class="deck-empty">{t('deck.empty')}</p>
+		{:else if words.length === 0}
+			<p class="deck-empty">{t('deck.noMatch', { term: search })}</p>
+		{:else}
+			<ol class="word-list" aria-label={'Vocabulary for level ' + data.level.level}>
+				{#each words as word, index (word.id)}<li>
+						<span class="word-index">{String(index + 1).padStart(2, '0')}</span>
+						<span class="word-japanese" lang="ja">{word.japanese}</span>
+						<span class="word-reading" lang="ja">{word.reading}</span>
+						<span class="word-meaning">{word.meaning}</span>
+					</li>{/each}
+			</ol>
+			<p class="study-muted deck-note">
+				{t('deck.showing', { shown: words.length, total: data.count })}
+			</p>
+		{/if}
+
+		<nav class="level-tabs" aria-label={t('deck.chooseLevel')}>
+			{#each data.levels as entry (entry.level)}<a
+					href={resolve('/quiz/[level]', { level: String(entry.level) })}
+					class:current={entry.level === data.level.level}
+					class:done={entry.status === 'completed'}
+					aria-current={entry.level === data.level.level ? 'page' : undefined}
+					><small>{String(entry.level).padStart(2, '0')}</small><span lang="ja"
+						>{entry.japanese}</span
+					></a
+				>{/each}
+		</nav>
+	{:else}
+		<section class="quiz-sheet">
+			<p class="study-eyebrow">{data.level.name} / {data.level.japanese}</p>
+			{#if quiz && question}
+				<div class="question-meta">
+					<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span><span
+						>{t('quiz.chooseMeaning')}</span
+					>
+				</div>
+				<progress value={current + 1} max="10" aria-label="Question progress"></progress>
+				<div class="word-prompt" aria-live="polite">
+					<p lang="ja">{question.reading}</p>
+					<h1 lang="ja">{question.japanese}</h1>
+					<span>{t('quiz.whatMeans')}</span>
+				</div>
+				<fieldset disabled={busy}>
+					<legend class="sr-only">Answer for {question.japanese}</legend>
+					<div class="options">
+						{#each question.options as option, index (current + ':' + index)}<label
+								class:selected={answers[current] === index}
+								><input
+									type="radio"
+									name={'question-' + current}
+									value={index}
+									bind:group={answers[current]}
+									onchange={() => sfx('select')}
+								/><span class="option-letter">{String.fromCharCode(65 + index)}</span><span
+									>{option}</span
+								></label
+							>{/each}
+					</div>
+				</fieldset>
+				<div class="quiz-controls">
+					<button
+						class="study-button secondary"
+						disabled={current === 0 || busy}
+						onclick={() => {
+							current--
+							sfx('tick')
+						}}>← {t('quiz.back')}</button
+					><span
+						>{t('quiz.answered', { done: answers.filter((answer) => answer >= 0).length })}</span
+					>{#if current < 9}<button
+							class="study-button"
+							disabled={answers[current] < 0 || busy}
+							onclick={() => {
+								current++
+								sfx('tick')
+							}}>{t('quiz.next')} →</button
+						>{:else}<button
+							class="study-button"
+							disabled={busy || answers.some((answer) => answer < 0)}
+							onclick={submit}>{busy ? t('quiz.saving') : t('quiz.finish') + ' ↗'}</button
+						>{/if}
+				</div>
+			{:else}<div class="loading">
+					<h1>{busy ? t('quiz.opening') : t('quiz.ready')}</h1>
+					<p class="study-muted">{t('quiz.readyLead')}</p>
+					{#if !busy}<button class="study-button" onclick={start}>{t('quiz.tryAgain')}</button>{/if}
+				</div>{/if}
+			{#if error}<p class="study-error" role="alert">{error}</p>{/if}
+		</section>
+		<p class="quiz-note">{t('quiz.note')}</p>
+		<div class="quiz-escape">
+			<button class="study-button secondary" onclick={backToStudy} disabled={busy}
+				>← {t('level.backToStudy')}</button
+			>
+		</div>
+	{/if}
 
 	{#if result}
 		<div class="result-backdrop">
@@ -212,7 +327,12 @@
 					{/if}
 					<a
 						class="study-button secondary"
-						href={resolve('/deck_list', {}) + '?level=' + result.level}
+						href={resolve('/quiz/quiz-results', {}) + '?attempt=' + result.attemptId}
+						>{t('result.reviewAnswers')}</a
+					>
+					<a
+						class="study-button secondary"
+						href={resolve('/quiz/[level]', { level: String(result.level) }) + '#words'}
 						>{t('result.continueStudy')}</a
 					>
 				</div>
@@ -490,6 +610,230 @@
 		}
 		.quiz-controls .study-button {
 			padding: 13px 16px;
+		}
+	}
+
+	/* ---------- Step 1: the words ---------- */
+	.level-intro {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 25px;
+		justify-content: space-between;
+		align-items: flex-end;
+		padding: clamp(22px, 3vw, 30px);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
+	}
+	.intro-copy {
+		min-width: 0;
+		flex: 1 1 320px;
+	}
+	.intro-copy h1 {
+		margin-bottom: 10px;
+	}
+	.intro-copy h1 span {
+		margin-left: 10px;
+		color: var(--color-primary);
+		font-size: var(--font-size-h3);
+	}
+	.intro-facts {
+		display: flex;
+		gap: clamp(18px, 3vw, 30px);
+		flex-wrap: wrap;
+	}
+	.intro-facts div {
+		display: grid;
+		gap: 3px;
+	}
+	.intro-facts strong {
+		font-family: var(--font-display);
+		font-size: clamp(20px, 3.3vw, 30px);
+		font-weight: var(--font-weight-bold);
+	}
+	.intro-facts small {
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-caption);
+	}
+	/* ---------- Step 2: the decision ---------- */
+	.level-start {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		flex-wrap: wrap;
+		margin-top: 18px;
+		padding: clamp(20px, 2.6vw, 26px) clamp(22px, 3vw, 30px);
+		border-radius: var(--radius-lg);
+		background: var(--color-primary);
+		color: var(--color-on-primary);
+		box-shadow: var(--shadow-md);
+	}
+	.level-start > div {
+		min-width: 0;
+		flex: 1 1 260px;
+	}
+	.level-start :global(.study-eyebrow) {
+		margin-bottom: 8px;
+		background: rgba(251, 247, 236, 0.2);
+		color: var(--color-on-primary);
+	}
+	.level-start .study-muted {
+		margin: 0;
+		color: var(--color-on-primary);
+		font-size: var(--font-size-body);
+		opacity: 0.85;
+	}
+	.level-start :global(.study-button) {
+		flex-shrink: 0;
+		background: var(--color-accent);
+		color: var(--panel-dark-deep);
+		box-shadow: var(--shadow-solid) rgba(0, 0, 0, 0.25);
+	}
+	.quiz-escape {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+	}
+	/* ---------- The word list ---------- */
+	.deck-actions {
+		display: flex;
+		gap: 14px;
+		align-items: center;
+		margin: 26px 0 18px;
+	}
+	.deck-actions input {
+		flex: 1;
+		min-width: 0;
+		min-height: 56px;
+		padding: 14px 22px;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-full);
+		background: var(--color-surface);
+		color: var(--color-text);
+		font: inherit;
+		font-size: var(--font-size-body);
+	}
+	.deck-actions input:focus {
+		border-color: var(--color-primary);
+		outline: none;
+	}
+	.word-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
+		overflow: hidden;
+	}
+	.word-list li {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+		gap: 14px;
+		align-items: baseline;
+		padding: 16px 24px;
+		border-bottom: 1px solid var(--color-border-subtle);
+	}
+	.word-list li:last-child {
+		border-bottom: 0;
+	}
+	.word-list li:nth-child(even) {
+		background: var(--color-surface-sunken);
+	}
+	.word-index {
+		color: var(--color-text-faint);
+		font-size: var(--font-size-caption);
+		font-weight: var(--font-weight-semibold);
+	}
+	.word-japanese {
+		font-family: var(--font-display);
+		font-size: clamp(18px, 2.7vw, 24px);
+		font-weight: var(--font-weight-bold);
+	}
+	.word-reading {
+		color: var(--color-primary);
+		font-size: var(--font-size-body);
+	}
+	.word-meaning {
+		font-size: var(--font-size-body);
+		overflow-wrap: anywhere;
+	}
+	.deck-empty {
+		padding: 44px;
+		border-radius: var(--radius-lg);
+		border: 2px dashed var(--color-border-strong);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-body);
+		text-align: center;
+	}
+	.deck-note {
+		margin-top: 18px;
+		font-size: var(--font-size-caption);
+	}
+	/* ---------- Level switcher ---------- */
+	.level-tabs {
+		display: grid;
+		grid-template-columns: repeat(10, minmax(0, 1fr));
+		gap: 6px;
+		margin: 32px 0 0;
+	}
+	.level-tabs a {
+		display: grid;
+		gap: 3px;
+		justify-items: center;
+		padding: 13px 4px;
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-solid) var(--color-border);
+		font-family: var(--font-display);
+		font-size: var(--font-size-body);
+		font-weight: var(--font-weight-bold);
+		text-align: center;
+		text-decoration: none;
+		overflow-wrap: anywhere;
+	}
+	.level-tabs small {
+		color: var(--color-text-faint);
+		font-size: var(--font-size-caption);
+		letter-spacing: 1px;
+	}
+	.level-tabs a.done {
+		background: var(--color-success-soft);
+		box-shadow: var(--shadow-solid) var(--color-border-strong);
+	}
+	.level-tabs a.current {
+		background: var(--color-primary);
+		color: var(--color-on-primary);
+		box-shadow: var(--shadow-solid) var(--color-primary-shadow);
+	}
+	.level-tabs a.current small {
+		color: var(--color-primary-soft);
+	}
+	@media (max-width: 800px) {
+		.word-list li {
+			grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr);
+			padding: 14px 16px;
+		}
+		.word-meaning {
+			grid-column: 2 / -1;
+		}
+		/* Ten tabs never fit a phone; five by two do. */
+		.level-tabs {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 480px) {
+		.level-start :global(.study-button) {
+			width: 100%;
+		}
+		.word-list li {
+			grid-template-columns: 30px minmax(0, 1fr);
+			gap: 6px 10px;
+		}
+		.word-reading,
+		.word-meaning {
+			grid-column: 2 / -1;
 		}
 	}
 </style>

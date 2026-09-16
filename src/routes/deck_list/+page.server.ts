@@ -1,18 +1,12 @@
-import { pageApi } from '$lib/server/page-api'
-import type { LevelProgress } from '$lib/levels'
+import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
-export type StudyWord = { id: string; japanese: string; reading: string; meaning: string }
-
-export const load: PageServerLoad = async ({ fetch, url }) => {
+/**
+ * The deck used to be its own section; it now lives on the level page beside
+ * the quiz it prepares you for. Old links and bookmarks land there instead.
+ */
+export const load: PageServerLoad = ({ url }) => {
 	const requested = Number(url.searchParams.get('level'))
 	const level = Number.isInteger(requested) && requested >= 1 && requested <= 10 ? requested : 1
-	const [progress, vocabulary] = await Promise.all([
-		pageApi<{ levels: LevelProgress[] }>(fetch, '/api/levels'),
-		pageApi<{ level: number; count: number; words: StudyWord[] }>(
-			fetch,
-			`/api/words?level=${level}`,
-		),
-	])
-	return { ...progress, ...vocabulary }
+	redirect(308, `/quiz/${level}`)
 }

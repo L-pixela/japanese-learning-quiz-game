@@ -41,12 +41,27 @@ export async function getQuizResult(d1: D1Database, userId: string, attemptId: s
 		.from(user)
 		.where(eq(user.id, userId))
 		.limit(1)
+	// Attempts taken before answers were recorded still show a score; they just
+	// have no per-question breakdown to show alongside it.
+	const chosen = Array.isArray(attempt.answers) ? attempt.answers : null
+	const review = chosen
+		? attempt.questions.map((question, i) => ({
+				japanese: question.japanese,
+				reading: question.reading,
+				options: question.options,
+				correctIndex: question.correctIndex,
+				chosenIndex: chosen[i] ?? null,
+				correct: chosen[i] === question.correctIndex,
+			}))
+		: null
+
 	return {
 		attemptId,
 		level: attempt.level,
 		difficulty: LEVELS[attempt.level - 1].difficulty,
 		score: attempt.score,
 		totalCount: 10,
+		review,
 		passed: attempt.score >= 6,
 		pointsEarned: attempt.score,
 		user: profile,
@@ -66,6 +81,7 @@ export async function saveQuizScore(
 	attemptId: string,
 	level: number,
 	score: number,
+	answers: number[],
 	now = new Date(),
 ) {
 	const timestamp = Math.floor(now.getTime() / 1000)
@@ -95,8 +111,8 @@ export async function saveQuizScore(
 			),
 		d1
 			.prepare(
-				'UPDATE quiz_attempt SET score = ?, submitted_at = ? WHERE id = ? AND user_id = ? AND submitted_at IS NULL',
+				'UPDATE quiz_attempt SET score = ?, answers = ?, submitted_at = ? WHERE id = ? AND user_id = ? AND submitted_at IS NULL',
 			)
-			.bind(score, timestamp, attemptId, userId),
+			.bind(score, JSON.stringify(answers), timestamp, attemptId, userId),
 	])
 }

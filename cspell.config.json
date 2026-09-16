@@ -18,7 +18,8 @@
 		"workerd",
 		"Anki",
 		"Tamagoyaki",
-		"Tsukimi"
+		"Tsukimi",
+		"unranked"
 	],
 	"ignorePaths": [
 		"node_modules/**",

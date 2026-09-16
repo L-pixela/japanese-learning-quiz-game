@@ -11,6 +11,8 @@ describe('user_level_progress and quiz scoring', () => {
 		)
 	})
 	afterEach(() => db.sqlite.close())
+	/** These cases assert scoring and progress, not the answer sheet itself. */
+	const anyAnswers = Array.from({ length: 10 }, () => 0)
 	function attempt(id: string, level = 1) {
 		db.sqlite
 			.prepare(
@@ -47,7 +49,7 @@ describe('user_level_progress and quiz scoring', () => {
 			['c', 2],
 		] as const) {
 			attempt(id)
-			await saveQuizScore(db.d1, 'u1', id, 1, score)
+			await saveQuizScore(db.d1, 'u1', id, 1, score, anyAnswers)
 			expect(
 				db.sqlite.prepare("SELECT status FROM user_level_progress WHERE user_id='u1'").get()
 					?.status,
@@ -60,8 +62,8 @@ describe('user_level_progress and quiz scoring', () => {
 	})
 	it('awards a replay once and keeps other users and levels untouched', async () => {
 		attempt('a')
-		await saveQuizScore(db.d1, 'u1', 'a', 1, 8)
-		await saveQuizScore(db.d1, 'u1', 'a', 1, 10)
+		await saveQuizScore(db.d1, 'u1', 'a', 1, 8, anyAnswers)
+		await saveQuizScore(db.d1, 'u1', 'a', 1, 10, anyAnswers)
 		expect(db.sqlite.prepare("SELECT points FROM user WHERE id='u1'").get()?.points).toBe(8)
 		expect(db.sqlite.prepare('SELECT attempts FROM user_level_progress').get()?.attempts).toBe(1)
 		expect(db.sqlite.prepare("SELECT points FROM user WHERE id='u2'").get()?.points).toBe(0)
@@ -74,7 +76,7 @@ describe('user_level_progress and quiz scoring', () => {
 			['d', '2026-09-13T00:01:00Z', 1],
 		] as const) {
 			attempt(id)
-			await saveQuizScore(db.d1, 'u1', id, 1, 6, new Date(time))
+			await saveQuizScore(db.d1, 'u1', id, 1, 6, anyAnswers, new Date(time))
 			expect(db.sqlite.prepare("SELECT streak FROM user WHERE id='u1'").get()?.streak).toBe(
 				expected,
 			)
@@ -83,8 +85,8 @@ describe('user_level_progress and quiz scoring', () => {
 	it('counts each completed learner once and scopes persisted results to the owner', async () => {
 		attempt('a')
 		attempt('b')
-		await saveQuizScore(db.d1, 'u1', 'a', 1, 7)
-		await saveQuizScore(db.d1, 'u1', 'b', 1, 9)
+		await saveQuizScore(db.d1, 'u1', 'a', 1, 7, anyAnswers)
+		await saveQuizScore(db.d1, 'u1', 'b', 1, 9, anyAnswers)
 		expect(await getQuizResult(db.d1, 'u1', 'a')).toMatchObject({
 			score: 7,
 			pointsEarned: 7,
@@ -92,6 +94,48 @@ describe('user_level_progress and quiz scoring', () => {
 			completion: { completedUsers: 1, totalUsers: 2, percentage: 50 },
 		})
 		expect(await getQuizResult(db.d1, 'u2', 'a')).toBeNull()
+	})
+	it('returns a per-question review of what was chosen against what was right', async () => {
+		// Real questions this time: the review echoes the option text back.
+		db.sqlite
+			.prepare(
+				'INSERT INTO quiz_attempt(id,user_id,level,questions,created_at) VALUES (?, ?, ?, ?, ?)',
+			)
+			.run(
+				'r',
+				'u1',
+				1,
+				JSON.stringify(
+					Array.from({ length: 10 }, (_, i) => ({
+						japanese: 'word' + i,
+						reading: 'reading' + i,
+						options: ['right', 'wrong', 'c', 'd'],
+						correctIndex: 0,
+					})),
+				),
+				1,
+			)
+		// Miss the first two, get the rest.
+		const answers = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+		await saveQuizScore(db.d1, 'u1', 'r', 1, 8, answers)
+
+		const result = await getQuizResult(db.d1, 'u1', 'r')
+		expect(result?.review).toHaveLength(10)
+		expect(result?.review?.[0]).toEqual({
+			japanese: 'word0',
+			reading: 'reading0',
+			options: ['right', 'wrong', 'c', 'd'],
+			correctIndex: 0,
+			chosenIndex: 1,
+			correct: false,
+		})
+		expect(result?.review?.filter((item) => !item.correct)).toHaveLength(2)
+		expect(result?.review?.[2].correct).toBe(true)
+	})
+	it('reports no review for an attempt saved before answers were recorded', async () => {
+		attempt('old')
+		db.sqlite.exec("UPDATE quiz_attempt SET score=7, submitted_at=1 WHERE id='old'")
+		expect((await getQuizResult(db.d1, 'u1', 'old'))?.review).toBeNull()
 	})
 	it('enforces unique user/level pairs, valid statuses, score range and cascading deletion', () => {
 		db.sqlite.exec("INSERT INTO user_level_progress VALUES ('u1',1,'completed',6,1,1)")
@@ -115,7 +159,7 @@ describe('user_level_progress and quiz scoring', () => {
 		db.sqlite.exec(
 			"CREATE TRIGGER reject_progress BEFORE INSERT ON user_level_progress BEGIN SELECT RAISE(ABORT, 'test failure'); END",
 		)
-		await expect(saveQuizScore(db.d1, 'u1', 'a', 1, 8)).rejects.toThrow()
+		await expect(saveQuizScore(db.d1, 'u1', 'a', 1, 8, anyAnswers)).rejects.toThrow()
 		expect(db.sqlite.prepare("SELECT points FROM user WHERE id='u1'").get()?.points).toBe(0)
 		expect(
 			db.sqlite.prepare("SELECT submitted_at FROM quiz_attempt WHERE id='a'").get()?.submitted_at,

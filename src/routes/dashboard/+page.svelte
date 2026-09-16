@@ -68,7 +68,7 @@
 			<span class="art-caption" lang="ja">一日一歩</span>
 		</div>
 	</section>
-	<section class="board" aria-label="Leaderboard">
+	<section class="board" id="leaderboard" aria-label="Leaderboard">
 		<div class="board-head">
 			<div>
 				<p class="study-eyebrow">{t('dashboard.boardEyebrow')}</p>
@@ -102,15 +102,21 @@
 			{/if}
 		</div>
 		<div class="board-table">
-			<div class="board-columns" aria-hidden="true">
-				<span>#</span><span>{t('dashboard.colLearner')}</span><span
-					>{t('dashboard.colUniversity')}</span
-				><span>{t('profile.rank')}</span><span>{t('dashboard.colPoints')}</span>
+			<div
+				class="board-columns"
+				class:before-you={data.leaderboard[0]?.id === data.user.id}
+				aria-hidden="true"
+			>
+				<span class="col-rank">#</span><span class="col-name">{t('dashboard.colLearner')}</span
+				><span class="col-university">{t('dashboard.colUniversity')}</span><span class="col-badge"
+					>{t('profile.rank')}</span
+				><span class="col-points">{t('dashboard.colPoints')}</span>
 			</div>
 			<ol class="board-list">
-				{#each data.leaderboard as learner (learner.id)}<li
+				{#each data.leaderboard as learner, i (learner.id)}<li
 						class:you={learner.id === data.user.id}
 						class:podium={learner.position <= 3}
+						class:before-you={data.leaderboard[i + 1]?.id === data.user.id}
 					>
 						<a
 							class="board-entry"
@@ -216,6 +222,8 @@
 		color: var(--on-panel-dark);
 		box-shadow: var(--shadow-md);
 		overflow: hidden;
+		/* Anchor scrolling in from the profile page: clear the sticky header. */
+		scroll-margin-top: 90px;
 	}
 	.board-head {
 		display: flex;
@@ -241,7 +249,7 @@
 	}
 	.board-table {
 		display: grid;
-		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 44px 92px;
+		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 56px 92px;
 	}
 	.board-columns,
 	.board-list {
@@ -264,6 +272,27 @@
 		grid-area: badge;
 		display: flex;
 		justify-content: center;
+		align-items: center;
+	}
+	/* The header cells sit in the same subgrid tracks as the row beneath, so
+	   each one is aligned the way its own column's content is: the rank badge
+	   is centred, so "Rank" is centred over it. */
+	.board-columns .col-rank {
+		grid-area: rank;
+		padding-left: 14px;
+	}
+	.board-columns .col-name {
+		grid-area: name;
+	}
+	.board-columns .col-university {
+		grid-area: university;
+	}
+	.board-columns .col-badge {
+		grid-area: badge;
+		text-align: center;
+	}
+	.board-columns .col-points {
+		grid-area: points;
 	}
 	.rank-status {
 		display: flex;
@@ -395,6 +424,21 @@
 		border-radius: var(--radius-md);
 		background: rgba(251, 247, 236, 0.14);
 		box-shadow: inset 4px 0 0 var(--color-accent);
+	}
+	/* Separators are straight, edge-to-edge lines; the highlighted row is a
+	   rounded panel. Where the two meet, the line carries on past the curve and
+	   reads as an overhanging edge — so the highlighted row draws no separator,
+	   and neither does whatever sits directly above it. The 1px is kept and
+	   only made transparent, so every row stays exactly the same height. */
+	.board-list li.you,
+	.board-list li.before-you,
+	.board-columns.before-you {
+		border-bottom-color: transparent;
+	}
+	/* A podium row already gets an accent bar from the inset shadow above, so
+	   the rank cell must not draw a second one beside it. */
+	.you .board-rank {
+		border-left-color: transparent;
 	}
 	@media (max-width: 800px) {
 		.hero-copy {
