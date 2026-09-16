@@ -112,9 +112,18 @@ export const quizAttempt = sqliteTable(
 			.notNull()
 			.references(() => user.id, { onDelete: 'cascade' }),
 		level: integer('level').notNull(),
+		// `type` and `meaning` are absent on attempts taken before questions had a
+		// direction; those are read back as plain meaning questions.
 		questions: text('questions', { mode: 'json' })
 			.$type<
-				Array<{ japanese: string; reading: string; options: string[]; correctIndex: number }>
+				Array<{
+					type?: 'meaning' | 'word' | 'reading'
+					japanese: string
+					reading: string
+					meaning?: string
+					options: string[]
+					correctIndex: number
+				}>
 			>()
 			.notNull(),
 		// The indices the learner picked, in question order. Kept alongside the

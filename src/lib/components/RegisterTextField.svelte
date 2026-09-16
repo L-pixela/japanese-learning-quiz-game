@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements'
+	import { t } from '$lib/i18n.svelte'
 
 	type Props = {
 		id: string
@@ -44,7 +45,7 @@
 			<button
 				type="button"
 				class="password-toggle"
-				aria-label={passwordVisible ? 'Hide password' : 'Show password'}
+				aria-label={passwordVisible ? t('auth.hidePassword') : t('auth.showPassword')}
 				aria-pressed={passwordVisible}
 				onclick={() => (passwordVisible = !passwordVisible)}
 			>
@@ -162,6 +163,6 @@
 		color: var(--color-error);
 		font-size: 0.85rem;
 		font-weight: 800;
-		line-height: 1.45;
+		line-height: var(--line-height-snug);
 	}
 </style>

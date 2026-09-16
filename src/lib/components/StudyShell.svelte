@@ -22,7 +22,7 @@
 				>TanTore<small>{t('nav.brandTagline')}</small></span
 			></a
 		>
-		<nav id="study-nav-links" class:open={isMenuOpen} aria-label="Main navigation">
+		<nav id="study-nav-links" class:open={isMenuOpen} aria-label={t('a11y.mainNav')}>
 			{#each links as link (link.href)}
 				<a
 					href={resolve(link.href, {})}

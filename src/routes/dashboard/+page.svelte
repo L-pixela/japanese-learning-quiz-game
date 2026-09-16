@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head
-	><title>Your study desk · TanTore</title><meta
+	><title>{t('dashboard.eyebrow')} · TanTore</title><meta
 		name="description"
 		content="Your daily Japanese vocabulary practice. Ten levels, one small step at a time."
 	/></svelte:head
@@ -29,7 +29,7 @@
 		</div>
 		<span class="study-stamp" lang="ja" aria-hidden="true">日々精進</span>
 	</div>
-	<section class="study-metrics" aria-label="Your learning summary">
+	<section class="study-metrics" aria-label={t('a11y.learningSummary')}>
 		<div class="study-metric">
 			<small>{t('dashboard.totalPoints')}</small><strong>{data.user.points.toLocaleString()}</strong
 			><span>{t('dashboard.totalPointsHint')}</span>
@@ -68,7 +68,7 @@
 			<span class="art-caption" lang="ja">一日一歩</span>
 		</div>
 	</section>
-	<section class="board" id="leaderboard" aria-label="Leaderboard">
+	<section class="board" id="leaderboard" aria-label={t('a11y.leaderboard')}>
 		<div class="board-head">
 			<div>
 				<p class="study-eyebrow">{t('dashboard.boardEyebrow')}</p>
@@ -131,7 +131,7 @@
 							<span class="board-university">{learner.university ?? '·'}</span>
 							<span class="board-badge"><RankBadge points={learner.points} size="sm" /></span>
 							<span class="board-points"
-								><span>{learner.points.toLocaleString()}</span><small>PTS</small></span
+								><span>{learner.points.toLocaleString()}</span><small>{t('nav.pts')}</small></span
 							>
 						</a>
 					</li>{/each}
@@ -167,8 +167,8 @@
 	.hero-copy h2 {
 		margin-bottom: 18px;
 		font-size: var(--font-size-display);
-		line-height: 1.05;
-		letter-spacing: -1.5px;
+		line-height: var(--line-height-tight);
+		letter-spacing: -0.5px;
 	}
 	.hero-copy > p:not(.study-eyebrow) {
 		margin-bottom: 26px;

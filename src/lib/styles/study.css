@@ -157,7 +157,7 @@
 	font-size: var(--text-headline);
 	font-weight: var(--font-weight-bold);
 	line-height: var(--line-height-tight);
-	letter-spacing: -1px;
+	letter-spacing: -0.3px;
 	margin-bottom: 14px;
 }
 .study-app h2 {
@@ -207,7 +207,7 @@
 	padding: 14px 11px;
 	border-radius: var(--radius-md);
 	background: var(--color-accent);
-	color: #2a3721;
+	color: var(--panel-dark-deep);
 	box-shadow: var(--shadow-solid) rgba(42, 55, 33, 0.28);
 	font-family: var(--font-display);
 	font-size: var(--text-xl);
@@ -313,7 +313,7 @@
 	font-family: var(--font-display);
 	font-size: var(--text-3xl);
 	font-weight: var(--font-weight-bold);
-	letter-spacing: -1px;
+	letter-spacing: 0.5px;
 }
 .study-metric span {
 	color: var(--color-text-faint);
@@ -333,7 +333,7 @@
 	padding: 18px clamp(16px, 2.4vw, 32px);
 	border-radius: var(--radius-lg);
 	background: rgba(255, 248, 236, 0.14);
-	color: #fbf7ec;
+	color: var(--on-panel-dark);
 	font-size: var(--text-sm);
 	font-weight: var(--font-weight-medium);
 }

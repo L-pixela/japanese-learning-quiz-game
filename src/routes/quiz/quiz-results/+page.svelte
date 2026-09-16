@@ -2,7 +2,8 @@
 	import { resolve } from '$app/paths'
 	import StudyShell from '$lib/components/StudyShell.svelte'
 	import JapanScene from '$lib/components/JapanScene.svelte'
-	import { LEVELS } from '$lib/levels'
+	import { QUESTION_TYPES } from '$lib/quiz-types'
+	import { t, levelName, difficultyLabel } from '$lib/i18n.svelte'
 	import type { PageData } from './$types'
 	let { data }: { data: PageData } = $props()
 	let result = $derived(data.result)
@@ -10,11 +11,19 @@
 	// Attempts recorded before answers were stored have no breakdown to show.
 	let review = $derived((result?.review ?? []).map((item, index) => ({ ...item, index })))
 	let missed = $derived(review.filter((item) => !item.correct))
+	// Which direction is weak matters more than the total: 6/10 made entirely of
+	// reading mistakes is a different problem from 6/10 spread evenly.
+	let byType = $derived(
+		QUESTION_TYPES.map((type) => {
+			const items = review.filter((item) => item.type === type)
+				return { type, total: items.length, right: items.filter((i) => i.correct).length }
+			}).filter((row) => row.total > 0),
+		)
 	let mistakesOnly = $state(false)
 	let shown = $derived(mistakesOnly ? missed : review)
 </script>
 
-<svelte:head><title>Your quiz results · TanTore</title></svelte:head>
+<svelte:head><title>{t('results.title')} · TanTore</title></svelte:head>
 <StudyShell>
 	{#if result}
 		<section class={'verdict ' + (result.passed ? 'passed' : 'retry')}>
@@ -22,56 +31,63 @@
 				<JapanScene scene={result.passed ? 'torii' : 'daruma'} />
 			</div>
 			<div class="verdict-copy">
-				<p class="study-eyebrow">Practice complete / おつかれさま</p>
-				<h1>{result.passed ? 'One step further.' : 'Every attempt is progress.'}</h1>
-				<p>
-					{result.passed
-						? 'You passed this level. Take that feeling into the next one.'
-						: 'A few more words to get familiar with. You can try again anytime.'}
-				</p>
+				<p class="study-eyebrow">{t('results.eyebrow')}</p>
+				<h1>{result.passed ? t('results.passedTitle') : t('results.failedTitle')}</h1>
+				<p>{result.passed ? t('results.passedLead') : t('results.failedLead')}</p>
 				<span class="verdict-stamp" lang="ja">{result.passed ? '合格' : '復習'}</span>
 			</div>
 		</section>
 		<div class="results-layout">
 			<section class="score-panel study-panel">
 				<p class="study-eyebrow">
-					Level {String(result.level).padStart(2, '0')} · {result.difficulty}
+					{t('deck.level')}
+					{String(result.level).padStart(2, '0')} · {difficultyLabel(result.difficulty)}
 				</p>
-				<h2>{LEVELS.find((l) => l.level === result.level)?.name ?? `Level ${result.level}`}</h2>
+				<h2>{levelName(result.level)}</h2>
 				<div
 					class="score-circle"
 					class:passed={result.passed}
 					style={'--score: ' + result.score * 10 + '%'}
 				>
-					<div><strong>{result.score}<span>/10</span></strong><small>CORRECT ANSWERS</small></div>
+					<div>
+						<strong>{result.score}<span>/10</span></strong><small
+							>{t('results.correctAnswers')}</small
+						>
+					</div>
 				</div>
 				<span class={'study-pill ' + (result.passed ? 'completed' : 'attempted')}
-					>{result.passed ? '✓ Passed' : 'Not passed this time'}</span
+					>{result.passed ? '✓ ' + t('results.passed') : t('results.notPassed')}</span
 				>
-				<p class="study-muted">Pass mark: 6 out of 10</p>
+				<p class="study-muted">{t('results.passMark')}</p>
 			</section>
 			<div class="result-details">
 				<section class="study-panel earned">
 					<div>
-						<p class="study-eyebrow">Points earned</p>
-						<strong>+{result.pointsEarned}<span> pt</span></strong>
+						<p class="study-eyebrow">{t('results.pointsEarned')}</p>
+						<strong>+{result.pointsEarned}<span>pt</span></strong>
 					</div>
 					<p class="study-muted">
-						{result.user.points.toLocaleString()} total points<br />{result.user.streak}-day streak
+						{t('results.totalPoints', { n: result.user.points.toLocaleString() })}<br />{t(
+							'results.streakDays',
+							{ n: result.user.streak },
+						)}
 					</p>
 				</section>
 				<section class="study-panel community">
-					<p class="study-eyebrow">A shared milestone / みんなの記録</p>
+					<p class="study-eyebrow">{t('results.milestone')}</p>
 					<strong>{result.completion.percentage}<span>%</span></strong>
-					<h2>have completed this level</h2>
+					<h2>{t('results.completedThisLevel')}</h2>
 					<p class="study-muted">
-						{result.completion.completedUsers} of {result.completion.totalUsers} registered learners have
-						passed Level {result.level}.
+						{t('results.completionDetail', {
+							done: result.completion.completedUsers,
+							total: result.completion.totalUsers,
+							level: result.level,
+						})}
 					</p>
 					<div class="community-bar" aria-hidden="true">
 						<span style={'width: ' + result.completion.percentage + '%'}></span>
 					</div>
-					<small>Each learner counts once, however many times they practice.</small>
+					<small>{t('results.countedOnce')}</small>
 				</section>
 			</div>
 		</div>
@@ -79,18 +95,28 @@
 			<section class="review study-panel">
 				<div class="review-head">
 					<div>
-						<p class="study-eyebrow">Question log / 復習</p>
+						<p class="study-eyebrow">{t('results.questionLog')}</p>
 						<h2>
 							{missed.length === 0
-								? 'A clean sheet — all ten correct.'
+								? t('results.cleanSheet')
 								: missed.length === 1
-									? 'One word to look at again.'
-									: missed.length + ' words to look at again.'}
+									? t('results.oneToReview')
+									: t('results.manyToReview', { n: missed.length })}
 						</h2>
 					</div>
-					<div class="review-filter" role="group" aria-label="Filter questions">
+					<ul class="type-scores" aria-label={t('a11y.scoreByType')}>
+						{#each byType as row (row.type)}
+							<li class:weak={row.right < row.total}>
+								<small>{t(`ask.${row.type}`)}</small>
+								<strong>{row.right}<span>/{row.total}</span></strong>
+							</li>
+						{/each}
+					</ul>
+				</div>
+				<div class="review-controls">
+					<div class="review-filter" role="group" aria-label={t('a11y.filterQuestions')}>
 						<button type="button" class:on={!mistakesOnly} onclick={() => (mistakesOnly = false)}>
-							All {review.length}
+							{t('results.filterAll', { n: review.length })}
 						</button>
 						<button
 							type="button"
@@ -98,30 +124,33 @@
 							disabled={missed.length === 0}
 							onclick={() => (mistakesOnly = true)}
 						>
-							Mistakes {missed.length}
+							{t('results.filterMistakes', { n: missed.length })}
 						</button>
 					</div>
 				</div>
 				<ol class="review-list">
 					{#each shown as item (item.index)}
+						{@const chose =
+							item.chosenIndex === null ? t('results.noAnswer') : item.options[item.chosenIndex]}
 						<li class={item.correct ? 'ok' : 'bad'}>
 							<span class="q-num">{String(item.index + 1).padStart(2, '0')}</span>
 							<div class="q-body">
 								<p class="q-word">
-									<span lang="ja">{item.japanese}</span><small lang="ja">{item.reading}</small>
-								</p>
-								<div class="q-answers">
-									<span class="q-answer correct">
-										<small>Correct answer</small>{item.options[item.correctIndex]}
-									</span>
-									{#if !item.correct}
-										<span class="q-answer wrong">
-											<small>You chose</small>{item.chosenIndex === null
-												? 'No answer'
-												: item.options[item.chosenIndex]}
-										</span>
+									<span class="w-jp" lang="ja">{item.japanese}</span>
+									{#if item.reading !== item.japanese}
+										<span class="w-kana" lang="ja">{item.reading}</span>
 									{/if}
-								</div>
+									{#if item.meaning}<span class="w-en">{item.meaning}</span>{/if}
+									<span class="q-asked">{t(`ask.${item.type}`)}</span>
+								</p>
+								<dl class="q-answers">
+									<dt>{t('results.correctAnswer')}</dt>
+									<dd class="correct">{item.options[item.correctIndex]}</dd>
+									{#if !item.correct}
+										<dt>{t('results.youChose')}</dt>
+										<dd class="wrong">{chose}</dd>
+									{/if}
+								</dl>
 							</div>
 							<span class="q-mark">{item.correct ? '✓' : '×'}</span>
 						</li>
@@ -132,20 +161,21 @@
 		<div class="study-actions">
 			{#if result.passed && result.level < 10}<a
 					class="study-button"
-					href={resolve('/quiz/[level]', { level: String(result.level + 1) })}>Next level →</a
+					href={resolve('/quiz/[level]', { level: String(result.level + 1) })}
+					>{t('results.nextLevel')} →</a
 				>{:else}<a
 					class="study-button"
-					href={resolve('/quiz/[level]', { level: String(result.level) })}>Practice again ↗</a
-				>{/if}<a class="study-button secondary" href={resolve('/quiz', {})}>Back to the path</a><a
-				class="dashboard-link"
-				href={resolve('/dashboard', {})}>Your study desk</a
-			>
+					href={resolve('/quiz/[level]', { level: String(result.level) })}
+					>{t('results.practiceAgain')} ↗</a
+				>{/if}<a class="study-button secondary" href={resolve('/quiz', {})}
+				>{t('results.backToPath')}</a
+			><a class="dashboard-link" href={resolve('/dashboard', {})}>{t('results.studyDesk')}</a>
 		</div>
 	{:else}<section class="study-panel">
-			<p class="study-eyebrow">Your next chapter</p>
-			<h1>A little practice comes first.</h1>
-			<p class="study-muted">Finish a level quiz to see your score and progress here.</p>
-			<a class="study-button" href={resolve('/quiz', {})}>Choose a level →</a>
+			<p class="study-eyebrow">{t('results.emptyEyebrow')}</p>
+			<h1>{t('results.emptyTitle')}</h1>
+			<p class="study-muted">{t('results.emptyLead')}</p>
+			<a class="study-button" href={resolve('/quiz', {})}>{t('results.chooseLevel')} →</a>
 		</section>{/if}
 </StudyShell>
 
@@ -178,7 +208,7 @@
 	}
 	.verdict-copy h1 {
 		font-size: var(--font-size-display);
-		line-height: 1.05;
+		line-height: var(--line-height-tight);
 	}
 	.verdict-copy p {
 		margin-bottom: 0;
@@ -224,28 +254,40 @@
 	.score-circle > div {
 		width: 193px;
 		height: 193px;
+		/* Side padding keeps the label clear of the ring; the gap separates it
+		   from the number instead of letting the two line boxes collide. */
+		padding: 0 18px;
+		gap: 10px;
 		background: var(--color-surface);
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+		text-align: center;
 	}
 	.score-circle strong {
 		font-family: var(--font-display);
 		font-size: clamp(44px, 8.5vw, 76px);
 		font-weight: var(--font-weight-bold);
-		letter-spacing: -4px;
+		/* A 76px number carries ~20px of leading it does not need here. */
+		line-height: 1;
+		/* Display tracking is set for letters; on digits it closes 1 and 0 into
+		   each other. Numbers here read better with a little air, not less. */
+		letter-spacing: 0.5px;
 	}
 	.score-circle strong span {
+		margin-left: 6px;
 		font-size: clamp(16px, 3vw, 26px);
 		color: var(--color-text-faint);
-		letter-spacing: -1px;
+		letter-spacing: 0;
 	}
 	.score-circle small {
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-caption);
 		font-weight: var(--font-weight-semibold);
+		line-height: var(--line-height-snug);
+		letter-spacing: 0.4px;
 	}
 	.score-panel > .study-muted {
 		margin: 15px 0 0;
@@ -266,10 +308,15 @@
 		font-family: var(--font-display);
 		font-size: clamp(32px, 6vw, 54px);
 		font-weight: var(--font-weight-bold);
-		letter-spacing: -2px;
+		letter-spacing: 0.5px;
+	}
+	.earned :global(.study-eyebrow),
+	.community :global(.study-eyebrow) {
+		margin-right: 14px;
 	}
 	.earned strong span,
 	.community > strong span {
+		margin-left: 5px;
 		font-size: clamp(14px, 2.2vw, 20px);
 		color: var(--color-text-secondary);
 	}
@@ -389,6 +436,8 @@
 		border-left-color: var(--color-danger);
 	}
 	.q-num {
+		width: 22px;
+		text-align: right;
 		color: var(--color-text-faint);
 		font-family: var(--font-display);
 		font-size: var(--text-base);
@@ -397,45 +446,72 @@
 	.q-body {
 		min-width: 0;
 	}
+	/* One headline per row: word, reading, gloss, then the direction tag pushed
+	   to the far right. Baseline-aligned so three different type sizes still sit
+	   on one line. */
 	.q-word {
 		display: flex;
 		align-items: baseline;
-		gap: 10px;
+		gap: 4px 12px;
 		flex-wrap: wrap;
-		margin: 0 0 8px;
+		margin: 0 0 12px;
+	}
+	.w-jp {
 		font-family: var(--font-display);
 		font-size: var(--text-lg);
 		font-weight: var(--font-weight-bold);
 	}
-	.q-word small {
-		color: var(--color-text-secondary);
-		font-family: var(--font-body);
+	.w-kana {
+		color: var(--color-primary);
 		font-size: var(--text-sm);
-		font-weight: var(--font-weight-medium);
+		font-weight: var(--font-weight-semibold);
 	}
+	.w-en {
+		min-width: 0;
+		color: var(--color-text-secondary);
+		font-size: var(--text-sm);
+		overflow-wrap: anywhere;
+	}
+	.q-asked {
+		margin-left: auto;
+		padding: 3px 10px;
+		border-radius: var(--radius-full);
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+	/* One shared label column, so every answer in the list starts at the same x.
+	   Sized to hold the longest label ("Correct answer") at this size. */
 	.q-answers {
-		display: flex;
-		gap: 10px 22px;
-		flex-wrap: wrap;
+		--label-column: 132px;
+		display: grid;
+		grid-template-columns: var(--label-column) minmax(0, 1fr);
+		gap: 6px 16px;
+		align-items: baseline;
+		margin: 0;
 	}
-	.q-answer {
+	.q-answers dt {
+		color: var(--color-text-faint);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-medium);
+		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+	.q-answers dd {
+		margin: 0;
 		font-size: var(--text-base);
 		font-weight: var(--font-weight-semibold);
 		overflow-wrap: anywhere;
 	}
-	.q-answer small {
-		display: block;
-		margin-bottom: 2px;
-		color: var(--color-text-faint);
-		font-size: var(--text-xs);
-		font-weight: var(--font-weight-medium);
-		text-transform: uppercase;
-		letter-spacing: 0.4px;
-	}
-	.q-answer.correct {
+	.q-answers dd.correct {
 		color: var(--color-success);
 	}
-	.q-answer.wrong {
+	.q-answers dd.wrong {
 		color: var(--color-danger);
 		text-decoration: line-through;
 		text-decoration-thickness: 1px;
@@ -459,8 +535,56 @@
 			padding: 14px;
 			gap: 10px;
 		}
+		/* Too narrow for two columns: the label sits above its value instead. */
 		.q-answers {
-			gap: 8px 16px;
+			grid-template-columns: minmax(0, 1fr);
+			gap: 2px;
 		}
+		.q-answers dd {
+			margin-bottom: 6px;
+		}
+		.q-answers dd:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.review-controls {
+		display: flex;
+		justify-content: flex-end;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-bottom: var(--spacing-md);
+	}
+	.type-scores {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		list-style: none;
+		margin: 14px 0 0;
+		padding: 0;
+	}
+	.type-scores li {
+		padding: 8px 14px;
+		border-radius: var(--radius-md);
+		background: var(--color-success-soft);
+	}
+	.type-scores li.weak {
+		background: var(--color-danger-soft);
+	}
+	.type-scores small {
+		display: block;
+		color: var(--color-text-secondary);
+		font-size: var(--text-xs);
+		font-weight: var(--font-weight-semibold);
+	}
+	.type-scores strong {
+		font-family: var(--font-display);
+		font-size: var(--text-lg);
+		letter-spacing: 0.5px;
+	}
+	.type-scores strong span {
+		margin-left: 3px;
+		color: var(--color-text-faint);
+		font-size: var(--text-sm);
 	}
 </style>

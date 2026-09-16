@@ -46,8 +46,10 @@ export async function getQuizResult(d1: D1Database, userId: string, attemptId: s
 	const chosen = Array.isArray(attempt.answers) ? attempt.answers : null
 	const review = chosen
 		? attempt.questions.map((question, i) => ({
+				type: question.type ?? ('meaning' as const),
 				japanese: question.japanese,
 				reading: question.reading,
+				meaning: question.meaning ?? null,
 				options: question.options,
 				correctIndex: question.correctIndex,
 				chosenIndex: chosen[i] ?? null,
