@@ -1035,7 +1035,8 @@
 			gap: var(--spacing-sm) var(--spacing-md);
 		}
 		.word-reading,
-		.word-meaning {
+		.word-meaning,
+		.word-cover {
 			grid-column: 2 / -1;
 		}
 	}
