@@ -454,36 +454,33 @@
 		box-shadow: var(--shadow-md);
 		display: flex;
 		flex-direction: column;
-		min-height: 0;
+		/* Never shorter than the question it holds. */
+		min-height: min-content;
 	}
-	/* Quiz phase: the card owns whatever height the viewport leaves over the
-	   nav and the escape button, so the page never scrolls. */
-	:global(body.quiz-active) {
-		overflow: hidden;
-	}
+	/* Quiz phase: the card aims to fill the viewport so the whole question is
+	   visible without scrolling — but it is a target, not a cage. Heights are
+	   minimums and overflow stays visible, so when a long prompt or a short
+	   screen needs more room the page simply scrolls. Capping the height here
+	   instead is what made the answers and the prompt paint over each other. */
 	:global(body.quiz-active .study-app) {
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		height: calc(100vh / var(--app-zoom));
-		height: calc(100dvh / var(--app-zoom));
+		min-height: calc(100vh / var(--app-zoom));
+		min-height: calc(100dvh / var(--app-zoom));
 	}
 	:global(body.quiz-active .study-footer) {
 		display: none;
 	}
 	:global(body.quiz-active .study-main) {
 		flex: 1 1 auto;
-		min-height: 0;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 	}
 	/* Keep the card's padding identical to the words page so the breadcrumb and
-	   level sit in the same place; only tighten when the viewport is too short to
-	   fit the quiz without scrolling. */
+	   level sit in the same place. */
 	:global(body.quiz-active .quiz-sheet) {
 		flex: 1 1 auto;
-		min-height: 0;
 		padding: var(--spacing-lg);
 	}
 	.question-meta {
@@ -512,10 +509,18 @@
 	}
 	.word-prompt {
 		flex: 1 1 auto;
-		min-height: 0;
+		/* The word being asked about is the one thing on this screen that must
+		   never be squeezed away. A min-height of 0 let the flex row collapse the
+		   band to nothing on a short viewport, which hid the prompt entirely once
+		   the card became a scroll container. */
+		min-height: min-content;
 		display: grid;
 		justify-items: center;
-		align-content: center;
+		/* "safe" is what stops the overlap: a plain centre keeps centring even
+		   once the content is taller than the band, so it spills equally over
+		   the question counter above and the answers below. Safe centring falls
+		   back to start in that case, and the card scrolls instead. */
+		align-content: safe center;
 		--prompt-reading: clamp(1.2em, 4vh, 1.7em);
 		--prompt-word: clamp(44px, 11vh, 84px);
 		/* No uniform row gap — the furigana hugs the kanji, while the tag and hint
@@ -526,7 +531,10 @@
 		   furigana or a shorter word, so the prompt never shifts the options. The
 		   minmax(0, …) lets a band compress under pressure instead of spilling its
 		   kanji up over the answer buttons when the viewport is short. */
-		grid-template-rows: auto minmax(0, var(--prompt-reading)) minmax(0, var(--prompt-word)) auto;
+		/* The word band may grow past its reserved height for a long phrase. A
+		   capped track would not shrink the text, only let it paint over the
+		   answers below. */
+		grid-template-rows: auto minmax(0, var(--prompt-reading)) minmax(var(--prompt-word), auto) auto;
 		padding: var(--spacing-md);
 	}
 	.word-prompt .ask-type {
@@ -545,10 +553,11 @@
 	.word-prompt h1 {
 		grid-row: 3;
 		display: grid;
-		place-content: center;
+		place-content: safe center;
 		margin: 0;
+		max-width: 100%;
 		font-family: var(--font-display);
-		font-size: clamp(34px, 8vh, 64px);
+		font-size: clamp(30px, min(8vh, 13vw), 64px);
 		letter-spacing: 4px;
 		overflow-wrap: anywhere;
 	}
@@ -563,6 +572,9 @@
 		padding: 0;
 		margin: 0;
 		min-width: 0;
+		/* Keeps its full height in the card's flex column: the answers must not
+		   be compressed up into the prompt above them. */
+		flex: 0 0 auto;
 	}
 	.options {
 		display: grid;
@@ -773,11 +785,31 @@
 		.options {
 			grid-template-columns: 1fr;
 		}
+		/* Three buttons will not share one phone line legibly. Back and Next are
+		   the pair the learner uses every question, so they keep a row of their
+		   own; leaving the quiz is a rarer choice and sits below them. */
 		.quiz-controls {
-			flex-wrap: wrap;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: var(--spacing-sm);
+		}
+		.quiz-controls-end {
+			display: contents;
+		}
+		.quiz-controls > .study-button {
+			grid-column: 1;
+			grid-row: 1;
+		}
+		.quiz-controls-end > .study-button:last-child {
+			grid-column: 2;
+			grid-row: 1;
+		}
+		.quiz-controls-end > .study-button:first-child {
+			grid-column: 1 / -1;
+			grid-row: 2;
 		}
 		.quiz-controls .study-button {
-			padding: var(--spacing-md) var(--spacing-md);
+			padding: var(--spacing-md) var(--spacing-sm);
 			font-size: var(--font-size-small);
 		}
 	}
@@ -864,10 +896,13 @@
 		display: flex;
 		gap: var(--spacing-md);
 		align-items: center;
+		/* The toggle drops to its own line rather than squeezing the field down
+		   to a sliver — a search box narrower than its placeholder is useless. */
+		flex-wrap: wrap;
 		margin: var(--spacing-lg) 0 var(--spacing-lg);
 	}
 	.deck-actions input {
-		flex: 1;
+		flex: 1 1 15rem;
 		min-width: 0;
 		min-height: 56px;
 		padding: var(--spacing-md) var(--spacing-lg);
@@ -1016,12 +1051,17 @@
 	   face is sized for two or three kanji, not a phrase. */
 	.prompt-en {
 		font-family: var(--font-body) !important;
-		font-size: clamp(22px, 5vh, 38px) !important;
+		/* Height alone is not enough: "to be happy; to be glad" is a phrase, not
+		   two kanji, so the width of the screen has to cap it too or it runs off
+		   the side of a phone. */
+		font-size: clamp(20px, min(5vh, 6.4vw), 38px) !important;
 		line-height: var(--line-height-tight);
 	}
 
 	.cover-toggle {
-		flex-shrink: 0;
+		/* Sized by its label beside the field; once the row wraps it takes the
+		   whole of its own line. Never shrinks below its text. */
+		flex: 0 0 auto;
 		min-height: 56px;
 	}
 	.cover-toggle[aria-pressed='true'] {
