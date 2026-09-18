@@ -82,9 +82,9 @@
 <style>
 	.map-overview {
 		display: flex;
-		gap: 35px;
+		gap: var(--spacing-lg);
 		align-items: center;
-		padding: 26px 30px;
+		padding: var(--spacing-lg) var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -101,7 +101,7 @@
 	.map-overview p {
 		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
-		margin: 7px 0 0;
+		margin: var(--spacing-sm) 0 0;
 	}
 	.map-progress {
 		flex: 1;
@@ -124,20 +124,20 @@
 	}
 	.legend {
 		display: flex;
-		gap: 10px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
-		margin: 24px 0 35px;
+		margin: var(--spacing-lg) 0 var(--spacing-lg);
 	}
 	.level-group {
 		position: relative;
-		padding: 0 0 38px 30px;
+		padding: 0 0 var(--spacing-lg) var(--spacing-lg);
 		border-left: 2px dashed var(--color-border-strong);
 	}
 	.group-heading {
 		display: flex;
-		gap: 16px;
+		gap: var(--spacing-md);
 		align-items: center;
-		margin-bottom: 18px;
+		margin-bottom: var(--spacing-lg);
 	}
 	.group-heading::before {
 		content: '';
@@ -164,7 +164,7 @@
 		font-weight: var(--font-weight-bold);
 	}
 	.group-heading p {
-		margin: 0 0 4px;
+		margin: 0 0 var(--spacing-sm);
 	}
 	.group-heading h2 {
 		margin: 0;
@@ -172,11 +172,11 @@
 	.level-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-		gap: 14px;
+		gap: var(--spacing-md);
 	}
 	.level-tile {
 		display: block;
-		padding: 22px;
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-solid) var(--color-border);
@@ -201,7 +201,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		gap: 8px;
+		gap: var(--spacing-sm);
 	}
 	.level-number {
 		font-size: var(--font-size-small);
@@ -209,18 +209,18 @@
 	}
 	.tile-top .study-pill {
 		font-size: var(--font-size-caption);
-		padding: 4px 6px;
+		padding: var(--spacing-sm) var(--spacing-sm);
 	}
 	.tile-japanese {
 		display: block;
-		margin: 24px 0 12px;
+		margin: var(--spacing-lg) 0 var(--spacing-md);
 		color: var(--color-primary);
 		font-family: var(--font-display);
 		font-size: clamp(22px, 3.8vw, 34px);
 		font-weight: var(--font-weight-bold);
 	}
 	.level-tile h3 {
-		margin-bottom: 7px;
+		margin-bottom: var(--spacing-sm);
 		font-size: var(--font-size-body);
 	}
 	.level-tile p {
@@ -231,8 +231,8 @@
 	.tile-bottom {
 		display: flex;
 		justify-content: space-between;
-		margin-top: 16px;
-		padding-top: 14px;
+		margin-top: var(--spacing-md);
+		padding-top: var(--spacing-md);
 		border-top: 1px solid var(--color-border);
 		font-size: var(--font-size-caption);
 		font-weight: var(--font-weight-semibold);
@@ -242,7 +242,7 @@
 		font-size: var(--font-size-body);
 	}
 	.map-note {
-		margin-left: 30px;
+		margin-left: var(--spacing-lg);
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.level-tile {
@@ -251,13 +251,13 @@
 	}
 	@media (max-width: 550px) {
 		.level-group {
-			padding-left: 20px;
+			padding-left: var(--spacing-lg);
 		}
 		.level-grid {
 			grid-template-columns: 1fr;
 		}
 		.map-overview {
-			gap: 20px;
+			gap: var(--spacing-lg);
 		}
 	}
 </style>

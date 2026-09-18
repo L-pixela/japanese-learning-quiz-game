@@ -113,7 +113,7 @@
 		grid-column: 1 / -1;
 	}
 	dt {
-		margin-bottom: 4px;
+		margin-bottom: var(--spacing-sm);
 		color: var(--color-text-secondary);
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);

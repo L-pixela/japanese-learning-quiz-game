@@ -28,7 +28,7 @@
 	.input-wrapper {
 		display: flex;
 		flex-direction: column;
-		gap: var(--spacing-xs);
+		gap: var(--spacing-sm);
 	}
 
 	label {

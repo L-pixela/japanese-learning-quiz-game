@@ -23,6 +23,13 @@
 :root {
 	color-scheme: light;
 
+	/* App-wide render scale. Browsers can't set the user's zoom control, but we
+	   can render as if at a given zoom level. Everything is px-based, so the one
+	   lever that scales text, spacing and stray px together is the `zoom`
+	   property (see the body rule below). --app-zoom is the single source of
+	   truth: viewport-height locks divide by it so they still fill the screen. */
+	--app-zoom: 1;
+
 	/* --- The three, raw --- */
 	--matcha: #546b41;
 	--sage: #99ad7a;
@@ -134,14 +141,10 @@
 	--line-height-normal: 1.6;
 	--line-height-relaxed: 1.8;
 
-	/* ===== Spacing ===== */
-	--spacing-xs: 4px;
-	--spacing-sm: 8px;
-	--spacing-md: 16px;
-	--spacing-lg: 24px;
-	--spacing-xl: 32px;
-	--spacing-2xl: 48px;
-	--spacing-3xl: 64px;
+	/* ===== Spacing — three steps, everything else is composed from these ===== */
+	--spacing-sm: 8px; /* tight: icon/text gaps, inline spacing */
+	--spacing-md: 14px; /* default component padding and gaps */
+	--spacing-lg: 22px; /* cards, sections, block spacing */
 
 	/* ===== Radius ===== */
 	--radius-sm: 10px;
@@ -331,6 +334,18 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
+/* Desktop/tablet: render the whole app as if the browser were at 90% zoom, so
+   more fits on screen without shrinking phone text. The user's own Ctrl +/-
+   zoom composes on top of this. */
+@media (min-width: 820px) {
+	:root {
+		--app-zoom: 0.9;
+	}
+	body {
+		zoom: var(--app-zoom);
+	}
+}
+
 .site-header {
 	display: flex;
 	align-items: center;
@@ -367,7 +382,7 @@ body {
 
 .japanese-label {
 	display: inline-block;
-	margin-left: var(--spacing-xs);
+	margin-left: var(--spacing-sm);
 	color: var(--color-text-secondary);
 	font-size: var(--text-sm);
 	font-weight: var(--font-weight-medium);

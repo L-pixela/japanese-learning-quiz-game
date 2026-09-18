@@ -207,8 +207,8 @@
 
 <style>
 	.deck-page {
-		min-height: 100vh;
-		padding: clamp(0.85rem, 3vw, 2rem);
+		min-height: calc(100vh / var(--app-zoom));
+		padding: var(--spacing-lg);
 	}
 	.deck-shell {
 		width: min(100%, 74rem);
@@ -229,7 +229,7 @@
 		color: var(--color-accent);
 	}
 	.deck-content {
-		padding: clamp(1.3rem, 4vw, 3rem);
+		padding: var(--spacing-lg);
 		background:
 			linear-gradient(var(--color-paper-line) 1px, transparent 1px), var(--color-surface-raised);
 		background-size: 100% 3.2rem;
@@ -517,7 +517,7 @@
 			padding: 0;
 		}
 		.deck-shell {
-			min-height: 100vh;
+			min-height: calc(100vh / var(--app-zoom));
 			border: 0;
 			border-radius: 0;
 		}

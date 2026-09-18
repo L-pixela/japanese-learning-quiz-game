@@ -356,10 +356,10 @@
 	/* The page default spaces these for full-width headings; beside an 84px
 	   photo the three lines need to read as one block. */
 	.identity-text .study-eyebrow {
-		margin-bottom: 10px;
+		margin-bottom: var(--spacing-md);
 	}
 	.identity-text h1 {
-		margin-bottom: 4px;
+		margin-bottom: var(--spacing-sm);
 		font-size: var(--text-2xl);
 		overflow-wrap: break-word;
 	}
@@ -375,7 +375,7 @@
 		gap: var(--spacing-md);
 		flex-wrap: wrap;
 		margin-bottom: var(--spacing-lg);
-		padding: 20px clamp(18px, 2.4vw, 26px);
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -385,7 +385,7 @@
 		flex: 1 1 260px;
 	}
 	.climb-copy .study-eyebrow {
-		margin-bottom: 10px;
+		margin-bottom: var(--spacing-md);
 	}
 	.climb-copy strong {
 		display: block;
@@ -395,7 +395,7 @@
 	}
 	.climb-copy small {
 		display: block;
-		margin-top: 6px;
+		margin-top: var(--spacing-sm);
 		color: var(--color-text-secondary);
 		font-size: var(--text-sm);
 	}
@@ -425,20 +425,20 @@
 	}
 	.photo-title {
 		display: block;
-		margin-bottom: 8px;
+		margin-bottom: var(--spacing-sm);
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
 	}
 	.photo-buttons {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
 	}
 	.file-button {
 		display: inline-flex;
 		align-items: center;
-		padding: 10px 20px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: var(--radius-full);
 		background: var(--color-primary);
 		color: var(--color-on-primary);
@@ -462,12 +462,12 @@
 	}
 	.photo-field small {
 		display: block;
-		margin-top: 8px;
+		margin-top: var(--spacing-sm);
 		color: var(--color-text-faint);
 		font-size: var(--text-xs);
 	}
 	.notice {
-		padding: 14px 18px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: var(--radius-md);
 		background: var(--color-success-soft);
 		color: var(--color-primary);
@@ -483,7 +483,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
+		gap: var(--spacing-md);
 		margin-bottom: var(--spacing-lg);
 	}
 	.count {
@@ -492,7 +492,7 @@
 	}
 	.small {
 		min-height: 44px;
-		padding: 10px 20px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		font-size: var(--text-sm);
 	}
 	form {
@@ -501,7 +501,7 @@
 	}
 	label {
 		display: grid;
-		gap: 8px;
+		gap: var(--spacing-sm);
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
 	}
@@ -509,7 +509,7 @@
 	textarea {
 		width: 100%;
 		min-height: 54px;
-		padding: 14px 18px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border: 2px solid var(--color-input-border);
 		border-radius: var(--radius-md);
 		background: var(--color-surface-sunken);
@@ -528,7 +528,7 @@
 	}
 	.form-actions {
 		display: flex;
-		gap: 12px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
 	}
 	.details {
@@ -541,7 +541,7 @@
 		grid-column: 1 / -1;
 	}
 	dt {
-		margin-bottom: 4px;
+		margin-bottom: var(--spacing-sm);
 		color: var(--color-text-secondary);
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
@@ -564,9 +564,9 @@
 	.history li {
 		display: grid;
 		grid-template-columns: 1fr auto auto;
-		gap: 12px;
+		gap: var(--spacing-md);
 		align-items: center;
-		padding: 14px 0;
+		padding: var(--spacing-md) 0;
 		border-bottom: 1px solid var(--color-border-subtle);
 	}
 	.history li:last-child {
@@ -582,7 +582,7 @@
 		color: var(--color-primary);
 	}
 	.h-score small {
-		margin-left: 3px;
+		margin-left: var(--spacing-sm);
 		color: var(--color-text-faint);
 		font-size: var(--text-sm);
 	}

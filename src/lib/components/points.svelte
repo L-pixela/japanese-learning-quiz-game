@@ -22,7 +22,7 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: center;
-		gap: var(--spacing-xs);
+		gap: var(--spacing-sm);
 	}
 
 	.points-value {

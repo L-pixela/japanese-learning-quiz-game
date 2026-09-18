@@ -40,7 +40,7 @@
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
 		box-shadow: var(--shadow-sm);
-		padding: var(--spacing-lg) var(--spacing-xl);
+		padding: var(--spacing-lg) var(--spacing-lg);
 	}
 
 	.rank-container {

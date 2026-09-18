@@ -82,7 +82,7 @@
 	}
 
 	h2 {
-		margin: var(--spacing-xs) 0;
+		margin: var(--spacing-sm) 0;
 		font-size: var(--font-size-h3);
 	}
 
@@ -122,7 +122,7 @@
 		z-index: 1;
 		display: flex;
 		align-items: flex-end;
-		gap: var(--spacing-xs);
+		gap: var(--spacing-sm);
 		width: 2.5rem;
 		height: 3.2rem;
 	}

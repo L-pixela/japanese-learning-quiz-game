@@ -184,9 +184,9 @@
 		display: grid;
 		grid-template-columns: clamp(160px, 30vw, 260px) minmax(0, 1fr);
 		align-items: center;
-		gap: 30px;
-		margin-bottom: 30px;
-		padding: 34px 40px;
+		gap: var(--spacing-lg);
+		margin-bottom: var(--spacing-lg);
+		padding: var(--spacing-lg) var(--spacing-lg);
 		border-radius: var(--radius-xl);
 		background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 		box-shadow: var(--shadow-md);
@@ -197,7 +197,7 @@
 	}
 	.verdict-art {
 		aspect-ratio: 1;
-		margin-left: 16px;
+		margin-left: var(--spacing-md);
 		border-radius: var(--radius-lg);
 		background: rgba(255, 248, 236, 0.14);
 		overflow: hidden;
@@ -218,8 +218,8 @@
 	}
 	.verdict-stamp {
 		display: inline-block;
-		margin-top: 20px;
-		padding: 10px 22px;
+		margin-top: var(--spacing-lg);
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
 		color: var(--color-primary-active);
@@ -232,11 +232,11 @@
 	.results-layout {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 24px;
+		gap: var(--spacing-lg);
 	}
 	.score-panel {
 		text-align: center;
-		padding: 35px;
+		padding: var(--spacing-lg);
 	}
 	.score-circle {
 		--ring: var(--status-caution);
@@ -246,7 +246,7 @@
 		place-items: center;
 		border-radius: 50%;
 		background: conic-gradient(var(--ring) var(--score), var(--color-border-subtle) 0);
-		margin: 30px auto;
+		margin: var(--spacing-lg) auto;
 	}
 	.score-circle.passed {
 		--ring: var(--color-success);
@@ -256,8 +256,8 @@
 		height: 193px;
 		/* Side padding keeps the label clear of the ring; the gap separates it
 		   from the number instead of letting the two line boxes collide. */
-		padding: 0 18px;
-		gap: 10px;
+		padding: 0 var(--spacing-lg);
+		gap: var(--spacing-md);
 		background: var(--color-surface);
 		border-radius: 50%;
 		display: flex;
@@ -277,7 +277,7 @@
 		letter-spacing: 0.5px;
 	}
 	.score-circle strong span {
-		margin-left: 6px;
+		margin-left: var(--spacing-sm);
 		font-size: clamp(16px, 3vw, 26px);
 		color: var(--color-text-faint);
 		letter-spacing: 0;
@@ -290,18 +290,18 @@
 		letter-spacing: 0.4px;
 	}
 	.score-panel > .study-muted {
-		margin: 15px 0 0;
+		margin: var(--spacing-md) 0 0;
 		font-size: var(--font-size-caption);
 	}
 	.result-details {
 		display: grid;
-		gap: 24px;
+		gap: var(--spacing-lg);
 	}
 	.earned {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		gap: 20px;
+		gap: var(--spacing-lg);
 	}
 	.earned strong,
 	.community > strong {
@@ -312,11 +312,11 @@
 	}
 	.earned :global(.study-eyebrow),
 	.community :global(.study-eyebrow) {
-		margin-right: 14px;
+		margin-right: var(--spacing-md);
 	}
 	.earned strong span,
 	.community > strong span {
-		margin-left: 5px;
+		margin-left: var(--spacing-sm);
 		font-size: clamp(14px, 2.2vw, 20px);
 		color: var(--color-text-secondary);
 	}
@@ -325,11 +325,11 @@
 	}
 	.community h2 {
 		font-size: 19px;
-		margin-top: 8px;
+		margin-top: var(--spacing-sm);
 	}
 	.community-bar {
 		height: 12px;
-		margin: 20px 0 12px;
+		margin: var(--spacing-lg) 0 var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-border-subtle);
 		overflow: hidden;
@@ -352,7 +352,7 @@
 	@media (max-width: 750px) {
 		.verdict {
 			grid-template-columns: 1fr;
-			padding: 24px;
+			padding: var(--spacing-lg);
 			text-align: center;
 			justify-items: center;
 		}
@@ -372,13 +372,13 @@
 
 	/* ---------- Question log ---------- */
 	.review {
-		margin-top: 30px;
+		margin-top: var(--spacing-lg);
 	}
 	.review-head {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		gap: 16px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
 		margin-bottom: var(--spacing-lg);
 	}
@@ -387,14 +387,14 @@
 	}
 	.review-filter {
 		display: flex;
-		gap: 6px;
-		padding: 5px;
+		gap: var(--spacing-sm);
+		padding: var(--spacing-sm);
 		border-radius: var(--radius-full);
 		background: var(--color-surface-sunken);
 	}
 	.review-filter button {
 		min-height: 44px;
-		padding: 9px 18px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border: 0;
 		border-radius: var(--radius-full);
 		background: none;
@@ -418,14 +418,14 @@
 		margin: 0;
 		padding: 0;
 		display: grid;
-		gap: 10px;
+		gap: var(--spacing-md);
 	}
 	.review-list li {
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) auto;
-		gap: 14px;
+		gap: var(--spacing-md);
 		align-items: center;
-		padding: 16px 18px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: var(--radius-md);
 		background: var(--color-surface-sunken);
 		/* A color bar carries the verdict at a glance; the ✓/× carries it for
@@ -452,9 +452,9 @@
 	.q-word {
 		display: flex;
 		align-items: baseline;
-		gap: 4px 12px;
+		gap: var(--spacing-sm) var(--spacing-md);
 		flex-wrap: wrap;
-		margin: 0 0 12px;
+		margin: 0 0 var(--spacing-md);
 	}
 	.w-jp {
 		font-family: var(--font-display);
@@ -474,7 +474,7 @@
 	}
 	.q-asked {
 		margin-left: auto;
-		padding: 3px 10px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
 		color: var(--color-text-secondary);
@@ -490,7 +490,7 @@
 		--label-column: 132px;
 		display: grid;
 		grid-template-columns: var(--label-column) minmax(0, 1fr);
-		gap: 6px 16px;
+		gap: var(--spacing-sm) var(--spacing-md);
 		align-items: baseline;
 		margin: 0;
 	}
@@ -532,16 +532,16 @@
 	}
 	@media (max-width: 540px) {
 		.review-list li {
-			padding: 14px;
-			gap: 10px;
+			padding: var(--spacing-md);
+			gap: var(--spacing-md);
 		}
 		/* Too narrow for two columns: the label sits above its value instead. */
 		.q-answers {
 			grid-template-columns: minmax(0, 1fr);
-			gap: 2px;
+			gap: var(--spacing-sm);
 		}
 		.q-answers dd {
-			margin-bottom: 6px;
+			margin-bottom: var(--spacing-sm);
 		}
 		.q-answers dd:last-child {
 			margin-bottom: 0;
@@ -552,19 +552,19 @@
 		display: flex;
 		justify-content: flex-end;
 		flex-wrap: wrap;
-		gap: 12px;
+		gap: var(--spacing-md);
 		margin-bottom: var(--spacing-md);
 	}
 	.type-scores {
 		display: flex;
-		gap: 10px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
 		list-style: none;
-		margin: 14px 0 0;
+		margin: var(--spacing-md) 0 0;
 		padding: 0;
 	}
 	.type-scores li {
-		padding: 8px 14px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-md);
 		background: var(--color-success-soft);
 	}
@@ -583,7 +583,7 @@
 		letter-spacing: 0.5px;
 	}
 	.type-scores strong span {
-		margin-left: 3px;
+		margin-left: var(--spacing-sm);
 		color: var(--color-text-faint);
 		font-size: var(--text-sm);
 	}

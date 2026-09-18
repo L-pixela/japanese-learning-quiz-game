@@ -93,7 +93,7 @@
 
 	.nav-links {
 		display: flex;
-		gap: var(--spacing-xl);
+		gap: var(--spacing-lg);
 	}
 
 	.nav-links a,
@@ -102,7 +102,7 @@
 		color: var(--color-text-secondary);
 		font-weight: var(--font-weight-medium);
 		font-size: var(--font-size-small);
-		padding: var(--spacing-xs) 0;
+		padding: var(--spacing-sm) 0;
 		position: relative;
 		transition: color var(--duration-fast) ease;
 	}

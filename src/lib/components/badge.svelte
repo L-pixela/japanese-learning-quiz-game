@@ -19,7 +19,7 @@
 	.badge {
 		display: inline-flex;
 		align-items: center;
-		padding: var(--spacing-xs) var(--spacing-sm);
+		padding: var(--spacing-sm) var(--spacing-sm);
 		border-radius: var(--radius-full);
 		font-family: var(--font-family);
 		font-size: var(--font-size-caption);
