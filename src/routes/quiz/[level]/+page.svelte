@@ -168,7 +168,7 @@
 </script>
 
 <svelte:head><title>Level {data.level.level} · TanTore</title></svelte:head>
-<StudyShell>
+<StudyShell confirmNavigation={started && result === null}>
 	<div class="quiz-top">
 		<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
 		{#if started}

@@ -44,10 +44,10 @@
 			<section class="level-group">
 				<div class="group-heading">
 					<span lang="ja">{group.japanese}</span>
-					<div>
+					<div class="group-meta">
 						<p class="study-eyebrow">{difficultyLabel(group.name)} / {group.range}</p>
-						<h2>{t(`group.${group.name}`)}</h2>
 					</div>
+					<h2>{t(`group.${group.name}`)}</h2>
 				</div>
 				<div class="level-grid">
 					{#each data.levels.filter((level) => level.difficulty === group.name) as level (level.level)}<a
@@ -82,9 +82,9 @@
 <style>
 	.map-overview {
 		display: flex;
-		gap: var(--spacing-lg);
+		gap: 35px;
 		align-items: center;
-		padding: var(--spacing-lg) var(--spacing-lg);
+		padding: 26px 30px;
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -101,7 +101,7 @@
 	.map-overview p {
 		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
-		margin: var(--spacing-sm) 0 0;
+		margin: 7px 0 0;
 	}
 	.map-progress {
 		flex: 1;
@@ -124,20 +124,21 @@
 	}
 	.legend {
 		display: flex;
-		gap: var(--spacing-md);
+		gap: 10px;
 		flex-wrap: wrap;
-		margin: var(--spacing-lg) 0 var(--spacing-lg);
+		margin: 24px 0 35px;
 	}
 	.level-group {
 		position: relative;
-		padding: 0 0 var(--spacing-lg) var(--spacing-lg);
+		padding: 0 0 38px 30px;
 		border-left: 2px dashed var(--color-border-strong);
 	}
 	.group-heading {
-		display: flex;
-		gap: var(--spacing-md);
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 16px;
 		align-items: center;
-		margin-bottom: var(--spacing-lg);
+		margin-bottom: 18px;
 	}
 	.group-heading::before {
 		content: '';
@@ -148,14 +149,14 @@
 		box-sizing: content-box;
 		position: absolute;
 		left: -9px;
-		top: 15px;
+		top: 30px;
 		border-radius: 50%;
 	}
 	.group-heading > span {
 		display: grid;
 		place-items: center;
-		width: 58px;
-		height: 58px;
+		width: 78px;
+		height: 78px;
 		border-radius: var(--radius-md);
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
@@ -163,20 +164,31 @@
 		font-size: clamp(18px, 2.9vw, 26px);
 		font-weight: var(--font-weight-bold);
 	}
+	.group-meta {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+	}
 	.group-heading p {
-		margin: 0 0 var(--spacing-sm);
+		display: inline-flex;
+		align-items: center;
+		min-height: 52px;
+		margin: 0;
+		padding: 10px 24px;
 	}
 	.group-heading h2 {
+		grid-column: 1 / -1;
 		margin: 0;
+		color: var(--color-text);
 	}
 	.level-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-		gap: var(--spacing-md);
+		gap: 14px;
 	}
 	.level-tile {
 		display: block;
-		padding: var(--spacing-lg);
+		padding: 22px;
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-solid) var(--color-border);
@@ -201,7 +213,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		gap: var(--spacing-sm);
+		gap: 8px;
 	}
 	.level-number {
 		font-size: var(--font-size-small);
@@ -209,18 +221,18 @@
 	}
 	.tile-top .study-pill {
 		font-size: var(--font-size-caption);
-		padding: var(--spacing-sm) var(--spacing-sm);
+		padding: 4px 6px;
 	}
 	.tile-japanese {
 		display: block;
-		margin: var(--spacing-lg) 0 var(--spacing-md);
+		margin: 24px 0 12px;
 		color: var(--color-primary);
 		font-family: var(--font-display);
 		font-size: clamp(22px, 3.8vw, 34px);
 		font-weight: var(--font-weight-bold);
 	}
 	.level-tile h3 {
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: 7px;
 		font-size: var(--font-size-body);
 	}
 	.level-tile p {
@@ -231,8 +243,8 @@
 	.tile-bottom {
 		display: flex;
 		justify-content: space-between;
-		margin-top: var(--spacing-md);
-		padding-top: var(--spacing-md);
+		margin-top: 16px;
+		padding-top: 14px;
 		border-top: 1px solid var(--color-border);
 		font-size: var(--font-size-caption);
 		font-weight: var(--font-weight-semibold);
@@ -242,7 +254,7 @@
 		font-size: var(--font-size-body);
 	}
 	.map-note {
-		margin-left: var(--spacing-lg);
+		margin-left: 30px;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.level-tile {
@@ -251,13 +263,27 @@
 	}
 	@media (max-width: 550px) {
 		.level-group {
-			padding-left: var(--spacing-lg);
+			padding-left: 20px;
 		}
 		.level-grid {
 			grid-template-columns: 1fr;
 		}
 		.map-overview {
-			gap: var(--spacing-lg);
+			gap: 20px;
+		}
+		.group-heading {
+			gap: 12px;
+		}
+		.group-heading::before {
+			top: 25px;
+		}
+		.group-heading > span {
+			width: 68px;
+			height: 68px;
+		}
+		.group-heading p {
+			min-height: 48px;
+			padding-inline: 16px;
 		}
 	}
 </style>
