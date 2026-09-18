@@ -22,7 +22,7 @@
 	.streak {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--spacing-xs);
+		gap: var(--spacing-sm);
 		color: var(--color-text-secondary);
 	}
 

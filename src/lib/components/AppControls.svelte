@@ -123,7 +123,7 @@
 		display: grid;
 		grid-auto-flow: column;
 		align-items: center;
-		padding: 4px;
+		padding: var(--spacing-sm);
 		border: 0;
 		border-radius: var(--radius-full);
 		background: var(--color-surface-sunken);
@@ -159,10 +159,10 @@
 	}
 	.thumb {
 		position: absolute;
-		top: 4px;
-		left: 4px;
-		bottom: 4px;
-		width: calc(50% - 4px);
+		top: var(--spacing-sm);
+		left: var(--spacing-sm);
+		bottom: var(--spacing-sm);
+		width: 48px;
 		border-radius: var(--radius-full);
 		background: var(--color-primary);
 		transition: transform var(--duration-base) var(--ease-standard);

@@ -54,7 +54,7 @@
 	.caption {
 		display: inline-block;
 		margin: 0 0 0.6rem;
-		padding: 6px 14px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: rgba(255, 248, 236, 0.2);
 		color: var(--color-on-primary);

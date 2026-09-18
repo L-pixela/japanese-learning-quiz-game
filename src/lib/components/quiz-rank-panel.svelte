@@ -58,7 +58,7 @@
 		letter-spacing: 0.1em;
 	}
 	h2 {
-		margin: var(--spacing-xs) 0 0;
+		margin: var(--spacing-sm) 0 0;
 		font-size: var(--font-size-h3);
 	}
 	.rank-card-shell--compact h2 {

@@ -75,13 +75,13 @@
 
 	.metric-value {
 		display: block;
-		margin-top: var(--spacing-xs);
+		margin-top: var(--spacing-sm);
 		font-size: var(--font-size-h2);
 	}
 
 	.metric-note {
 		display: block;
-		margin-top: var(--spacing-xs);
+		margin-top: var(--spacing-sm);
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-caption);
 	}

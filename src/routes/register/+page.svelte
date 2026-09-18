@@ -154,7 +154,7 @@
 
 <style>
 	.register-page {
-		min-height: 100vh;
+		min-height: calc(100vh / var(--app-zoom));
 		display: grid;
 		place-items: center;
 		padding: 1.5rem;
@@ -207,7 +207,7 @@
 		flex-direction: column;
 		justify-content: center;
 		gap: 1.1rem;
-		padding: clamp(1.6rem, 4vw, 3rem);
+		padding: var(--spacing-lg);
 		background: var(--color-surface);
 	}
 
@@ -218,7 +218,7 @@
 	.caption {
 		display: inline-block;
 		margin: 0 0 0.6rem;
-		padding: 6px 14px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
@@ -319,7 +319,7 @@
 		}
 
 		.register-shell {
-			min-height: 100vh;
+			min-height: calc(100vh / var(--app-zoom));
 			border: 0;
 			border-radius: 0;
 		}

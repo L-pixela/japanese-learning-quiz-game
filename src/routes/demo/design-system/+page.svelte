@@ -31,12 +31,9 @@
 	]
 
 	const spacing = [
-		{ name: 'XS', variable: '--spacing-xs' },
 		{ name: 'SM', variable: '--spacing-sm' },
 		{ name: 'MD', variable: '--spacing-md' },
 		{ name: 'LG', variable: '--spacing-lg' },
-		{ name: 'XL', variable: '--spacing-xl' },
-		{ name: '2XL', variable: '--spacing-2xl' },
 	]
 
 	const radii = [
@@ -215,15 +212,15 @@
 
 <style>
 	.page {
-		min-height: 100vh;
-		padding: var(--spacing-2xl);
+		min-height: calc(100vh / var(--app-zoom));
+		padding: var(--spacing-lg);
 		background: var(--color-background);
 		color: var(--color-text);
 		font-family: var(--font-family);
 	}
 
 	header {
-		margin-bottom: var(--spacing-2xl);
+		margin-bottom: var(--spacing-lg);
 	}
 
 	header h1 {
@@ -238,7 +235,7 @@
 	}
 
 	section {
-		margin-bottom: var(--spacing-2xl);
+		margin-bottom: var(--spacing-lg);
 	}
 
 	h2 {
@@ -279,7 +276,7 @@
 	.color-info {
 		display: flex;
 		flex-direction: column;
-		gap: var(--spacing-xs);
+		gap: var(--spacing-sm);
 		padding: var(--spacing-md);
 	}
 

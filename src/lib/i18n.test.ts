@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { i18n, LANGUAGES, t } from './i18n.svelte'
+import { i18n, LANGUAGES, t, levelName, levelDesc, difficultyLabel } from './i18n.svelte'
+import { dictionary } from './i18n/dictionary'
 
 describe('i18n store', () => {
 	let localStorageMock: { getItem: ReturnType<typeof vi.fn>; setItem: ReturnType<typeof vi.fn> }
@@ -74,5 +75,31 @@ describe('i18n store', () => {
 
 	it('exposes the expected LANGUAGES', () => {
 		expect(LANGUAGES.map((l) => l.code)).toEqual(['en', 'ja'])
+	})
+
+	it('resolves dynamic level and difficulty copy in both languages', () => {
+		for (const lang of ['en', 'ja'] as const) {
+			i18n.set(lang)
+			const column = lang === 'en' ? 0 : 1
+			expect(levelName(1)).toBe(dictionary['levelName.1'][column])
+			expect(levelDesc(1)).toBe(dictionary['levelDesc.1'][column])
+			expect(difficultyLabel('Easy')).toBe(dictionary['difficulty.Easy'][column])
+		}
+	})
+	it('returns unknown dynamic keys without crashing', () => {
+		expect(levelName(999)).toBe('levelName.999')
+		expect(difficultyLabel('unknown')).toBe('difficulty.unknown')
+	})
+	it('keeps placeholders and intentionally empty hints consistent', () => {
+		const placeholders = (text: string) =>
+			[...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort()
+		for (const [key, [en, ja]] of Object.entries(dictionary)) {
+			expect(ja.trim().length === 0, key).toBe(en.trim().length === 0)
+			expect(placeholders(ja), key).toEqual(placeholders(en))
+		}
+	})
+	it('preserves intentionally empty hints', () => {
+		i18n.set('ja')
+		expect(t('dashboard.totalPointsHint')).toBe('')
 	})
 })

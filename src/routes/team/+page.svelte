@@ -116,10 +116,10 @@
 	.team-intro {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 12px 22px;
+		gap: var(--spacing-md) var(--spacing-lg);
 		align-items: center;
-		margin: 35px 0;
-		padding: 24px 30px;
+		margin: var(--spacing-lg) 0;
+		padding: var(--spacing-lg) var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -144,7 +144,7 @@
 	.team-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 25px;
+		gap: var(--spacing-lg);
 	}
 	.member {
 		position: relative;
@@ -180,13 +180,13 @@
 		flex-direction: column;
 		justify-content: center;
 		min-height: 0;
-		padding: 30px;
+		padding: var(--spacing-lg);
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
 		transform: rotateY(180deg);
 	}
 	.member-back h2 {
-		margin: 10px 0 14px;
+		margin: var(--spacing-md) 0 var(--spacing-md);
 		font-size: var(--font-size-h3);
 	}
 	/* One line per deliverable, scanned rather than read. The card is a fixed
@@ -196,7 +196,7 @@
 		padding: 0;
 		list-style: none;
 		display: grid;
-		gap: 9px;
+		gap: var(--spacing-md);
 		overflow-y: auto;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-small);
@@ -205,7 +205,7 @@
 	}
 	.member-work li {
 		position: relative;
-		padding-left: 20px;
+		padding-left: var(--spacing-lg);
 	}
 	.member-work li::before {
 		content: '';
@@ -263,7 +263,7 @@
 	.portrait-frame svg {
 		height: 57%;
 		width: auto;
-		margin-bottom: 8px;
+		margin-bottom: var(--spacing-sm);
 	}
 	.portrait-frame span {
 		font-size: var(--text-sm);
@@ -273,7 +273,7 @@
 		position: absolute;
 		top: 14px;
 		left: 14px;
-		padding: 5px 12px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: rgba(255, 248, 236, 0.92);
 		color: var(--color-primary-active);
@@ -281,10 +281,10 @@
 		font-weight: var(--font-weight-bold);
 	}
 	.member-info {
-		padding: 25px;
+		padding: var(--spacing-lg);
 	}
 	.member-info h2 {
-		margin-bottom: 6px;
+		margin-bottom: var(--spacing-sm);
 		font-size: clamp(19px, 2.9vw, 26px);
 		letter-spacing: 1px;
 	}
@@ -295,8 +295,8 @@
 		letter-spacing: 0.6px;
 	}
 	.contribution {
-		margin: 20px 0 0;
-		padding-top: 18px;
+		margin: var(--spacing-lg) 0 0;
+		padding-top: var(--spacing-lg);
 		border-top: 1px solid var(--color-border-subtle);
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-small);
@@ -306,11 +306,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 35px;
-		padding: 50px 0 0;
+		gap: var(--spacing-lg);
+		padding: var(--spacing-lg) 0 0;
 	}
 	.team-note > span {
-		padding: 14px 26px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: var(--radius-full);
 		background: var(--color-accent);
 		color: var(--color-on-primary);
@@ -337,7 +337,7 @@
 		}
 		.team-note {
 			flex-direction: column;
-			gap: 15px;
+			gap: var(--spacing-md);
 			text-align: center;
 		}
 	}

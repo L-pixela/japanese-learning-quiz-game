@@ -44,10 +44,10 @@
 			<section class="level-group">
 				<div class="group-heading">
 					<span lang="ja">{group.japanese}</span>
-					<div>
+					<div class="group-meta">
 						<p class="study-eyebrow">{difficultyLabel(group.name)} / {group.range}</p>
-						<h2>{t(`group.${group.name}`)}</h2>
 					</div>
+					<h2>{t(`group.${group.name}`)}</h2>
 				</div>
 				<div class="level-grid">
 					{#each data.levels.filter((level) => level.difficulty === group.name) as level (level.level)}<a
@@ -134,7 +134,8 @@
 		border-left: 2px dashed var(--color-border-strong);
 	}
 	.group-heading {
-		display: flex;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
 		gap: 16px;
 		align-items: center;
 		margin-bottom: 18px;
@@ -148,14 +149,14 @@
 		box-sizing: content-box;
 		position: absolute;
 		left: -9px;
-		top: 15px;
+		top: 30px;
 		border-radius: 50%;
 	}
 	.group-heading > span {
 		display: grid;
 		place-items: center;
-		width: 58px;
-		height: 58px;
+		width: 78px;
+		height: 78px;
 		border-radius: var(--radius-md);
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
@@ -163,11 +164,22 @@
 		font-size: clamp(18px, 2.9vw, 26px);
 		font-weight: var(--font-weight-bold);
 	}
+	.group-meta {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+	}
 	.group-heading p {
-		margin: 0 0 4px;
+		display: inline-flex;
+		align-items: center;
+		min-height: 52px;
+		margin: 0;
+		padding: 10px 24px;
 	}
 	.group-heading h2 {
+		grid-column: 1 / -1;
 		margin: 0;
+		color: var(--color-text);
 	}
 	.level-grid {
 		display: grid;
@@ -258,6 +270,20 @@
 		}
 		.map-overview {
 			gap: 20px;
+		}
+		.group-heading {
+			gap: 12px;
+		}
+		.group-heading::before {
+			top: 25px;
+		}
+		.group-heading > span {
+			width: 68px;
+			height: 68px;
+		}
+		.group-heading p {
+			min-height: 48px;
+			padding-inline: 16px;
 		}
 	}
 </style>

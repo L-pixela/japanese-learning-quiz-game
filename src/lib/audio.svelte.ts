@@ -15,6 +15,8 @@
  * silent.
  */
 
+import { secureRandom } from './random'
+
 export type Sfx = 'select' | 'correct' | 'wrong' | 'pass' | 'fail' | 'tick'
 
 const MUSIC_KEY = 'tantore-music'
@@ -38,7 +40,7 @@ const SFX_GAIN = 0.3
 const LOOKAHEAD_S = 2.5
 const TICK_MS = 400
 
-const rand = (min: number, max: number) => min + Math.random() * (max - min)
+const rand = (min: number, max: number) => min + secureRandom() * (max - min)
 
 /** Frequency of a scale step, where 5 steps is one octave. */
 function scaleHz(step: number) {
@@ -377,7 +379,7 @@ class AudioStore {
 
 			if (this.#phraseLeft === 0) {
 				this.#phraseLeft = Math.floor(rand(2, 5))
-				if (Math.random() < 0.55) this.#bassNote(at, rand(5, 8))
+				if (secureRandom() < 0.55) this.#bassNote(at, rand(5, 8))
 			}
 
 			// Long decays, quieter as the line climbs, so high notes never poke out.
@@ -388,8 +390,8 @@ class AudioStore {
 
 			// Mostly stepwise, with the occasional small leap, drifting over a
 			// two-octave range rather than running up and down it.
-			const move = Math.random() < 0.7 ? 1 : 2
-			this.#step += Math.random() < 0.5 ? move : -move
+			const move = secureRandom() < 0.7 ? 1 : 2
+			this.#step += secureRandom() < 0.5 ? move : -move
 			if (this.#step > 11) this.#step -= 5
 			if (this.#step < 0) this.#step += 5
 

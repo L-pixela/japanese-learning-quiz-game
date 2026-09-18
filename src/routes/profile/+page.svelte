@@ -14,6 +14,7 @@
 	let busy = $state(false)
 	let message = $state('')
 	let error = $state('')
+	let showSignOutConfirmation = $state(false)
 
 	/**
 	 * Resize the chosen picture to a 256px square in the browser before it ever
@@ -144,8 +145,37 @@
 				<p class="handle">@{data.profile.username}</p>
 			</div>
 		</div>
-		<button class="study-button danger" onclick={signOut}>{t('auth.signOut')}</button>
+		<button class="study-button danger" onclick={() => (showSignOutConfirmation = true)}
+			>{t('auth.signOut')}</button
+		>
 	</div>
+
+	{#if showSignOutConfirmation}
+		<div class="signout-backdrop">
+			<div
+				class="signout-dialog"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="signout-dialog-title"
+				aria-describedby="signout-dialog-description"
+			>
+				<h2 id="signout-dialog-title">{t('auth.signOutTitle')}</h2>
+				<p id="signout-dialog-description">{t('auth.signOutMessage')}</p>
+				<div class="signout-actions">
+					<button
+						class="study-button secondary"
+						type="button"
+						onclick={() => (showSignOutConfirmation = false)}
+					>
+						{t('nav.cancel')}
+					</button>
+					<button class="study-button danger" type="button" onclick={signOut}>
+						{t('auth.signOut')}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	<section class="study-metrics" aria-label={t('profile.eyebrow')}>
 		<div class="study-metric">
@@ -357,6 +387,65 @@
 	   photo the three lines need to read as one block. */
 	.identity-text .study-eyebrow {
 		margin-bottom: 10px;
+	}
+	.signout-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: var(--z-modal);
+		display: grid;
+		place-items: center;
+		padding: var(--spacing-lg);
+		background: rgba(38, 48, 29, 0.52);
+	}
+	.signout-dialog {
+		width: min(440px, 100%);
+		padding: clamp(26px, 5vw, 40px);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-lg);
+		text-align: center;
+	}
+	.signout-mark {
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 48px;
+		margin: 0 auto 18px;
+		border-radius: var(--radius-full);
+		background: var(--status-caution-soft);
+		color: var(--color-danger);
+		font-family: var(--font-display);
+		font-size: var(--text-xl);
+		font-weight: var(--font-weight-bold);
+	}
+	.signout-dialog .study-eyebrow {
+		margin-bottom: 12px;
+	}
+	.signout-dialog h2 {
+		margin-bottom: 10px;
+	}
+	.signout-dialog > p:not(.study-eyebrow) {
+		margin-bottom: 0;
+		color: var(--color-text-secondary);
+		line-height: var(--line-height-normal);
+	}
+	.signout-actions {
+		display: flex;
+		justify-content: center;
+		gap: var(--spacing-md);
+		margin-top: 28px;
+	}
+	.signout-dialog .study-button.danger:hover {
+		background: color-mix(in srgb, var(--color-danger) 82%, black);
+	}
+	.profile-heading > .study-button.danger:hover {
+		background: color-mix(in srgb, var(--color-danger) 82%, black);
+	}
+	@media (max-width: 480px) {
+		.signout-actions {
+			flex-direction: column-reverse;
+		}
 	}
 	.identity-text h1 {
 		margin-bottom: 4px;

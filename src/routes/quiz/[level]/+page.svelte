@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { untrack } from 'svelte'
+	import { tick, untrack } from 'svelte'
 	import { SvelteSet } from 'svelte/reactivity'
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
@@ -62,9 +62,26 @@
 	}
 
 	function backToStudy() {
+		result = null
 		started = false
 		quiz = null
 		error = ''
+	}
+	async function continueStudy() {
+		backToStudy()
+		await tick()
+		document.getElementById('words')?.focus()
+	}
+	function openResults(dialog: HTMLDialogElement) {
+		const previousOverflow = document.body.style.overflow
+		dialog.showModal()
+		document.body.style.overflow = 'hidden'
+		return {
+			destroy() {
+				dialog.close()
+				document.body.style.overflow = previousOverflow
+			},
+		}
 	}
 	async function start() {
 		busy = true
@@ -133,6 +150,13 @@
 		search = ''
 		revealed.clear()
 	})
+
+	// During the quiz the card is sized to the viewport, so lock the page:
+	// no scroll, no footer, and the shared chrome flexes to give the card room.
+	$effect(() => {
+		document.body.classList.toggle('quiz-active', started)
+		return () => document.body.classList.remove('quiz-active')
+	})
 	async function nextQuiz() {
 		await goto(resolve('/quiz/[level]', { level: String(data.level.level + 1) }))
 	}
@@ -144,17 +168,26 @@
 </script>
 
 <svelte:head><title>Level {data.level.level} · TanTore</title></svelte:head>
-<StudyShell>
+<StudyShell confirmNavigation={started && result === null}>
 	<div class="quiz-top">
-		<a href={resolve('/quiz', {})}>← {t('level.allLevels')}</a><span
-			>{t('deck.level')}
-			{String(data.level.level).padStart(2, '0')} · {difficultyLabel(data.level.difficulty)}</span
-		>
+		<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
+		{#if started}
+			<div class="quiz-top-title">
+				<span class="quiz-top-level"
+					>{t('deck.level')}
+					{String(data.level.level).padStart(2, '0')} ·
+					{difficultyLabel(data.level.difficulty)}</span
+				>
+				<span class="quiz-top-name" lang="ja"
+					>{levelName(data.level.level)} / {data.level.japanese}</span
+				>
+			</div>
+		{/if}
 	</div>
 
 	{#if !started}
 		<!-- Step 1. The words, and the decision to be tested on them. -->
-		<section class="level-intro" id="words">
+		<section class="level-intro" id="words" tabindex="-1">
 			<div class="intro-copy">
 				<p class="study-eyebrow">{t('level.stepStudy')}</p>
 				<h1>{levelName(data.level.level)} <span lang="ja">{data.level.japanese}</span></h1>
@@ -239,12 +272,9 @@
 		</nav>
 	{:else}
 		<section class="quiz-sheet">
-			<p class="study-eyebrow">{levelName(data.level.level)} / {data.level.japanese}</p>
 			{#if quiz && question}
 				<div class="question-meta">
-					<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span><span
-						>{t('quiz.chooseMeaning')}</span
-					>
+					<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span>
 				</div>
 				<progress value={current + 1} max="10" aria-label={t('a11y.questionProgress')}></progress>
 				<div class="word-prompt" aria-live="polite">
@@ -286,20 +316,23 @@
 							current--
 							sfx('tick')
 						}}>← {t('quiz.back')}</button
-					><span
-						>{t('quiz.answered', { done: answers.filter((answer) => answer >= 0).length })}</span
-					>{#if current < 9}<button
-							class="study-button"
-							disabled={answers[current] < 0 || busy}
-							onclick={() => {
-								current++
-								sfx('tick')
-							}}>{t('quiz.next')} →</button
-						>{:else}<button
-							class="study-button"
-							disabled={busy || answers.some((answer) => answer < 0)}
-							onclick={submit}>{busy ? t('quiz.saving') : t('quiz.finish') + ' ↗'}</button
-						>{/if}
+					>
+					<div class="quiz-controls-end">
+						<button class="study-button secondary" onclick={backToStudy} disabled={busy}
+							>← {t('level.backToStudy')}</button
+						>{#if current < 9}<button
+								class="study-button"
+								disabled={answers[current] < 0 || busy}
+								onclick={() => {
+									current++
+									sfx('tick')
+								}}>{t('quiz.next')} →</button
+							>{:else}<button
+								class="study-button"
+								disabled={busy || answers.some((answer) => answer < 0)}
+								onclick={submit}>{busy ? t('quiz.saving') : t('quiz.finish') + ' ↗'}</button
+							>{/if}
+					</div>
 				</div>
 			{:else}<div class="loading">
 					<h1>{busy ? t('quiz.opening') : t('quiz.ready')}</h1>
@@ -308,22 +341,20 @@
 				</div>{/if}
 			{#if error}<p class="study-error" role="alert">{error}</p>{/if}
 		</section>
-		<p class="quiz-note">{t('quiz.note')}</p>
-		<div class="quiz-escape">
-			<button class="study-button secondary" onclick={backToStudy} disabled={busy}
-				>← {t('level.backToStudy')}</button
-			>
-		</div>
 	{/if}
 
 	{#if result}
-		<div class="result-backdrop">
-			<div
-				class={'result-card ' + (result.passed ? 'passed' : 'failed')}
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="result-title"
-			>
+		<dialog
+			class="result-backdrop"
+			use:openResults
+			aria-labelledby="result-title"
+			aria-describedby="result-lead"
+			oncancel={(event) => {
+				event.preventDefault()
+				void continueStudy()
+			}}
+		>
+			<div class={'result-card ' + (result.passed ? 'passed' : 'failed')}>
 				<div class="result-art">
 					<img
 						src={result.passed ? '/team/pass.png' : '/team/fail.png'}
@@ -339,7 +370,7 @@
 						? t('result.passedTitle', { level: String(result.level).padStart(2, '0') })
 						: t('result.failedTitle')}
 				</h2>
-				<p class="result-lead">
+				<p class="result-lead" id="result-lead">
 					{result.passed ? t('result.passedLead') : t('result.failedLead')}
 				</p>
 				<div class="result-stats">
@@ -370,25 +401,46 @@
 						href={resolve('/quiz/quiz-results', {}) + '?attempt=' + result.attemptId}
 						>{t('result.reviewAnswers')}</a
 					>
-					<a
-						class="study-button secondary"
-						href={resolve('/quiz/[level]', { level: String(result.level) }) + '#words'}
-						>{t('result.continueStudy')}</a
+					<button class="study-button secondary" onclick={continueStudy}
+						>{t('result.continueStudy')}</button
 					>
 				</div>
 			</div>
-		</div>
+		</dialog>
 	{/if}
 </StudyShell>
 
 <style>
 	.quiz-top {
-		display: flex;
-		justify-content: space-between;
-		gap: 15px;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		gap: var(--spacing-md);
 		font-size: var(--font-size-caption);
-		margin-bottom: 25px;
+		margin-bottom: var(--spacing-lg);
 		color: var(--color-text-secondary);
+	}
+	.quiz-top-back {
+		justify-self: start;
+		padding: var(--spacing-sm);
+		text-decoration: none;
+	}
+	.quiz-top-title {
+		justify-self: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--spacing-sm);
+		text-align: center;
+		line-height: var(--line-height-snug);
+		min-width: 0;
+	}
+	.quiz-top-name {
+		font-family: var(--font-display);
+		font-size: var(--font-size-body);
+		font-weight: var(--font-weight-bold);
+		color: var(--color-text);
+		overflow-wrap: anywhere;
 	}
 	.quiz-top a {
 		text-decoration: none;
@@ -396,18 +448,51 @@
 	.quiz-sheet {
 		width: min(820px, 100%);
 		margin: auto;
-		padding: clamp(24px, 5vw, 46px);
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-xl);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-md);
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+	/* Quiz phase: the card owns whatever height the viewport leaves over the
+	   nav and the escape button, so the page never scrolls. */
+	:global(body.quiz-active) {
+		overflow: hidden;
+	}
+	:global(body.quiz-active .study-app) {
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		height: calc(100vh / var(--app-zoom));
+		height: calc(100dvh / var(--app-zoom));
+	}
+	:global(body.quiz-active .study-footer) {
+		display: none;
+	}
+	:global(body.quiz-active .study-main) {
+		flex: 1 1 auto;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	/* Keep the card's padding identical to the words page so the breadcrumb and
+	   level sit in the same place; only tighten when the viewport is too short to
+	   fit the quiz without scrolling. */
+	:global(body.quiz-active .quiz-sheet) {
+		flex: 1 1 auto;
+		min-height: 0;
+		padding: var(--spacing-lg);
 	}
 	.question-meta {
 		display: flex;
 		justify-content: space-between;
-		gap: 12px;
+		gap: var(--spacing-md);
 		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
-		margin: 25px 0 12px;
+		margin: var(--spacing-md);
 	}
 	progress {
 		display: block;
@@ -426,23 +511,50 @@
 		background: var(--color-primary);
 	}
 	.word-prompt {
-		text-align: center;
-		padding: 38px 0;
+		flex: 1 1 auto;
+		min-height: 0;
+		display: grid;
+		justify-items: center;
+		align-content: center;
+		--prompt-reading: clamp(1.2em, 4vh, 1.7em);
+		--prompt-word: clamp(44px, 11vh, 84px);
+		/* No uniform row gap — the furigana hugs the kanji, while the tag and hint
+		   carry their own spacing (see below). */
+		row-gap: 0;
+		column-gap: var(--spacing-md);
+		/* Reserved tracks: each band keeps its space even when a question has no
+		   furigana or a shorter word, so the prompt never shifts the options. The
+		   minmax(0, …) lets a band compress under pressure instead of spilling its
+		   kanji up over the answer buttons when the viewport is short. */
+		grid-template-rows: auto minmax(0, var(--prompt-reading)) minmax(0, var(--prompt-word)) auto;
+		padding: var(--spacing-md);
+	}
+	.word-prompt .ask-type {
+		grid-row: 1;
+		margin-bottom: var(--spacing-lg);
 	}
 	.word-prompt p {
+		grid-row: 2;
+		align-self: end;
+		margin: 0;
+		padding-bottom: var(--spacing-sm);
 		font-size: var(--font-size-body);
 		letter-spacing: 3px;
-		margin-bottom: 10px;
 		color: var(--color-text-secondary);
 	}
 	.word-prompt h1 {
-		margin-bottom: 18px;
+		grid-row: 3;
+		display: grid;
+		place-content: center;
+		margin: 0;
 		font-family: var(--font-display);
-		font-size: clamp(44px, 8vw, 76px);
+		font-size: clamp(34px, 8vh, 64px);
 		letter-spacing: 4px;
 		overflow-wrap: anywhere;
 	}
 	.word-prompt > span {
+		grid-row: 4;
+		margin-top: var(--spacing-lg);
 		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
 	}
@@ -455,15 +567,15 @@
 	.options {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 12px;
+		gap: var(--spacing-md);
 	}
 	.options label {
 		position: relative;
 		display: flex;
-		gap: 14px;
+		gap: var(--spacing-md);
 		align-items: center;
-		min-height: 82px;
-		padding: 18px 20px;
+		min-height: clamp(46px, 8.5vh, 72px);
+		padding: var(--spacing-md);
 		border-radius: var(--radius-md);
 		background: var(--color-surface-sunken);
 		box-shadow: var(--shadow-solid) var(--color-border);
@@ -493,8 +605,8 @@
 		display: grid;
 		place-items: center;
 		flex-shrink: 0;
-		width: 36px;
-		height: 36px;
+		width: clamp(30px, 5vh, 36px);
+		height: clamp(30px, 5vh, 36px);
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
 		color: var(--color-text-secondary);
@@ -510,35 +622,46 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
-		margin-top: 30px;
+		gap: var(--spacing-md);
+		margin-top: var(--spacing-lg);
 	}
-	.quiz-controls > span {
-		font-size: var(--font-size-caption);
-		color: var(--color-text-secondary);
+	.quiz-controls-end {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-md);
 	}
 	.quiz-note {
 		text-align: center;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-caption);
-		margin-top: 22px;
+		margin-top: var(--spacing-lg);
 	}
 	.result-backdrop {
 		position: fixed;
 		inset: 0;
 		z-index: var(--z-modal);
 		display: grid;
-		place-items: center;
-		padding: 20px;
-		background: rgba(20, 25, 17, 0.66);
-		backdrop-filter: blur(3px);
+		place-items: safe center;
+		width: 100%;
+		height: calc(100dvh / var(--app-zoom));
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: var(--spacing-md);
+		border: 0;
+		overflow-y: auto;
+		background: transparent;
+		color: var(--color-text);
 		animation: fade var(--duration-base) var(--ease-out);
 	}
+	.result-backdrop::backdrop {
+		background: rgba(20, 25, 17, 0.66);
+		backdrop-filter: blur(3px);
+	}
 	.result-card {
+		--card-padding: var(--spacing-lg);
 		width: min(520px, 100%);
-		max-height: 92vh;
-		overflow-y: auto;
-		padding: 0 34px 34px;
+		padding: 0 var(--card-padding) var(--spacing-lg);
 		border-radius: var(--radius-xl);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-lg);
@@ -547,8 +670,10 @@
 	}
 	.result-art {
 		position: relative;
-		margin: -1px -34px 22px;
-		padding: 30px 0;
+		display: grid;
+		place-items: center;
+		margin: 0 calc(-1 * var(--card-padding)) var(--spacing-md);
+		padding: var(--spacing-lg) 0 var(--spacing-md);
 		border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 		background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 	}
@@ -556,9 +681,9 @@
 		background: var(--color-danger);
 	}
 	.result-art img {
-		width: 148px;
-		margin: 14px;
-		height: 148px;
+		width: clamp(88px, 18dvh, 128px);
+		margin: 0;
+		height: clamp(88px, 18dvh, 128px);
 		border-radius: var(--radius-full);
 		border: 5px solid #fff;
 		object-fit: cover;
@@ -566,23 +691,24 @@
 	}
 	.result-stamp {
 		position: absolute;
-		right: 34px;
-		bottom: 26px;
-		padding: 9px 18px;
+		right: 14px;
+		top: 12px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
 		color: var(--color-primary-active);
 		box-shadow: var(--shadow-solid) rgba(20, 25, 17, 0.22);
 		font-family: var(--font-display);
-		font-size: 20px;
+		font-size: 16px;
 		font-weight: var(--font-weight-bold);
 		letter-spacing: 3px;
 	}
 	.result-card h2 {
+		margin: 0;
 		font-size: clamp(20px, 3.3vw, 30px);
 	}
 	.result-lead {
-		margin: 10px 0 0;
+		margin: var(--spacing-md) 0 0;
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-small);
 		line-height: var(--line-height-relaxed);
@@ -590,13 +716,14 @@
 	.result-stats {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 10px;
-		margin: 24px 0;
-		padding: 20px 0;
+		gap: var(--spacing-md);
+		margin: var(--spacing-md) 0;
+		padding: var(--spacing-md) var(--spacing-sm);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface-sunken);
 	}
 	.result-stats strong {
+		overflow-wrap: anywhere;
 		display: block;
 		font-family: var(--font-display);
 		font-size: clamp(21px, 3.6vw, 32px);
@@ -604,20 +731,20 @@
 		letter-spacing: 0.5px;
 	}
 	.result-stats strong span {
-		margin-left: 4px;
+		margin-left: var(--spacing-sm);
 		font-size: var(--font-size-body);
 		color: var(--color-text-faint);
 	}
 	.result-stats small {
 		display: block;
-		margin-top: 4px;
+		margin-top: var(--spacing-sm);
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-caption);
 		line-height: var(--line-height-snug);
 	}
 	.result-actions {
 		display: grid;
-		gap: 12px;
+		gap: var(--spacing-sm);
 	}
 	@keyframes pop {
 		from {
@@ -637,20 +764,21 @@
 		}
 	}
 	.loading {
-		padding: 45px 0;
+		padding: var(--spacing-lg) 0;
 	}
 	.study-error {
-		margin-top: 20px;
+		margin-top: var(--spacing-lg);
 	}
 	@media (max-width: 550px) {
 		.options {
 			grid-template-columns: 1fr;
 		}
-		.quiz-controls > span {
-			display: none;
+		.quiz-controls {
+			flex-wrap: wrap;
 		}
 		.quiz-controls .study-button {
-			padding: 13px 16px;
+			padding: var(--spacing-md) var(--spacing-md);
+			font-size: var(--font-size-small);
 		}
 	}
 
@@ -658,10 +786,10 @@
 	.level-intro {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 25px;
+		gap: var(--spacing-lg);
 		justify-content: space-between;
 		align-items: flex-end;
-		padding: clamp(22px, 3vw, 30px);
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -671,21 +799,21 @@
 		flex: 1 1 320px;
 	}
 	.intro-copy h1 {
-		margin-bottom: 10px;
+		margin-bottom: var(--spacing-md);
 	}
 	.intro-copy h1 span {
-		margin-left: 10px;
+		margin-left: var(--spacing-md);
 		color: var(--color-primary);
 		font-size: var(--font-size-h3);
 	}
 	.intro-facts {
 		display: flex;
-		gap: clamp(18px, 3vw, 30px);
+		gap: var(--spacing-lg);
 		flex-wrap: wrap;
 	}
 	.intro-facts div {
 		display: grid;
-		gap: 3px;
+		gap: var(--spacing-sm);
 	}
 	.intro-facts strong {
 		font-family: var(--font-display);
@@ -701,10 +829,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 20px;
+		gap: var(--spacing-lg);
 		flex-wrap: wrap;
-		margin-top: 18px;
-		padding: clamp(20px, 2.6vw, 26px) clamp(22px, 3vw, 30px);
+		margin-top: var(--spacing-lg);
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--color-primary);
 		color: var(--color-on-primary);
@@ -715,7 +843,7 @@
 		flex: 1 1 260px;
 	}
 	.level-start :global(.study-eyebrow) {
-		margin-bottom: 8px;
+		margin-bottom: var(--spacing-sm);
 		background: rgba(251, 247, 236, 0.2);
 		color: var(--color-on-primary);
 	}
@@ -731,23 +859,18 @@
 		color: var(--panel-dark-deep);
 		box-shadow: var(--shadow-solid) rgba(0, 0, 0, 0.25);
 	}
-	.quiz-escape {
-		display: flex;
-		justify-content: center;
-		margin-top: 20px;
-	}
 	/* ---------- The word list ---------- */
 	.deck-actions {
 		display: flex;
-		gap: 14px;
+		gap: var(--spacing-md);
 		align-items: center;
-		margin: 26px 0 18px;
+		margin: var(--spacing-lg) 0 var(--spacing-lg);
 	}
 	.deck-actions input {
 		flex: 1;
 		min-width: 0;
 		min-height: 56px;
-		padding: 14px 22px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border: 2px solid var(--color-border);
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
@@ -771,9 +894,9 @@
 	.word-list li {
 		display: grid;
 		grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
-		gap: 14px;
+		gap: var(--spacing-md);
 		align-items: baseline;
-		padding: 16px 24px;
+		padding: var(--spacing-md) var(--spacing-lg);
 		border-bottom: 1px solid var(--color-border-subtle);
 	}
 	.word-list li:last-child {
@@ -801,7 +924,7 @@
 		overflow-wrap: anywhere;
 	}
 	.deck-empty {
-		padding: 44px;
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		border: 2px dashed var(--color-border-strong);
 		color: var(--color-text-secondary);
@@ -809,21 +932,21 @@
 		text-align: center;
 	}
 	.deck-note {
-		margin-top: 18px;
+		margin-top: var(--spacing-lg);
 		font-size: var(--font-size-caption);
 	}
 	/* ---------- Level switcher ---------- */
 	.level-tabs {
 		display: grid;
 		grid-template-columns: repeat(10, minmax(0, 1fr));
-		gap: 6px;
-		margin: 32px 0 0;
+		gap: var(--spacing-sm);
+		margin: var(--spacing-lg) 0 0;
 	}
 	.level-tabs a {
 		display: grid;
-		gap: 3px;
+		gap: var(--spacing-sm);
 		justify-items: center;
-		padding: 13px 4px;
+		padding: var(--spacing-md) var(--spacing-sm);
 		border-radius: var(--radius-md);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-solid) var(--color-border);
@@ -854,7 +977,7 @@
 	@media (max-width: 800px) {
 		.word-list li {
 			grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr);
-			padding: 14px 16px;
+			padding: var(--spacing-md) var(--spacing-md);
 		}
 		.word-meaning {
 			grid-column: 2 / -1;
@@ -870,7 +993,7 @@
 		}
 		.word-list li {
 			grid-template-columns: 30px minmax(0, 1fr);
-			gap: 6px 10px;
+			gap: var(--spacing-sm) var(--spacing-md);
 		}
 		.word-reading,
 		.word-meaning {
@@ -879,8 +1002,8 @@
 	}
 	.ask-type {
 		display: inline-block;
-		margin-bottom: 16px;
-		padding: 6px 14px;
+		margin-bottom: var(--spacing-md);
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-primary-soft);
 		color: var(--color-primary-active);
@@ -893,7 +1016,7 @@
 	   face is sized for two or three kanji, not a phrase. */
 	.prompt-en {
 		font-family: var(--font-body) !important;
-		font-size: clamp(26px, 4.6vw, 40px) !important;
+		font-size: clamp(22px, 5vh, 38px) !important;
 		line-height: var(--line-height-tight);
 	}
 
@@ -910,7 +1033,7 @@
 	.word-cover {
 		width: 100%;
 		min-height: 40px;
-		padding: 8px 14px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border: 1px dashed var(--color-border-strong);
 		border-radius: var(--radius-md);
 		background: var(--color-surface-sunken);
@@ -923,5 +1046,21 @@
 	.word-cover:hover {
 		border-style: solid;
 		color: var(--color-primary);
+	}
+	/* The prompt bands and options above already scale with vh, so the card fits
+	   normal phones and laptops. This floor only kicks in for very short
+	   viewports (phone landscape) to guarantee no scroll and no overlap. */
+	@media (max-height: 500px) {
+		.word-prompt {
+			--prompt-reading: 1em;
+			--prompt-word: clamp(30px, 8vh, 44px);
+			padding: var(--spacing-sm) 0;
+		}
+		.word-prompt h1 {
+			font-size: clamp(26px, 6vh, 40px);
+		}
+		.options label {
+			min-height: clamp(38px, 7vh, 52px);
+		}
 	}
 </style>

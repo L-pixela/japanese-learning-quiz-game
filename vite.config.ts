@@ -37,6 +37,10 @@ export default defineConfig({
 				'src/routes/**/+*.svelte',
 				'src/**/*.d.ts',
 				'src/lib/server/db/mock-db.ts',
+				'src/lib/server/db/test-d1.ts',
+				'src/lib/i18n/dictionary.ts',
+				'src/lib/team.ts',
+				'src/lib/mock-data/decks.ts',
 			],
 		},
 		projects: [

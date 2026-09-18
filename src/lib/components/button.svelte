@@ -40,7 +40,7 @@
 	}
 
 	.button--sm {
-		padding: var(--spacing-xs) var(--spacing-sm);
+		padding: var(--spacing-sm) var(--spacing-sm);
 		font-size: var(--font-size-small);
 		border-radius: var(--radius-sm);
 	}

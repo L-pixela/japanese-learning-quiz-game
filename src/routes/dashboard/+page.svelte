@@ -102,22 +102,14 @@
 			{/if}
 		</div>
 		<div class="board-table">
-			<div
-				class="board-columns"
-				class:before-you={data.leaderboard[0]?.id === data.user.id}
-				aria-hidden="true"
-			>
+			<div class="board-columns" aria-hidden="true">
 				<span class="col-rank">#</span><span class="col-name">{t('dashboard.colLearner')}</span
 				><span class="col-university">{t('dashboard.colUniversity')}</span><span class="col-badge"
 					>{t('profile.rank')}</span
 				><span class="col-points">{t('dashboard.colPoints')}</span>
 			</div>
 			<ol class="board-list">
-				{#each data.leaderboard as learner, i (learner.id)}<li
-						class:you={learner.id === data.user.id}
-						class:podium={learner.position <= 3}
-						class:before-you={data.leaderboard[i + 1]?.id === data.user.id}
-					>
+				{#each data.leaderboard as learner (learner.id)}<li class:you={learner.id === data.user.id}>
 						<a
 							class="board-entry"
 							href={resolve('/profile/[id]', { id: learner.id })}
@@ -153,7 +145,7 @@
 	.hero-copy {
 		position: relative;
 		z-index: 1;
-		padding: clamp(24px, 3.2vw, 48px);
+		padding: var(--spacing-lg);
 		color: var(--on-panel-dark);
 	}
 	.hero-copy :global(.study-eyebrow) {
@@ -165,13 +157,13 @@
 		white-space: pre-line;
 	}
 	.hero-copy h2 {
-		margin-bottom: 18px;
+		margin-bottom: var(--spacing-lg);
 		font-size: var(--font-size-display);
 		line-height: var(--line-height-tight);
 		letter-spacing: -0.5px;
 	}
 	.hero-copy > p:not(.study-eyebrow) {
-		margin-bottom: 26px;
+		margin-bottom: var(--spacing-lg);
 		font-size: var(--font-size-body);
 		line-height: var(--line-height-relaxed);
 		color: var(--on-panel-dark-muted);
@@ -187,11 +179,11 @@
 	.hero-meta {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 26px;
+		gap: var(--spacing-md);
+		margin-top: var(--spacing-lg);
 	}
 	.hero-meta span {
-		padding: 7px 14px;
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: rgba(255, 248, 236, 0.16);
 		font-size: var(--font-size-caption);
@@ -213,10 +205,10 @@
 		text-shadow: 0 2px 10px rgba(20, 25, 17, 0.3);
 	}
 	.board {
-		margin-top: 30px;
+		margin-top: var(--spacing-lg);
 		/* Extra side padding leaves room for the highlighted row to sit inside
 		   the rounded corners instead of bleeding into them. */
-		padding: 30px clamp(20px, 2.4vw, 34px) 24px;
+		padding: var(--spacing-lg);
 		border-radius: var(--radius-lg);
 		background: var(--panel-dark);
 		color: var(--on-panel-dark);
@@ -229,7 +221,7 @@
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
-		gap: 12px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
 	}
 	.board-head h2 {
@@ -240,7 +232,7 @@
 		color: var(--on-panel-dark);
 	}
 	.board-position {
-		padding: 9px 16px;
+		padding: var(--spacing-md) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-accent);
 		color: var(--panel-dark-deep);
@@ -258,6 +250,7 @@
 	.board-list {
 		display: grid;
 		grid-template-columns: subgrid;
+		row-gap: var(--spacing-sm);
 	}
 	.board-columns,
 	.board-entry {
@@ -265,7 +258,7 @@
 		grid-template-columns: subgrid;
 		grid-column: 1 / -1;
 		grid-template-areas: 'rank name university badge points';
-		gap: 14px;
+		gap: var(--spacing-md);
 		align-items: center;
 	}
 	.board-badge {
@@ -279,7 +272,7 @@
 	   is centred, so "Rank" is centred over it. */
 	.board-columns .col-rank {
 		grid-area: rank;
-		padding-left: 14px;
+		padding-left: var(--spacing-md);
 	}
 	.board-columns .col-name {
 		grid-area: name;
@@ -297,10 +290,10 @@
 	.rank-status {
 		display: flex;
 		align-items: center;
-		gap: 14px;
+		gap: var(--spacing-md);
 		flex-wrap: wrap;
-		margin-top: 20px;
-		padding: 14px 16px;
+		margin-top: var(--spacing-lg);
+		padding: var(--spacing-md) var(--spacing-md);
 		border-radius: var(--radius-md);
 		background: rgba(251, 247, 236, 0.1);
 	}
@@ -323,7 +316,7 @@
 	}
 	.rank-bar {
 		height: 10px;
-		margin-bottom: 6px;
+		margin-bottom: var(--spacing-sm);
 		border-radius: var(--radius-full);
 		background: rgba(251, 247, 236, 0.18);
 		overflow: hidden;
@@ -347,8 +340,8 @@
 		grid-area: points;
 	}
 	.board-columns {
-		margin-top: 22px;
-		padding: 0 12px 12px;
+		margin-top: var(--spacing-lg);
+		padding: 0 var(--spacing-md) var(--spacing-md);
 		border-bottom: 1px solid rgba(251, 247, 236, 0.22);
 		color: var(--on-panel-dark-muted);
 		font-size: var(--text-sm);
@@ -357,16 +350,19 @@
 	.board-list {
 		list-style: none;
 		padding: 0;
-		margin: 0;
+		margin: var(--spacing-md) 0 0;
 	}
 	.board-list li {
 		display: grid;
 		grid-template-columns: subgrid;
 		grid-column: 1 / -1;
-		border-bottom: 1px solid rgba(251, 247, 236, 0.12);
+		border: 1px solid rgba(251, 247, 236, 0.12);
+		border-radius: var(--radius-md);
+		background: rgba(251, 247, 236, 0.04);
 	}
 	.board-entry {
-		padding: 16px 12px;
+		padding: var(--spacing-md) var(--spacing-md);
+		border-radius: inherit;
 		font-size: var(--text-base);
 		font-weight: var(--font-weight-medium);
 		text-decoration: none;
@@ -375,27 +371,23 @@
 	.board-entry:hover {
 		background: rgba(251, 247, 236, 0.08);
 	}
-	.board-list li:last-child {
-		border-bottom: 0;
+	.board-entry:focus-visible {
+		outline: 2px solid var(--on-panel-dark);
+		outline-offset: 2px;
 	}
 	.board-rank {
-		padding-left: 10px;
-		border-left: 4px solid transparent;
+		padding-left: var(--spacing-md);
 		color: var(--on-panel-dark-muted);
 		font-family: var(--font-display);
 		font-size: var(--text-base);
-	}
-	/* Top three get the accent; everyone else stays quiet. */
-	.podium .board-rank {
-		color: var(--color-accent);
-		border-left-color: var(--color-accent);
 	}
 	.board-name {
 		overflow-wrap: anywhere;
 	}
 	.board-name em {
-		margin-left: 8px;
-		padding: 3px 10px;
+		display: inline-block;
+		margin-left: var(--spacing-sm);
+		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-full);
 		background: var(--color-accent);
 		color: var(--panel-dark-deep);
@@ -415,34 +407,19 @@
 		font-weight: var(--font-weight-bold);
 	}
 	.board-points small {
-		margin-left: 5px;
+		margin-left: var(--spacing-sm);
 		color: var(--on-panel-dark-muted);
 		font-size: var(--text-xs);
 		font-weight: var(--font-weight-medium);
 	}
-	.you {
-		border-radius: var(--radius-md);
-		background: rgba(251, 247, 236, 0.14);
-		box-shadow: inset 4px 0 0 var(--color-accent);
-	}
-	/* Separators are straight, edge-to-edge lines; the highlighted row is a
-	   rounded panel. Where the two meet, the line carries on past the curve and
-	   reads as an overhanging edge — so the highlighted row draws no separator,
-	   and neither does whatever sits directly above it. The 1px is kept and
-	   only made transparent, so every row stays exactly the same height. */
-	.board-list li.you,
-	.board-list li.before-you,
-	.board-columns.before-you {
-		border-bottom-color: transparent;
-	}
-	/* A podium row already gets an accent bar from the inset shadow above, so
-	   the rank cell must not draw a second one beside it. */
-	.you .board-rank {
-		border-left-color: transparent;
+	.board-list li.you {
+		border-color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+		background: rgba(251, 247, 236, 0.1);
+		box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 12%, transparent);
 	}
 	@media (max-width: 800px) {
 		.hero-copy {
-			padding: 28px;
+			padding: var(--spacing-lg);
 		}
 	}
 	@media (max-width: 550px) {
@@ -457,14 +434,14 @@
 			letter-spacing: 5px;
 		}
 		.board {
-			padding: 22px 18px 6px;
+			padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
 		}
 		.board-table {
 			grid-template-columns: 40px minmax(0, 1fr) 92px;
 		}
 		.board-columns,
 		.board-entry {
-			gap: 2px 10px;
+			gap: var(--spacing-sm) var(--spacing-md);
 		}
 		/* Narrow screens: university and badge drop to a second line. */
 		.board-entry {
