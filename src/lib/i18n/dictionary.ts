@@ -10,7 +10,6 @@ export const dictionary = {
 	'nav.menu': ['Menu', 'メニュー'],
 	'nav.music': ['Background music', 'BGM'],
 	'nav.sfx': ['Sound effects', '効果音'],
-	'nav.leaveQuizEyebrow': ['Unsaved quiz', '未保存のクイズ'],
 	'nav.leaveQuizTitle': ['Leave this quiz?', 'クイズを終了しますか？'],
 	'nav.leaveQuizMessage': [
 		'Are you sure? You will lose your current quiz progress.',
@@ -131,7 +130,9 @@ export const dictionary = {
 	'auth.noAccount': ['New to TanTore?', 'はじめてですか？'],
 	'auth.createAccount': ['Create an account', 'アカウントを作成'],
 	'auth.haveAccount': ['Already have an account?', 'アカウントをお持ちですか？'],
-	'auth.signOut': ['Sign out', 'ログアウト'],
+	'auth.signOut': ['Sign out', 'サインアウト'],
+	'auth.signOutTitle': ['Sign out of TanTore?', 'TanToreからサインアウトしますか？'],
+	'auth.signOutMessage': ['Are you sure you want to sign out?', '本当にサインアウトしますか？'],
 
 	'profile.eyebrow': ['Your profile', 'プロフィール'],
 	'profile.title': ['Your profile', 'プロフィール'],

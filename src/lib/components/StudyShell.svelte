@@ -80,9 +80,8 @@
 			aria-labelledby="navigation-dialog-title"
 			aria-describedby="navigation-dialog-description"
 		>
-			<span class="dialog-mark" aria-hidden="true">!</span>
-			<p class="study-eyebrow">{t('nav.leaveQuizEyebrow')}</p>
-			<h2 id="navigation-dialog-title">{t('nav.leaveQuizTitle')}</h2>
+			
+			<strong id="navigation-dialog-title" class="navigation-dialog-title">{t('nav.leaveQuizTitle')}</strong>
 			<p id="navigation-dialog-description">{t('nav.leaveQuizMessage')}</p>
 			<div class="dialog-actions">
 				<button
@@ -119,6 +118,14 @@
 		background: var(--color-surface);
 		box-shadow: var(--shadow-lg);
 		text-align: center;
+	}
+
+	.navigation-dialog-title {
+		display: block;
+		margin-bottom: 10px;
+		font-weight: var(--font-weight-bold);
+		font-size: var(--text-lg);
+		color: var(--color-text);
 	}
 
 	.dialog-mark {

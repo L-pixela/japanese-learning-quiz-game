@@ -14,6 +14,7 @@
 	let busy = $state(false)
 	let message = $state('')
 	let error = $state('')
+	let showSignOutConfirmation = $state(false)
 
 	/**
 	 * Resize the chosen picture to a 256px square in the browser before it ever
@@ -144,8 +145,37 @@
 				<p class="handle">@{data.profile.username}</p>
 			</div>
 		</div>
-		<button class="study-button danger" onclick={signOut}>{t('auth.signOut')}</button>
+		<button class="study-button danger" onclick={() => (showSignOutConfirmation = true)}
+			>{t('auth.signOut')}</button
+		>
 	</div>
+
+	{#if showSignOutConfirmation}
+		<div class="signout-backdrop">
+			<div
+				class="signout-dialog"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="signout-dialog-title"
+				aria-describedby="signout-dialog-description"
+			>
+				<h2 id="signout-dialog-title">{t('auth.signOutTitle')}</h2>
+				<p id="signout-dialog-description">{t('auth.signOutMessage')}</p>
+				<div class="signout-actions">
+					<button
+						class="study-button secondary"
+						type="button"
+						onclick={() => (showSignOutConfirmation = false)}
+					>
+						{t('nav.cancel')}
+					</button>
+					<button class="study-button danger" type="button" onclick={signOut}>
+						{t('auth.signOut')}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	<section class="study-metrics" aria-label={t('profile.eyebrow')}>
 		<div class="study-metric">
@@ -356,10 +386,69 @@
 	/* The page default spaces these for full-width headings; beside an 84px
 	   photo the three lines need to read as one block. */
 	.identity-text .study-eyebrow {
-		margin-bottom: var(--spacing-md);
+		margin-bottom: 10px;
+	}
+	.signout-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: var(--z-modal);
+		display: grid;
+		place-items: center;
+		padding: var(--spacing-lg);
+		background: rgba(38, 48, 29, 0.52);
+	}
+	.signout-dialog {
+		width: min(440px, 100%);
+		padding: clamp(26px, 5vw, 40px);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-lg);
+		text-align: center;
+	}
+	.signout-mark {
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 48px;
+		margin: 0 auto 18px;
+		border-radius: var(--radius-full);
+		background: var(--status-caution-soft);
+		color: var(--color-danger);
+		font-family: var(--font-display);
+		font-size: var(--text-xl);
+		font-weight: var(--font-weight-bold);
+	}
+	.signout-dialog .study-eyebrow {
+		margin-bottom: 12px;
+	}
+	.signout-dialog h2 {
+		margin-bottom: 10px;
+	}
+	.signout-dialog > p:not(.study-eyebrow) {
+		margin-bottom: 0;
+		color: var(--color-text-secondary);
+		line-height: var(--line-height-normal);
+	}
+	.signout-actions {
+		display: flex;
+		justify-content: center;
+		gap: var(--spacing-md);
+		margin-top: 28px;
+	}
+	.signout-dialog .study-button.danger:hover {
+		background: color-mix(in srgb, var(--color-danger) 82%, black);
+	}
+	.profile-heading > .study-button.danger:hover {
+		background: color-mix(in srgb, var(--color-danger) 82%, black);
+	}
+	@media (max-width: 480px) {
+		.signout-actions {
+			flex-direction: column-reverse;
+		}
 	}
 	.identity-text h1 {
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: 4px;
 		font-size: var(--text-2xl);
 		overflow-wrap: break-word;
 	}
@@ -375,7 +464,7 @@
 		gap: var(--spacing-md);
 		flex-wrap: wrap;
 		margin-bottom: var(--spacing-lg);
-		padding: var(--spacing-lg);
+		padding: 20px clamp(18px, 2.4vw, 26px);
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-sm);
@@ -385,7 +474,7 @@
 		flex: 1 1 260px;
 	}
 	.climb-copy .study-eyebrow {
-		margin-bottom: var(--spacing-md);
+		margin-bottom: 10px;
 	}
 	.climb-copy strong {
 		display: block;
@@ -395,7 +484,7 @@
 	}
 	.climb-copy small {
 		display: block;
-		margin-top: var(--spacing-sm);
+		margin-top: 6px;
 		color: var(--color-text-secondary);
 		font-size: var(--text-sm);
 	}
@@ -425,20 +514,20 @@
 	}
 	.photo-title {
 		display: block;
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: 8px;
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
 	}
 	.photo-buttons {
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-md);
+		gap: 12px;
 		flex-wrap: wrap;
 	}
 	.file-button {
 		display: inline-flex;
 		align-items: center;
-		padding: var(--spacing-md) var(--spacing-lg);
+		padding: 10px 20px;
 		border-radius: var(--radius-full);
 		background: var(--color-primary);
 		color: var(--color-on-primary);
@@ -462,12 +551,12 @@
 	}
 	.photo-field small {
 		display: block;
-		margin-top: var(--spacing-sm);
+		margin-top: 8px;
 		color: var(--color-text-faint);
 		font-size: var(--text-xs);
 	}
 	.notice {
-		padding: var(--spacing-md) var(--spacing-lg);
+		padding: 14px 18px;
 		border-radius: var(--radius-md);
 		background: var(--color-success-soft);
 		color: var(--color-primary);
@@ -483,7 +572,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--spacing-md);
+		gap: 12px;
 		margin-bottom: var(--spacing-lg);
 	}
 	.count {
@@ -492,7 +581,7 @@
 	}
 	.small {
 		min-height: 44px;
-		padding: var(--spacing-md) var(--spacing-lg);
+		padding: 10px 20px;
 		font-size: var(--text-sm);
 	}
 	form {
@@ -501,7 +590,7 @@
 	}
 	label {
 		display: grid;
-		gap: var(--spacing-sm);
+		gap: 8px;
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
 	}
@@ -509,7 +598,7 @@
 	textarea {
 		width: 100%;
 		min-height: 54px;
-		padding: var(--spacing-md) var(--spacing-lg);
+		padding: 14px 18px;
 		border: 2px solid var(--color-input-border);
 		border-radius: var(--radius-md);
 		background: var(--color-surface-sunken);
@@ -528,7 +617,7 @@
 	}
 	.form-actions {
 		display: flex;
-		gap: var(--spacing-md);
+		gap: 12px;
 		flex-wrap: wrap;
 	}
 	.details {
@@ -541,7 +630,7 @@
 		grid-column: 1 / -1;
 	}
 	dt {
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: 4px;
 		color: var(--color-text-secondary);
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-semibold);
@@ -564,9 +653,9 @@
 	.history li {
 		display: grid;
 		grid-template-columns: 1fr auto auto;
-		gap: var(--spacing-md);
+		gap: 12px;
 		align-items: center;
-		padding: var(--spacing-md) 0;
+		padding: 14px 0;
 		border-bottom: 1px solid var(--color-border-subtle);
 	}
 	.history li:last-child {
@@ -582,7 +671,7 @@
 		color: var(--color-primary);
 	}
 	.h-score small {
-		margin-left: var(--spacing-sm);
+		margin-left: 3px;
 		color: var(--color-text-faint);
 		font-size: var(--text-sm);
 	}
