@@ -102,22 +102,14 @@
 			{/if}
 		</div>
 		<div class="board-table">
-			<div
-				class="board-columns"
-				class:before-you={data.leaderboard[0]?.id === data.user.id}
-				aria-hidden="true"
-			>
+			<div class="board-columns" aria-hidden="true">
 				<span class="col-rank">#</span><span class="col-name">{t('dashboard.colLearner')}</span
 				><span class="col-university">{t('dashboard.colUniversity')}</span><span class="col-badge"
 					>{t('profile.rank')}</span
 				><span class="col-points">{t('dashboard.colPoints')}</span>
 			</div>
 			<ol class="board-list">
-				{#each data.leaderboard as learner, i (learner.id)}<li
-						class:you={learner.id === data.user.id}
-						class:podium={learner.position <= 3}
-						class:before-you={data.leaderboard[i + 1]?.id === data.user.id}
-					>
+				{#each data.leaderboard as learner (learner.id)}<li class:you={learner.id === data.user.id}>
 						<a
 							class="board-entry"
 							href={resolve('/profile/[id]', { id: learner.id })}
@@ -258,6 +250,7 @@
 	.board-list {
 		display: grid;
 		grid-template-columns: subgrid;
+		row-gap: 8px;
 	}
 	.board-columns,
 	.board-entry {
@@ -357,16 +350,19 @@
 	.board-list {
 		list-style: none;
 		padding: 0;
-		margin: 0;
+		margin: 10px 0 0;
 	}
 	.board-list li {
 		display: grid;
 		grid-template-columns: subgrid;
 		grid-column: 1 / -1;
-		border-bottom: 1px solid rgba(251, 247, 236, 0.12);
+		border: 1px solid rgba(251, 247, 236, 0.12);
+		border-radius: var(--radius-md);
+		background: rgba(251, 247, 236, 0.04);
 	}
 	.board-entry {
 		padding: 16px 12px;
+		border-radius: inherit;
 		font-size: var(--text-base);
 		font-weight: var(--font-weight-medium);
 		text-decoration: none;
@@ -375,25 +371,21 @@
 	.board-entry:hover {
 		background: rgba(251, 247, 236, 0.08);
 	}
-	.board-list li:last-child {
-		border-bottom: 0;
+	.board-entry:focus-visible {
+		outline: 2px solid var(--on-panel-dark);
+		outline-offset: 2px;
 	}
 	.board-rank {
 		padding-left: 10px;
-		border-left: 4px solid transparent;
 		color: var(--on-panel-dark-muted);
 		font-family: var(--font-display);
 		font-size: var(--text-base);
-	}
-	/* Top three get the accent; everyone else stays quiet. */
-	.podium .board-rank {
-		color: var(--color-accent);
-		border-left-color: var(--color-accent);
 	}
 	.board-name {
 		overflow-wrap: anywhere;
 	}
 	.board-name em {
+		display: inline-block;
 		margin-left: 8px;
 		padding: 3px 10px;
 		border-radius: var(--radius-full);
@@ -420,25 +412,10 @@
 		font-size: var(--text-xs);
 		font-weight: var(--font-weight-medium);
 	}
-	.you {
-		border-radius: var(--radius-md);
-		background: rgba(251, 247, 236, 0.14);
-		box-shadow: inset 4px 0 0 var(--color-accent);
-	}
-	/* Separators are straight, edge-to-edge lines; the highlighted row is a
-	   rounded panel. Where the two meet, the line carries on past the curve and
-	   reads as an overhanging edge — so the highlighted row draws no separator,
-	   and neither does whatever sits directly above it. The 1px is kept and
-	   only made transparent, so every row stays exactly the same height. */
-	.board-list li.you,
-	.board-list li.before-you,
-	.board-columns.before-you {
-		border-bottom-color: transparent;
-	}
-	/* A podium row already gets an accent bar from the inset shadow above, so
-	   the rank cell must not draw a second one beside it. */
-	.you .board-rank {
-		border-left-color: transparent;
+	.board-list li.you {
+		border-color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+		background: rgba(251, 247, 236, 0.1);
+		box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 12%, transparent);
 	}
 	@media (max-width: 800px) {
 		.hero-copy {
@@ -457,7 +434,7 @@
 			letter-spacing: 5px;
 		}
 		.board {
-			padding: 22px 18px 6px;
+			padding: 22px 18px 18px;
 		}
 		.board-table {
 			grid-template-columns: 40px minmax(0, 1fr) 92px;

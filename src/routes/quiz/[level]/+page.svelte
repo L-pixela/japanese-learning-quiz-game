@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { untrack } from 'svelte'
+	import { tick, untrack } from 'svelte'
 	import { SvelteSet } from 'svelte/reactivity'
 	import { goto } from '$app/navigation'
 	import { resolve } from '$app/paths'
@@ -62,9 +62,26 @@
 	}
 
 	function backToStudy() {
+		result = null
 		started = false
 		quiz = null
 		error = ''
+	}
+	async function continueStudy() {
+		backToStudy()
+		await tick()
+		document.getElementById('words')?.focus()
+	}
+	function openResults(dialog: HTMLDialogElement) {
+		const previousOverflow = document.body.style.overflow
+		dialog.showModal()
+		document.body.style.overflow = 'hidden'
+		return {
+			destroy() {
+				dialog.close()
+				document.body.style.overflow = previousOverflow
+			},
+		}
 	}
 	async function start() {
 		busy = true
@@ -154,7 +171,7 @@
 
 	{#if !started}
 		<!-- Step 1. The words, and the decision to be tested on them. -->
-		<section class="level-intro" id="words">
+		<section class="level-intro" id="words" tabindex="-1">
 			<div class="intro-copy">
 				<p class="study-eyebrow">{t('level.stepStudy')}</p>
 				<h1>{levelName(data.level.level)} <span lang="ja">{data.level.japanese}</span></h1>
@@ -317,13 +334,17 @@
 	{/if}
 
 	{#if result}
-		<div class="result-backdrop">
-			<div
-				class={'result-card ' + (result.passed ? 'passed' : 'failed')}
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="result-title"
-			>
+		<dialog
+			class="result-backdrop"
+			use:openResults
+			aria-labelledby="result-title"
+			aria-describedby="result-lead"
+			oncancel={(event) => {
+				event.preventDefault()
+				void continueStudy()
+			}}
+		>
+			<div class={'result-card ' + (result.passed ? 'passed' : 'failed')}>
 				<div class="result-art">
 					<img
 						src={result.passed ? '/team/pass.png' : '/team/fail.png'}
@@ -339,7 +360,7 @@
 						? t('result.passedTitle', { level: String(result.level).padStart(2, '0') })
 						: t('result.failedTitle')}
 				</h2>
-				<p class="result-lead">
+				<p class="result-lead" id="result-lead">
 					{result.passed ? t('result.passedLead') : t('result.failedLead')}
 				</p>
 				<div class="result-stats">
@@ -370,14 +391,12 @@
 						href={resolve('/quiz/quiz-results', {}) + '?attempt=' + result.attemptId}
 						>{t('result.reviewAnswers')}</a
 					>
-					<a
-						class="study-button secondary"
-						href={resolve('/quiz/[level]', { level: String(result.level) }) + '#words'}
-						>{t('result.continueStudy')}</a
+					<button class="study-button secondary" onclick={continueStudy}
+						>{t('result.continueStudy')}</button
 					>
 				</div>
 			</div>
-		</div>
+		</dialog>
 	{/if}
 </StudyShell>
 
@@ -528,17 +547,27 @@
 		inset: 0;
 		z-index: var(--z-modal);
 		display: grid;
-		place-items: center;
-		padding: 20px;
-		background: rgba(20, 25, 17, 0.66);
-		backdrop-filter: blur(3px);
+		place-items: safe center;
+		width: 100%;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 16px;
+		border: 0;
+		overflow-y: auto;
+		background: transparent;
+		color: var(--color-text);
 		animation: fade var(--duration-base) var(--ease-out);
 	}
+	.result-backdrop::backdrop {
+		background: rgba(20, 25, 17, 0.66);
+		backdrop-filter: blur(3px);
+	}
 	.result-card {
+		--card-padding: clamp(18px, 5vw, 34px);
 		width: min(520px, 100%);
-		max-height: 92vh;
-		overflow-y: auto;
-		padding: 0 34px 34px;
+		padding: 0 var(--card-padding) 20px;
 		border-radius: var(--radius-xl);
 		background: var(--color-surface);
 		box-shadow: var(--shadow-lg);
@@ -547,8 +576,10 @@
 	}
 	.result-art {
 		position: relative;
-		margin: -1px -34px 22px;
-		padding: 30px 0;
+		display: grid;
+		place-items: center;
+		margin: 0 calc(-1 * var(--card-padding)) 16px;
+		padding: 40px 0 12px;
 		border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 		background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 	}
@@ -556,9 +587,9 @@
 		background: var(--color-danger);
 	}
 	.result-art img {
-		width: 148px;
-		margin: 14px;
-		height: 148px;
+		width: clamp(88px, 18dvh, 128px);
+		margin: 0;
+		height: clamp(88px, 18dvh, 128px);
 		border-radius: var(--radius-full);
 		border: 5px solid #fff;
 		object-fit: cover;
@@ -566,19 +597,20 @@
 	}
 	.result-stamp {
 		position: absolute;
-		right: 34px;
-		bottom: 26px;
-		padding: 9px 18px;
+		right: 14px;
+		top: 12px;
+		padding: 5px 12px;
 		border-radius: var(--radius-full);
 		background: var(--color-surface);
 		color: var(--color-primary-active);
 		box-shadow: var(--shadow-solid) rgba(20, 25, 17, 0.22);
 		font-family: var(--font-display);
-		font-size: 20px;
+		font-size: 16px;
 		font-weight: var(--font-weight-bold);
 		letter-spacing: 3px;
 	}
 	.result-card h2 {
+		margin: 0;
 		font-size: clamp(20px, 3.3vw, 30px);
 	}
 	.result-lead {
@@ -591,12 +623,13 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 10px;
-		margin: 24px 0;
-		padding: 20px 0;
+		margin: 16px 0;
+		padding: 12px 8px;
 		border-radius: var(--radius-lg);
 		background: var(--color-surface-sunken);
 	}
 	.result-stats strong {
+		overflow-wrap: anywhere;
 		display: block;
 		font-family: var(--font-display);
 		font-size: clamp(21px, 3.6vw, 32px);
@@ -617,7 +650,7 @@
 	}
 	.result-actions {
 		display: grid;
-		gap: 12px;
+		gap: 8px;
 	}
 	@keyframes pop {
 		from {

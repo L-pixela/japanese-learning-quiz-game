@@ -3,18 +3,8 @@ import { eq, sql } from 'drizzle-orm'
 import { getDb, requireDb } from '$lib/server/db'
 import { quizAttempt, word } from '$lib/server/db/schema'
 import { QUESTION_TYPES, type QuestionType } from '$lib/quiz-types'
+import { secureRandomInt } from '$lib/random'
 import type { RequestHandler } from './$types'
-
-function secureRandomInt(maxExclusive: number): number {
-	const range = 2 ** 32
-	const limit = range - (range % maxExclusive)
-	const values = new Uint32Array(1)
-
-	do crypto.getRandomValues(values)
-	while (values[0] >= limit)
-
-	return values[0] % maxExclusive
-}
 
 function shuffle<T>(items: T[]): T[] {
 	const result = [...items]
