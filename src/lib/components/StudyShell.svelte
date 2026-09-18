@@ -80,8 +80,9 @@
 			aria-labelledby="navigation-dialog-title"
 			aria-describedby="navigation-dialog-description"
 		>
-			
-			<strong id="navigation-dialog-title" class="navigation-dialog-title">{t('nav.leaveQuizTitle')}</strong>
+			<strong id="navigation-dialog-title" class="navigation-dialog-title"
+				>{t('nav.leaveQuizTitle')}</strong
+			>
 			<p id="navigation-dialog-description">{t('nav.leaveQuizMessage')}</p>
 			<div class="dialog-actions">
 				<button

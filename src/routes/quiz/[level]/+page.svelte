@@ -1014,7 +1014,11 @@
 			grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr);
 			padding: var(--spacing-md) var(--spacing-md);
 		}
-		.word-meaning {
+		/* The cover button stands in for the meaning, so it has to travel with
+		   it — left out of this rule it lands in a leftover track and wraps to
+		   one word per line. */
+		.word-meaning,
+		.word-cover {
 			grid-column: 2 / -1;
 		}
 		/* Ten tabs never fit a phone; five by two do. */
