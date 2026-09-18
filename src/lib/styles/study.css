@@ -435,8 +435,13 @@
 		height: 40px;
 		font-size: var(--text-lg);
 	}
+	/* A button on a phone fills its line. "Its line" is decided by the row it
+	   sits in, so max-width keeps this from shoving a sibling off screen when
+	   two of them share one flex row. */
 	.study-button {
 		width: 100%;
+		max-width: 100%;
+		min-width: 0;
 		min-height: 52px;
 		padding: var(--spacing-md) var(--spacing-lg);
 	}

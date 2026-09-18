@@ -242,6 +242,10 @@
 	.board-table {
 		display: grid;
 		grid-template-columns: 48px minmax(0, 1.1fr) minmax(0, 1fr) 56px 92px;
+		/* The rows are subgrids of this one, and a subgrid's tracks are laid out
+		   against the parent's gutters — so the gap has to be declared here or
+		   the rank number ends up touching the username. */
+		column-gap: var(--spacing-md);
 	}
 	.board-columns,
 	.board-list {
@@ -437,7 +441,8 @@
 			padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
 		}
 		.board-table {
-			grid-template-columns: 40px minmax(0, 1fr) 92px;
+			grid-template-columns: auto minmax(0, 1fr) 92px;
+			column-gap: var(--spacing-md);
 		}
 		.board-columns,
 		.board-entry {
