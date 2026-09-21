@@ -12,6 +12,14 @@
 	// of points away.
 	let badge = $derived(getRankFromPoints(data.user.points))
 	let toNext = $derived(getRankProgress(data.user.points))
+
+	// On a phone this page is a frame with a scrolling leaderboard in it,
+	// the same shape as the words screen. The marker lets the shared chrome
+	// (nav, main, footer) take part in that frame.
+	$effect(() => {
+		document.body.classList.add('board-active')
+		return () => document.body.classList.remove('board-active')
+	})
 </script>
 
 <svelte:head
@@ -429,9 +437,37 @@
 	@media (max-width: 550px) {
 		.practice-hero {
 			grid-template-columns: 1fr;
+			/* The 360px floor is for the two-column desktop hero. Stacked on a
+			   phone it just adds empty panel under the button. */
+			min-height: 0;
 		}
+		/* The scene is a motif, not an illustration plate. Its SVG keeps its own
+		   aspect ratio, so a min-height alone let it grow to ~250px of a 667px
+		   phone; this pins the band and crops the artwork into it. */
 		.hero-art {
-			min-height: 210px;
+			min-height: 0;
+			height: clamp(88px, 13dvh, 140px);
+			overflow: hidden;
+		}
+		.hero-art :global(svg) {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		.hero-copy {
+			padding: var(--spacing-md);
+		}
+		.hero-meta {
+			gap: var(--spacing-sm);
+			margin-top: var(--spacing-md);
+		}
+		.hero-meta span {
+			padding: 4px var(--spacing-sm);
+			font-size: var(--text-xs);
+		}
+		.art-caption {
+			top: 12px;
+			right: 12px;
 		}
 		.art-caption {
 			font-size: 18px;
@@ -457,6 +493,227 @@
 		}
 		.board-columns > span:nth-child(3),
 		.board-columns > span:nth-child(4) {
+			display: none;
+		}
+	}
+	/* ============================================================
+	   PHONE AND TABLET: the dashboard as an app screen.
+
+	   Stacked as a web page it is a greeting, four cards, a hero panel
+	   and only then the leaderboard — roughly 900px before the thing
+	   most people open this page to look at.
+
+	   So the frame stops moving: greeting, stats and the start button
+	   stay put, and the leaderboard scrolls inside its own panel, the
+	   same way the word list does. The decorative scene steps aside on
+	   a phone — there is no room to spend on it.
+	   ============================================================ */
+	@media (max-width: 1024px), (max-height: 860px) {
+		:global(body.board-active) {
+			overflow: hidden;
+		}
+		:global(body.board-active .study-app) {
+			display: flex;
+			flex-direction: column;
+			height: calc(100vh / var(--app-zoom));
+			height: calc(100dvh / var(--app-zoom));
+			min-height: 0;
+			padding: 4px;
+			padding-bottom: max(4px, env(safe-area-inset-bottom));
+		}
+		:global(body.board-active .study-nav) {
+			margin-bottom: 6px;
+			padding: 6px 12px;
+			border-radius: var(--radius-md);
+		}
+		:global(body.board-active .study-brand) {
+			font-size: var(--text-sm);
+		}
+		:global(body.board-active .study-brand small) {
+			display: none;
+		}
+		:global(body.board-active .study-seal) {
+			width: 32px;
+			height: 32px;
+			font-size: var(--text-base);
+		}
+		:global(body.board-active .study-nav-toggle) {
+			width: 38px;
+			height: 38px;
+		}
+		:global(body.board-active .study-footer) {
+			display: none;
+		}
+		:global(body.board-active .study-main) {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+			padding: 8px;
+			border-radius: var(--radius-lg);
+			overflow: hidden;
+		}
+
+		/* Greeting on one line. */
+		.study-heading {
+			flex: 0 0 auto;
+			margin-bottom: var(--spacing-sm);
+		}
+		.study-heading :global(.study-eyebrow),
+		.study-heading :global(.study-muted) {
+			display: none;
+		}
+		.study-heading :global(h1) {
+			margin-bottom: 0;
+			font-size: var(--text-lg);
+		}
+		.study-stamp {
+			padding: 6px 8px;
+			font-size: var(--text-sm);
+			letter-spacing: 1px;
+		}
+
+		/* Four numbers as one strip rather than four cards. */
+		.study-metrics {
+			flex: 0 0 auto;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 4px;
+			margin: 0 0 var(--spacing-sm);
+		}
+		.study-metric {
+			padding: 8px 6px;
+			border-radius: var(--radius-md);
+			text-align: center;
+		}
+		.study-metric small {
+			margin-bottom: 0;
+			font-size: 10px;
+			line-height: 1.2;
+		}
+		.study-metric strong {
+			font-size: var(--text-base);
+		}
+		.study-metric span {
+			display: none;
+		}
+
+		/* The hero becomes a start bar: the button, nothing else. */
+		.practice-hero {
+			flex: 0 0 auto;
+			grid-template-columns: 1fr;
+			min-height: 0;
+			margin-bottom: var(--spacing-sm);
+		}
+		.hero-art {
+			display: none;
+		}
+		.hero-copy {
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.hero-copy :global(.study-eyebrow) {
+			display: none;
+		}
+		.hero-copy h2 {
+			margin-bottom: var(--spacing-sm);
+			font-size: var(--text-base);
+		}
+		.hero-copy :global(.study-muted) {
+			display: none;
+		}
+		.hero-copy :global(.study-button) {
+			min-height: 44px;
+			padding: 8px 18px;
+		}
+		.hero-meta {
+			display: none;
+		}
+
+		/* The panel fills what is left; only its rows move. */
+		.board {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+			margin-top: 0;
+			padding: var(--spacing-md);
+			scroll-margin-top: 0;
+		}
+		.board-head {
+			flex: 0 0 auto;
+		}
+		.board-head :global(.study-eyebrow) {
+			display: none;
+		}
+		.board-head h2 {
+			font-size: var(--text-base);
+		}
+		.rank-status {
+			flex: 0 0 auto;
+		}
+		.board-table {
+			flex: 1 1 auto;
+			min-height: 0;
+			/* Header row, then the rows take the remaining height. */
+			grid-template-rows: auto minmax(0, 1fr);
+		}
+		.board-list {
+			min-height: 0;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			-webkit-overflow-scrolling: touch;
+		}
+	}
+	/* Short frames — a phone on its side, or a small phone. The greeting and
+	   the stats are the first things to go: the leaderboard is what the page
+	   is for, and it needs the height more than they do. */
+	@media (max-height: 560px) {
+		.study-heading,
+		.study-metrics {
+			display: none;
+		}
+		.practice-hero {
+			margin-bottom: 6px;
+		}
+		.hero-copy {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--spacing-md);
+			padding: 6px 10px;
+		}
+		.hero-copy h2 {
+			margin: 0;
+			font-size: var(--text-sm);
+		}
+		.hero-copy :global(.study-button) {
+			width: auto;
+			min-height: 36px;
+			padding: 6px 14px;
+			font-size: var(--text-xs);
+		}
+		.board {
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.board-head {
+			display: none;
+		}
+	}
+
+	/* The smallest phones still in use: same idea, one step milder. */
+	@media (max-width: 360px) and (max-height: 640px) {
+		.study-heading {
+			display: none;
+		}
+		.study-metrics {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+		.study-metric {
+			padding: 6px 4px;
+		}
+		.hero-copy h2 {
+			display: none;
+		}
+		.board-head {
 			display: none;
 		}
 	}

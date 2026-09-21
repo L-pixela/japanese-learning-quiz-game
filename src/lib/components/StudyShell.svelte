@@ -10,11 +10,25 @@
 		$props()
 	let isMenuOpen = $state(false)
 	let pendingNavigation = $state<string | null>(null)
+	// Each destination carries a glyph for the rail, drawn as a single stroked
+	// path on a 24x24 grid so they share one optical weight.
 	const links = [
-		{ href: '/dashboard', key: 'nav.overview' },
-		{ href: '/quiz', key: 'nav.quiz' },
-		{ href: '/team', key: 'nav.team' },
-		{ href: '/profile', key: 'nav.profile' },
+		{ href: '/dashboard', key: 'nav.overview', icon: 'M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5' },
+		{
+			href: '/quiz',
+			key: 'nav.quiz',
+			icon: 'M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 4.3a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4Z',
+		},
+		{
+			href: '/team',
+			key: 'nav.team',
+			icon: 'M9 11a3.2 3.2 0 1 0 0-6.4A3.2 3.2 0 0 0 9 11Zm7 .4a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4ZM2.5 19.2c0-3 2.9-4.8 6.5-4.8s6.5 1.8 6.5 4.8M17 14.6c2.6.3 4.5 1.8 4.5 4.6',
+		},
+		{
+			href: '/profile',
+			key: 'nav.profile',
+			icon: 'M12 11.4a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4ZM4.8 20c0-3.6 3.2-5.8 7.2-5.8s7.2 2.2 7.2 5.8',
+		},
 	] as const
 
 	function navigate(event: MouseEvent, href: string) {
@@ -23,6 +37,15 @@
 		pendingNavigation = href
 		isMenuOpen = false
 	}
+
+	// The rail is fixed, so something has to hold a column open for it. The
+	// marker goes on <body> rather than .study-app because the per-page app
+	// shells set `padding` shorthand on .study-app, which would wipe a
+	// padding-left set there.
+	$effect(() => {
+		document.body.classList.add('has-rail')
+		return () => document.body.classList.remove('has-rail')
+	})
 
 	async function confirmPendingNavigation() {
 		if (!pendingNavigation) return
@@ -33,6 +56,30 @@
 </script>
 
 <div class="study-app">
+	<!-- Navigation on phones and tablets: always on screen, one tap per
+	     destination, no menu to open first. The header keeps the same links as
+	     text for desktop, and the rail hides there. -->
+	<nav class="study-rail" aria-label={t('a11y.mainNav')}>
+		<a
+			class="rail-seal"
+			href={resolve('/dashboard', {})}
+			onclick={(event) => navigate(event, resolve('/dashboard', {}))}
+			aria-label="TanTore"><span lang="ja">単</span></a
+		>
+		{#each links as link (link.href)}
+			<a
+				class="rail-link"
+				class:current={page.url.pathname.startsWith(link.href)}
+				href={resolve(link.href, {})}
+				aria-current={page.url.pathname.startsWith(link.href) ? 'page' : undefined}
+				title={t(link.key)}
+				onclick={(event) => navigate(event, resolve(link.href, {}))}
+			>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d={link.icon} /></svg>
+				<span>{t(link.key)}</span>
+			</a>
+		{/each}
+	</nav>
 	<header class="study-nav">
 		<a
 			class="study-brand"
@@ -50,8 +97,8 @@
 					onclick={(event) => navigate(event, resolve(link.href, {}))}>{t(link.key)}</a
 				>
 			{/each}
-			<AppControls />
 		</nav>
+		<AppControls />
 		<button
 			type="button"
 			class="study-nav-toggle"

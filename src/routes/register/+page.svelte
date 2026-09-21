@@ -154,10 +154,19 @@
 
 <style>
 	.register-page {
+		/* border-box or the padding lands on top of the full-viewport
+		   min-height and the page scrolls by exactly the padding. */
+		box-sizing: border-box;
 		min-height: calc(100vh / var(--app-zoom));
+		min-height: calc(100dvh / var(--app-zoom));
 		display: grid;
 		place-items: center;
 		padding: 1.5rem;
+	}
+	.register-page *,
+	.register-page *::before,
+	.register-page *::after {
+		box-sizing: border-box;
 	}
 
 	.register-shell {
@@ -298,35 +307,141 @@
 		text-decoration: underline;
 	}
 
+	/* ============================================================
+	   PHONE AND SMALL TABLET. Same idea as the login screen: the rank
+	   panel becomes a title band instead of a full stacked hero.
+
+	   Signing up needs four fields though, and four fields plus a button
+	   will not fit a phone whatever the spacing. So the page frame stays
+	   put — header and band never move — and the form itself is what
+	   scrolls. That is a form you can scroll, not a page that scrolls
+	   away from you.
+	   ============================================================ */
 	@media (max-width: 760px) {
 		.register-page {
-			padding: 0.85rem;
-			place-items: start center;
+			height: calc(100dvh / var(--app-zoom));
+			padding: 0;
+			place-items: stretch;
+		}
+
+		.register-shell {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			border-radius: 0;
+			box-shadow: none;
+		}
+
+		.site-header {
+			flex-shrink: 0;
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+
+		.site-header p {
+			display: none;
 		}
 
 		.register-layout {
+			flex: 1 1 auto;
+			min-height: 0;
 			grid-template-columns: 1fr;
+			grid-template-rows: auto minmax(0, 1fr);
 		}
 
+		/* Four fields and a button already fill a phone. The rank preview is
+		   an advert for a screen the learner reaches by finishing this form,
+		   so on a phone it goes entirely and the form fits without scrolling. */
 		.rank-panel {
-			padding: 1.6rem;
+			display: none;
+		}
+
+		.register-layout {
+			grid-template-rows: minmax(0, 1fr);
+		}
+
+		.register-form {
+			min-height: 0;
+			gap: var(--spacing-md);
+			padding: var(--spacing-md);
+			overflow-y: auto;
+			overscroll-behavior: contain;
 		}
 	}
 
 	@media (max-width: 420px) {
-		.register-page {
-			padding: 0;
-		}
-
 		.register-shell {
-			min-height: calc(100vh / var(--app-zoom));
 			border: 0;
-			border-radius: 0;
 		}
+	}
 
-		.site-header {
-			align-items: flex-start;
+	/* Phone on its side: no room for a band at all. */
+	@media (max-height: 520px) and (orientation: landscape) {
+		/* A landscape phone is wider than the 760px phone breakpoint, so it
+		   never picked up the fixed shell and scrolled instead. */
+		.register-page {
+			height: calc(100dvh / var(--app-zoom));
+			padding: 0;
+			place-items: stretch;
+		}
+		.register-shell {
+			display: flex;
 			flex-direction: column;
+			width: 100%;
+			border-radius: 0;
+			box-shadow: none;
+		}
+		.register-layout {
+			flex: 1 1 auto;
+			min-height: 0;
+			grid-template-columns: 1fr;
+		}
+		.register-form {
+			min-height: 0;
+			overflow-y: auto;
+		}
+		.site-header p {
+			display: none;
+		}
+		.rank-panel {
+			display: none;
+		}
+		.site-header {
+			padding: 4px var(--spacing-md);
+		}
+		.register-layout {
+			grid-template-rows: minmax(0, 1fr);
+		}
+		.register-form {
+			gap: var(--spacing-sm);
+		}
+	}
+	/* Short phones: trim the field furniture so the button stays on screen. */
+	@media (max-width: 760px) and (max-height: 720px) {
+		.register-form {
+			gap: var(--spacing-sm);
+		}
+		.register-form :global(.text-field) {
+			gap: 0.25rem;
+		}
+		.register-form :global(input) {
+			min-height: 2.7rem;
+		}
+		.register-form button[type='submit'] {
+			min-height: 2.7rem;
+		}
+		.form-title {
+			margin: 0;
+		}
+		.form-title h2 {
+			margin: 0;
+			font-size: 1.15rem;
+		}
+		.form-title .caption {
+			display: none;
+		}
+		.login-link {
+			margin: 0;
+			font-size: var(--text-xs);
 		}
 	}
 </style>
