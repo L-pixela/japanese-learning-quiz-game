@@ -7,7 +7,7 @@
 	// Both preferences live in localStorage, so they can only be read once the
 	// component is in the browser.
 	let systemIsDark = $state(false)
-
+	
 	onMount(() => {
 		i18n.hydrate()
 		theme.hydrate()
@@ -122,6 +122,7 @@
 		position: relative;
 		display: grid;
 		grid-auto-flow: column;
+		justify-items: center;
 		align-items: center;
 		padding: var(--spacing-sm);
 		border: 0;
@@ -194,6 +195,49 @@
 		.thumb,
 		.face {
 			transition: none;
+		}
+	}
+	@media (max-width: 540px) {
+		.app-controls {
+			gap: 4px;
+			width: 100%;
+		}
+		.switch {
+			padding: 4px;
+		}
+		.lang {
+			grid-template-columns: 36px 46px;
+		}
+		.theme,
+		.sound {
+			grid-template-columns: 30px 30px;
+		}
+		.face {
+			font-size: 12px;
+			line-height: 24px;
+		}
+		.thumb {
+			top: 4px;
+			bottom: 4px;
+			width: 36px;
+		}
+		.lang .thumb {
+			width: 36px;
+		}
+		.lang.on .thumb {
+			width: 46px;
+			transform: translateX(36px);
+		}
+		.theme .thumb,
+		.sound .thumb {
+			width: 30px;
+		}
+		.theme.on .thumb,
+		.sound.on .thumb {
+			transform: translateX(30px);
+		}
+		.sound .face {
+			font-size: 11px;
 		}
 	}
 </style>

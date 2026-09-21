@@ -390,17 +390,37 @@
 }
 @media (max-width: 820px) {
 	.study-nav {
+		position: relative;
 		gap: var(--spacing-md);
+	}
+	.study-nav > .study-brand {
+		order: 1;
+	}
+	.study-nav > .study-nav-toggle {
+		order: 2;
+	}
+	.study-nav > .app-controls {
+		order: 3;
+		flex-basis: 100%;
+		justify-content: center;
 	}
 	.study-nav-toggle {
 		display: flex;
 	}
 	.study-nav nav {
 		display: none;
-		order: 3;
-		width: 100%;
+		position: absolute;
+		top: calc(100% + 8px);
+		right: 0;
+		z-index: var(--z-sticky);
+		width: min(260px, calc(100vw - 32px));
+		padding: var(--spacing-sm);
 		flex-direction: column;
 		gap: var(--spacing-sm);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-lg);
 	}
 	.study-nav nav.open {
 		display: flex;
@@ -409,6 +429,9 @@
 		padding: var(--spacing-md);
 		text-align: left;
 		font-size: var(--text-sm);
+	}
+	.study-nav nav a[aria-current] {
+		background: var(--color-primary-soft);
 	}
 	.study-heading {
 		flex-direction: column;
@@ -762,13 +785,6 @@
 	body.has-rail {
 		padding-left: calc(56px + env(safe-area-inset-left));
 		box-sizing: border-box;
-	}
-	/* The header keeps the wordmark and the controls; the rail has the links.
-	   The seal is already on the rail, so the header does not repeat it. */
-	.study-nav nav,
-	.study-nav-toggle,
-	.study-nav .study-seal {
-		display: none !important;
 	}
 	.study-nav {
 		justify-content: space-between;

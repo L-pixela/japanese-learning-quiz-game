@@ -12,14 +12,6 @@
 	// of points away.
 	let badge = $derived(getRankFromPoints(data.user.points))
 	let toNext = $derived(getRankProgress(data.user.points))
-
-	// On a phone this page is a frame with a scrolling leaderboard in it,
-	// the same shape as the words screen. The marker lets the shared chrome
-	// (nav, main, footer) take part in that frame.
-	$effect(() => {
-		document.body.classList.add('board-active')
-		return () => document.body.classList.remove('board-active')
-	})
 </script>
 
 <svelte:head
@@ -495,6 +487,14 @@
 		.board-columns > span:nth-child(4) {
 			display: none;
 		}
+		.study-metric :global(.rank-badge) {
+			width: 48px !important;
+			height: 48px !important;
+		}
+		.study-metric :global(.rank-badge img) {
+			width: 30px !important;
+			height: 30px !important;
+		}
 	}
 	/* ============================================================
 	   PHONE AND TABLET: the dashboard as an app screen.
@@ -508,7 +508,7 @@
 	   same way the word list does. The decorative scene steps aside on
 	   a phone — there is no room to spend on it.
 	   ============================================================ */
-	@media (max-width: 1024px), (max-height: 860px) {
+	@media (max-width: 0px) {
 		:global(body.board-active) {
 			overflow: hidden;
 		}
@@ -666,7 +666,7 @@
 	/* Short frames — a phone on its side, or a small phone. The greeting and
 	   the stats are the first things to go: the leaderboard is what the page
 	   is for, and it needs the height more than they do. */
-	@media (max-height: 560px) {
+	@media (max-height: 0px) {
 		.study-heading,
 		.study-metrics {
 			display: none;
@@ -700,7 +700,7 @@
 	}
 
 	/* The smallest phones still in use: same idea, one step milder. */
-	@media (max-width: 360px) and (max-height: 640px) {
+	@media (max-width: 0px) and (max-height: 0px) {
 		.study-heading {
 			display: none;
 		}
@@ -715,6 +715,35 @@
 		}
 		.board-head {
 			display: none;
+		}
+	}
+
+	/* Keep the earlier compact practice card on smaller screens while leaving
+	   the page itself free to scroll. */
+	@media (max-width: 1024px) {
+		.practice-hero {
+			grid-template-columns: 1fr;
+			min-height: 0;
+			margin-bottom: var(--spacing-sm);
+		}
+		.hero-art {
+			display: none;
+		}
+		.hero-copy {
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.hero-copy :global(.study-eyebrow),
+		.hero-copy :global(.study-muted),
+		.hero-meta {
+			display: none;
+		}
+		.hero-copy h2 {
+			margin-bottom: var(--spacing-sm);
+			font-size: var(--text-base);
+		}
+		.hero-copy :global(.study-button) {
+			min-height: 44px;
+			padding: 8px 18px;
 		}
 	}
 </style>

@@ -81,5 +81,14 @@
 		.stat-divider {
 			display: none;
 		}
+
+		.rank-container :global(.rank-badge) {
+			width: 56px !important;
+			height: 56px !important;
+		}
+		.rank-container :global(.rank-badge img) {
+			width: 34px !important;
+			height: 34px !important;
+		}
 	}
 </style>
