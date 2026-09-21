@@ -153,10 +153,61 @@
 
 	// During the quiz the card is sized to the viewport, so lock the page:
 	// no scroll, no footer, and the shared chrome flexes to give the card room.
+	// The words half gets its own marker so the phone layout can turn it into
+	// an app screen too: a fixed header and start button, with the list as the
+	// only thing that moves.
 	$effect(() => {
 		document.body.classList.toggle('quiz-active', started)
-		return () => document.body.classList.remove('quiz-active')
+		document.body.classList.toggle('words-active', !started)
+		return () => {
+			document.body.classList.remove('quiz-active')
+			document.body.classList.remove('words-active')
+		}
 	})
+	// Keyboard play, for anyone taking the quiz on a laptop. Ten questions is
+	// forty-odd clicks with a mouse; A-D or 1-4 picks an answer and Enter moves
+	// on, so a round can be played without leaving the keyboard.
+	function handleKey(event: KeyboardEvent) {
+		if (!started || !quiz || !question || result || busy) return
+		if (event.metaKey || event.ctrlKey || event.altKey) return
+		// Never steal a keystroke from something the learner is typing into.
+		const target = event.target as HTMLElement | null
+		if (target?.isContentEditable) return
+		const tag = target?.tagName
+		if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+
+		if (event.key === 'Enter') {
+			if (answers[current] < 0) return
+			event.preventDefault()
+			if (current < 9) {
+				current++
+				sfx('tick')
+			} else if (!answers.some((answer) => answer < 0)) {
+				void submit()
+			}
+			return
+		}
+		if (event.key === 'ArrowLeft' && current > 0) {
+			event.preventDefault()
+			current--
+			sfx('tick')
+			return
+		}
+		if (event.key === 'ArrowRight' && answers[current] >= 0 && current < 9) {
+			event.preventDefault()
+			current++
+			sfx('tick')
+			return
+		}
+		const letter = 'abcd'.indexOf(event.key.toLowerCase())
+		const digit = event.key >= '1' && event.key <= '4' ? Number(event.key) - 1 : -1
+		const choice = letter >= 0 ? letter : digit
+		if (choice >= 0 && choice < question.options.length) {
+			event.preventDefault()
+			answers[current] = choice
+			sfx('select')
+		}
+	}
 	async function nextQuiz() {
 		await goto(resolve('/quiz/[level]', { level: String(data.level.level + 1) }))
 	}
@@ -168,6 +219,7 @@
 </script>
 
 <svelte:head><title>Level {data.level.level} · TanTore</title></svelte:head>
+<svelte:window onkeydown={handleKey} />
 <StudyShell confirmNavigation={started && result === null}>
 	<div class="quiz-top">
 		<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
@@ -1014,7 +1066,11 @@
 			grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr);
 			padding: var(--spacing-md) var(--spacing-md);
 		}
-		.word-meaning {
+		/* The cover button stands in for the meaning, so it has to travel with
+		   it — left out of this rule it lands in a leftover track and wraps to
+		   one word per line. */
+		.word-meaning,
+		.word-cover {
 			grid-column: 2 / -1;
 		}
 		/* Ten tabs never fit a phone; five by two do. */
@@ -1031,7 +1087,8 @@
 			gap: var(--spacing-sm) var(--spacing-md);
 		}
 		.word-reading,
-		.word-meaning {
+		.word-meaning,
+		.word-cover {
 			grid-column: 2 / -1;
 		}
 	}
@@ -1101,6 +1158,499 @@
 		}
 		.options label {
 			min-height: clamp(38px, 7vh, 52px);
+		}
+	}
+	/* ============================================================
+	   PHONE AND TABLET: the quiz is an app screen, not a web page.
+
+	   The rule the whole block serves: the question, all four answers and
+	   the controls are on screen at once, with no scrolling. That is only
+	   safe if every reserved height is a share of the viewport rather than
+	   a fixed pixel count — fixed minimums are what used to add up past the
+	   screen and force the overlap. So the bands below are sized in dvh and
+	   the prompt absorbs whatever is left over.
+
+	   Budget at 375x667, the smallest phone we support:
+	     chrome ~7dvh · meta+bar ~5dvh · answers ~31dvh · controls ~13dvh
+	     leaving roughly 44dvh for the word itself.
+	   ============================================================ */
+	/* Phones and tablets in portrait, plus any phone turned sideways: a
+	   landscape phone is 850px wide but only 390px tall, so it needs the app
+	   shell every bit as much as a narrow one does. */
+	@media (max-width: 820px), (max-height: 860px) {
+		:global(body.quiz-active) {
+			overflow: hidden;
+		}
+		:global(body.quiz-active .study-app) {
+			height: calc(100vh / var(--app-zoom));
+			height: calc(100dvh / var(--app-zoom));
+			min-height: 0;
+			padding: 4px;
+			padding-bottom: max(4px, env(safe-area-inset-bottom));
+		}
+		/* The chrome shrinks to a title bar: during a question, branding is not
+		   what the screen is for. */
+		:global(body.quiz-active .study-nav) {
+			margin-bottom: 6px;
+			padding: 6px 12px;
+			border-radius: var(--radius-md);
+		}
+		:global(body.quiz-active .study-brand) {
+			font-size: var(--text-sm);
+		}
+		:global(body.quiz-active .study-brand small) {
+			display: none;
+		}
+		:global(body.quiz-active .study-seal) {
+			width: 32px;
+			height: 32px;
+			font-size: var(--text-base);
+		}
+		:global(body.quiz-active .study-nav-toggle) {
+			width: 38px;
+			height: 38px;
+		}
+		:global(body.quiz-active .study-main) {
+			min-height: 0;
+			padding: 8px;
+			border-radius: var(--radius-lg);
+			overflow: hidden;
+		}
+		:global(body.quiz-active .quiz-top) {
+			margin-bottom: 6px;
+			font-size: var(--text-xs);
+		}
+		/* One line: wrapped to two, "All levels" costs more height than the
+		   words it saves. */
+		.quiz-top-back {
+			white-space: nowrap;
+		}
+		/* The deck name is already on the words screen the learner just came
+		   from; mid-question the level number carries enough context to be
+		   worth its 22px. */
+		:global(body.quiz-active .quiz-top-title) {
+			gap: 2px;
+		}
+		:global(body.quiz-active .quiz-top-name) {
+			display: none;
+		}
+		:global(body.quiz-active .quiz-sheet) {
+			/* The card is as tall as the question, no taller. Stretching it to
+			   the full frame and centring the contents put an empty band above
+			   the counter and below the buttons; hugging the content puts that
+			   space outside the card, where it reads as margin instead of as a
+			   hole in the middle of the screen. */
+			flex: 0 1 auto;
+			height: auto;
+			max-height: 100%;
+			margin: auto;
+			min-height: 0;
+			padding: 10px;
+			/* One rhythm throughout: counter to bar, bar to word, word to
+			   answers, answers to buttons are all this same gap. */
+			justify-content: flex-start;
+			gap: clamp(8px, 2.2dvh, 22px);
+			/* The bands above are budgeted to fit every phone we support. This
+			   only ever engages for a freak combination — four maximum-length
+			   answers on a 320px screen — and when it does, reaching the content
+			   by scrolling beats having it clipped away unreachable. */
+			overflow-y: auto;
+			overscroll-behavior: contain;
+		}
+		.question-meta {
+			margin: 0;
+		}
+		progress {
+			height: 8px;
+		}
+		/* Absorbs the slack so the answers keep their footing, but never
+		   collapses to nothing: min-content keeps the word itself on screen. */
+		/* Sized by what is in it, not by what is left over. The reserved bands
+		   are what made the gap above the word differ from the gap below it. */
+		.word-prompt {
+			flex: 0 0 auto;
+			min-height: 0;
+			padding: 0;
+			grid-template-rows: auto auto auto auto;
+			row-gap: clamp(3px, 0.8dvh, 8px);
+		}
+		.word-prompt .ask-type {
+			/* Both sides explicitly, so the pill sits on the card's rhythm
+			   rather than carrying a stray inherited margin above it. */
+			margin-top: 0;
+			margin-bottom: 0;
+			padding: 4px 10px;
+			font-size: 11px;
+		}
+		/* The hint under the word says the same thing as the pill above it and
+		   the counter line. On a phone that is 38px of the height budget spent
+		   saying it three times, so the phone keeps the pill only. */
+		.word-prompt > span:last-child {
+			display: none;
+		}
+		/* One line, always: wrapped to two it costs more than it tells you. */
+		.question-meta {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.word-prompt h1 {
+			font-size: clamp(22px, min(6.4dvh, 11vw), 52px);
+			letter-spacing: 2px;
+		}
+		.word-prompt p {
+			font-size: clamp(11px, 1.7dvh, 15px);
+			letter-spacing: 2px;
+			padding-bottom: 0;
+		}
+		/* An English phrase runs to 60 characters in this deck, so it is capped
+		   by width as well as height and allowed to wrap to two lines. */
+		.prompt-en {
+			font-size: clamp(16px, min(4.2dvh, 5.4vw), 34px) !important;
+		}
+		.options {
+			gap: clamp(5px, 1.2dvh, 12px);
+		}
+		.options label {
+			min-height: clamp(34px, 6dvh, 60px);
+			gap: 10px;
+			padding: clamp(6px, 1dvh, 12px) clamp(8px, 2vw, 14px);
+			font-size: clamp(13px, 1.75dvh, 16px);
+			line-height: var(--line-height-snug);
+		}
+		.option-letter {
+			width: 26px;
+			height: 26px;
+			font-size: var(--text-xs);
+		}
+		.quiz-controls {
+			margin-top: 0;
+			gap: 6px;
+		}
+		.quiz-controls .study-button {
+			min-height: clamp(40px, 6dvh, 52px);
+			padding: 6px 10px;
+			font-size: var(--text-xs);
+		}
+		/* Leaving mid-quiz is a rare choice: a quiet full-width link rather than
+		   a third pill competing with Back and Next. */
+		.quiz-controls-end > .study-button:first-child {
+			min-height: 30px;
+			background: transparent;
+			box-shadow: none;
+			font-size: var(--text-xs);
+			text-decoration: underline;
+		}
+	}
+	/* ------------------------------------------------------------
+	   PHONE LANDSCAPE. Turning the phone does not just make the same
+	   column shorter — at 375px of height a stacked prompt and four
+	   answers cannot both fit. Landscape gets its own arrangement:
+	   the word on the left, the answers beside it, controls beneath
+	   them. Same markup, different screen.
+	   ------------------------------------------------------------ */
+	@media (max-width: 1024px) and (max-height: 520px) and (orientation: landscape) {
+		:global(body.quiz-active .quiz-top-title) {
+			display: none;
+		}
+		:global(body.quiz-active .quiz-sheet) {
+			display: grid;
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+			grid-template-rows: auto minmax(0, 1fr) auto;
+			column-gap: 14px;
+			row-gap: 4px;
+			padding: 8px 10px;
+		}
+		.question-meta {
+			grid-column: 1 / -1;
+			grid-row: 1;
+			margin: 0;
+		}
+		progress {
+			grid-column: 1 / -1;
+			grid-row: 1;
+			align-self: end;
+			height: 5px;
+		}
+		.word-prompt {
+			grid-column: 1;
+			grid-row: 2 / 4;
+			padding: 0;
+			--prompt-word: clamp(24px, 17dvh, 52px);
+		}
+		.word-prompt h1 {
+			font-size: clamp(20px, min(15dvh, 7vw), 46px);
+		}
+		.prompt-en {
+			font-size: clamp(14px, min(9dvh, 3.4vw), 28px) !important;
+		}
+		fieldset {
+			grid-column: 2;
+			grid-row: 2;
+			min-height: 0;
+		}
+		/* One column beside the prompt: two would be too narrow to read. */
+		.options {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 4px;
+		}
+		.options label {
+			min-height: clamp(26px, 8.5dvh, 44px);
+			padding: 4px 8px;
+			gap: 8px;
+			font-size: clamp(11px, 3.2dvh, 14px);
+		}
+		.option-letter {
+			width: 20px;
+			height: 20px;
+			font-size: 10px;
+		}
+		.quiz-controls {
+			grid-column: 2;
+			grid-row: 3;
+			margin-top: 4px;
+			gap: 4px;
+		}
+		.quiz-controls .study-button {
+			min-height: clamp(28px, 9dvh, 40px);
+			font-size: 11px;
+			padding: 4px 8px;
+		}
+		.quiz-controls-end > .study-button:first-child {
+			min-height: 24px;
+			font-size: 10px;
+		}
+	}
+	/* The smallest screen still in the wild (320x568) showing the longest
+	   answers in the deck. Rare enough not to shape the design, common enough
+	   to be worth the last 32px. */
+	/* Narrow screens, whatever their height: a 280px folded cover display has
+	   the same problem as a 320px phone once the rail takes its column. */
+	@media (max-width: 360px) {
+		.options label {
+			min-height: clamp(30px, 5.4dvh, 50px);
+			padding: 4px 8px;
+			font-size: clamp(12px, 1.6dvh, 15px);
+		}
+		.word-prompt {
+			--prompt-word: clamp(24px, 6dvh, 44px);
+		}
+		.quiz-controls .study-button {
+			min-height: 36px;
+		}
+	}
+	/* ============================================================
+	   PHONE AND TABLET: the words screen is an app screen too.
+
+	   On a web page the intro paragraph, the stats, the start button,
+	   the search box, 55 words and the level grid simply stack, and the
+	   learner scrolls past half of it every visit to reach the list.
+
+	   On a phone the frame is fixed and only the list moves: the deck
+	   name and the start button stay put at the top, the level strip
+	   stays put at the bottom, and the words scroll between them. The
+	   long lead paragraph is dropped — the screen is self-evident once
+	   the words are on it.
+	   ============================================================ */
+	@media (max-width: 1024px), (max-height: 860px) {
+		:global(body.words-active) {
+			overflow: hidden;
+		}
+		:global(body.words-active .study-app) {
+			/* Without the flex column the main panel has no height to size
+			   against and simply grows to fit all 55 words, which is the whole
+			   scroll this screen is meant to avoid. */
+			display: flex;
+			flex-direction: column;
+			height: calc(100vh / var(--app-zoom));
+			height: calc(100dvh / var(--app-zoom));
+			min-height: 0;
+			padding: 4px;
+			padding-bottom: max(4px, env(safe-area-inset-bottom));
+		}
+		:global(body.words-active .study-nav) {
+			margin-bottom: 6px;
+			padding: 6px 12px;
+			border-radius: var(--radius-md);
+		}
+		:global(body.words-active .study-brand) {
+			font-size: var(--text-sm);
+		}
+		:global(body.words-active .study-brand small) {
+			display: none;
+		}
+		:global(body.words-active .study-seal) {
+			width: 32px;
+			height: 32px;
+			font-size: var(--text-base);
+		}
+		:global(body.words-active .study-nav-toggle) {
+			width: 38px;
+			height: 38px;
+		}
+		:global(body.words-active .study-footer) {
+			display: none;
+		}
+		:global(body.words-active .study-main) {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+			padding: 8px;
+			border-radius: var(--radius-lg);
+			overflow: hidden;
+		}
+		:global(body.words-active .quiz-top) {
+			flex: 0 0 auto;
+			margin-bottom: 4px;
+			font-size: var(--text-xs);
+		}
+		:global(body.words-active .quiz-top-title) {
+			display: none;
+		}
+
+		/* Header: the deck name and the three numbers on one compact line. */
+		.level-intro {
+			flex: 0 0 auto;
+			gap: 6px;
+			padding: 10px 12px;
+		}
+		.intro-copy {
+			flex: 1 1 100%;
+		}
+		.intro-copy :global(.study-eyebrow) {
+			display: none;
+		}
+		.intro-copy h1 {
+			margin-bottom: 0;
+			font-size: var(--text-lg);
+		}
+		.intro-copy h1 span {
+			font-size: var(--text-base);
+		}
+		/* Said once on screen is enough; the words below say the rest. */
+		.intro-copy .study-muted {
+			display: none;
+		}
+		.intro-facts {
+			gap: 14px;
+		}
+		.intro-facts strong {
+			font-size: var(--text-base);
+		}
+		.intro-facts small {
+			font-size: 11px;
+		}
+
+		/* The action the screen exists for stays on screen, always. */
+		.level-start {
+			flex: 0 0 auto;
+			margin-top: 6px;
+			padding: 8px 12px;
+			gap: 10px;
+		}
+		.level-start > div {
+			flex: 1 1 auto;
+		}
+		.level-start :global(.study-eyebrow) {
+			display: none;
+		}
+		.level-start .study-muted {
+			font-size: var(--text-xs);
+		}
+		.level-start :global(.study-button) {
+			width: auto;
+			min-height: 42px;
+			padding: 8px 16px;
+			font-size: var(--text-sm);
+		}
+
+		/* Search and the cover toggle share one line here. Wrapping them costs
+		   48px that the word list needs more than they do. */
+		.deck-actions {
+			flex: 0 0 auto;
+			flex-wrap: nowrap;
+			gap: 8px;
+			margin: 8px 0;
+		}
+		.deck-actions input {
+			flex: 1 1 auto;
+			min-width: 0;
+			min-height: 42px;
+			padding: 8px 14px;
+			font-size: var(--text-sm);
+		}
+		.cover-toggle {
+			flex: 0 0 auto;
+			width: auto;
+			min-height: 42px;
+			padding: 8px 12px;
+			font-size: var(--text-xs);
+		}
+
+		/* The one thing that scrolls. */
+		.word-list {
+			flex: 1 1 auto;
+			min-height: 0;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			-webkit-overflow-scrolling: touch;
+		}
+		.word-list li {
+			padding: 10px 12px;
+		}
+		.deck-empty {
+			flex: 1 1 auto;
+			padding: 24px;
+		}
+		/* The count belongs to the list, not to a line of its own. */
+		.deck-note {
+			display: none;
+		}
+
+		/* Ten levels as a two-row grid is 120px of permanent furniture. As one
+		   swipeable strip it is 44px, and the list keeps the difference. */
+		.level-tabs {
+			display: flex;
+			flex: 0 0 auto;
+			gap: 6px;
+			margin: 8px 0 0;
+			padding-bottom: 2px;
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+		.level-tabs::-webkit-scrollbar {
+			display: none;
+		}
+		.level-tabs a {
+			flex: 0 0 auto;
+			min-width: 52px;
+			padding: 5px 8px;
+			font-size: var(--text-xs);
+		}
+		.level-tabs small {
+			font-size: 10px;
+		}
+	}
+
+	/* Phone on its side: the header collapses to a single strip so the list
+	   still gets most of the 375px available. */
+	@media (max-height: 520px) and (orientation: landscape) {
+		.level-intro,
+		.level-tabs {
+			display: none;
+		}
+		:global(body.words-active .study-main) {
+			padding: 6px;
+		}
+		.level-start {
+			margin-top: 0;
+			padding: 6px 10px;
+		}
+		.deck-actions {
+			margin: 6px 0;
 		}
 	}
 </style>

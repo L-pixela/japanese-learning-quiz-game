@@ -414,6 +414,17 @@
 		flex-direction: column;
 		align-items: start;
 	}
+	/* Turning the row into a column re-points flex-basis from width to height,
+	   so a child written as `flex: 1 1 320px` for the desktop row silently
+	   becomes 320px TALL here — a large empty band under the content. Children
+	   size to their content in the column and take the full width instead. */
+	.study-heading > * {
+		flex: 0 0 auto;
+		max-width: 100%;
+	}
+	.study-heading > div {
+		width: 100%;
+	}
 	.study-stamp {
 		writing-mode: horizontal-tb;
 		letter-spacing: 2px;
@@ -423,9 +434,33 @@
 	}
 }
 @media (max-width: 540px) {
+	/* Two up, not one. Four single-file cards at 44px type is most of a phone
+	   screen spent on four numbers, and it is what pushed everything below the
+	   summary out of reach. */
 	.study-metrics {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--spacing-sm);
+		margin: var(--spacing-lg) 0;
+	}
+	.study-metric {
+		padding: var(--spacing-md) var(--spacing-md);
+	}
+	.study-metric strong {
+		font-size: var(--text-xl);
+	}
+	.study-metric small {
+		margin-bottom: 2px;
+		font-size: var(--text-xs);
+	}
+	/* The heading block: title and stamp on one line, lead dropped. */
+	.study-heading {
 		gap: var(--spacing-md);
+		margin-bottom: var(--spacing-lg);
+	}
+	.study-stamp {
+		padding: 8px 10px;
+		font-size: var(--text-base);
+		letter-spacing: 2px;
 	}
 	.study-brand {
 		font-size: var(--text-base);
@@ -505,5 +540,290 @@
 	.study-main,
 	.study-footer {
 		width: min(1440px, 100%);
+	}
+}
+
+/* ============================================================
+   PHONE DENSITY.
+
+   Every signed-in screen is built from the same handful of classes, so
+   the spacing is set once here rather than per page. A phone is not a
+   narrow desktop: the desktop rhythm (44px headings, 1.6 line-height,
+   32px block margins) is generous on a 27in monitor and simply pushes
+   content off a 667px screen.
+
+   Headings drop one step, the body line-height tightens from 1.6 to
+   1.45, and block margins roughly halve. Nothing here changes what is
+   on a screen — only how much room it takes to say it.
+   ============================================================ */
+@media (max-width: 540px) {
+	.study-app {
+		line-height: var(--line-height-snug);
+	}
+	.study-app h1 {
+		margin-bottom: var(--spacing-sm);
+		font-size: var(--text-xl);
+	}
+	.study-app h2 {
+		font-size: var(--text-lg);
+	}
+	.study-app h3 {
+		font-size: var(--text-base);
+	}
+	.study-app p {
+		margin-bottom: var(--spacing-sm);
+	}
+	.study-eyebrow {
+		margin-bottom: var(--spacing-sm);
+		padding: 5px 12px;
+		font-size: var(--text-xs);
+	}
+	.study-muted {
+		font-size: var(--text-sm);
+		line-height: var(--line-height-snug);
+	}
+	.study-heading {
+		gap: var(--spacing-md);
+		margin-bottom: var(--spacing-lg);
+	}
+	.study-panel {
+		padding: var(--spacing-md);
+	}
+	.study-actions {
+		margin-top: var(--spacing-md);
+	}
+	.study-main {
+		padding: var(--spacing-md) 12px var(--spacing-lg);
+	}
+
+	.study-footer {
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+		margin-top: var(--spacing-sm);
+		padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+		text-align: center;
+		font-size: var(--text-xs);
+	}
+}
+
+/* ============================================================
+   FOOTER — 奥付 okuzuke, the colophon at the back of a Japanese book.
+
+   It was a filled slab with three sentences running into each other.
+   A colophon is quieter than that: a hairline rule, generous letter
+   spacing, the shop name set in the display face, and the rest stepping
+   back. No box, no fill — the page ends, and this signs it.
+   ============================================================ */
+.study-footer {
+	background: none;
+	border-radius: 0;
+	border-top: 1px solid rgba(255, 248, 236, 0.16);
+	color: var(--on-panel-dark-muted);
+	align-items: baseline;
+}
+.study-footer > span:first-child {
+	color: var(--on-panel-dark);
+	font-family: var(--font-display);
+	font-weight: var(--font-weight-semibold);
+	/* Japanese sets airier than Latin; the tracking is the point. */
+	letter-spacing: 0.18em;
+}
+.study-footer > span:nth-child(2) {
+	opacity: 0.72;
+	letter-spacing: 0.04em;
+}
+.study-footer a {
+	color: var(--on-panel-dark);
+	text-decoration: underline;
+	text-decoration-color: rgba(255, 248, 236, 0.35);
+	text-underline-offset: 4px;
+	letter-spacing: 0.06em;
+	transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+.study-footer a:hover {
+	text-decoration-color: var(--on-panel-dark);
+}
+@media (max-width: 540px) {
+	.study-footer {
+		align-items: center;
+	}
+	/* Stacked, the three lines want a visible hierarchy rather than three
+	   equal ones: name, then breath, then the credit. */
+	.study-footer > span:first-child {
+		font-size: var(--text-sm);
+		letter-spacing: 0.22em;
+	}
+	.study-footer > span:nth-child(2) {
+		font-size: 11px;
+	}
+}
+
+/* ============================================================
+   THE RAIL — persistent icon navigation, phones and tablets.
+
+   A hamburger hides where you can go behind a tap, and on a study app
+   the four destinations never change. The rail puts them permanently
+   down the left edge in both orientations, which is also the only nav
+   that survives the fixed-height app screens (quiz, words, dashboard)
+   where the page itself cannot scroll to reach a menu.
+
+   It is fixed rather than a layout column on purpose: the app screens
+   are already flex columns sized to the viewport, and a fixed rail plus
+   a padding offset leaves all of that untouched.
+   ============================================================ */
+.study-rail {
+	display: none;
+}
+
+@media (max-width: 1024px) {
+	.study-rail {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		z-index: var(--z-sticky);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+		width: 56px;
+		padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+		padding-left: env(safe-area-inset-left);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-md);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-width: none;
+	}
+	.study-rail::-webkit-scrollbar {
+		display: none;
+	}
+
+	.rail-seal {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 38px;
+		height: 38px;
+		margin-bottom: 6px;
+		border-radius: var(--radius-md);
+		background: var(--color-primary);
+		color: var(--color-on-primary);
+		font-family: var(--font-display);
+		font-size: var(--text-lg);
+		text-decoration: none;
+	}
+
+	.rail-link {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		gap: 2px;
+		width: 48px;
+		padding: 6px 2px;
+		border-radius: var(--radius-md);
+		color: var(--color-text-secondary);
+		text-decoration: none;
+		transition: background var(--duration-fast) var(--ease-standard);
+	}
+	.rail-link svg {
+		width: 22px;
+		height: 22px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	/* The label earns its place: an icon alone is a guess. */
+	.rail-link span {
+		font-size: 9px;
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: 0.02em;
+		line-height: 1.1;
+		text-align: center;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.rail-link:hover {
+		background: var(--color-surface-sunken);
+	}
+	.rail-link.current {
+		background: var(--color-primary-soft);
+		color: var(--color-primary-active);
+	}
+
+	/* Everything else shifts over to clear the rail. This lives on <body> so
+	   the fixed-height app shells, which set `padding` shorthand on
+	   .study-app, cannot reset it and let the rail cover the content. */
+	body.has-rail {
+		padding-left: calc(56px + env(safe-area-inset-left));
+		box-sizing: border-box;
+	}
+	/* The header keeps the wordmark and the controls; the rail has the links.
+	   The seal is already on the rail, so the header does not repeat it. */
+	.study-nav nav,
+	.study-nav-toggle,
+	.study-nav .study-seal {
+		display: none !important;
+	}
+	.study-nav {
+		justify-content: space-between;
+	}
+}
+
+/* A phone on its side has little height: the rail drops its labels and
+   tightens so the four icons still fit without scrolling the rail. */
+@media (max-width: 1024px) and (max-height: 520px) {
+	.study-rail {
+		width: 48px;
+		gap: 2px;
+	}
+	.rail-link {
+		width: 42px;
+		padding: 5px 2px;
+	}
+	.rail-link span {
+		display: none;
+	}
+	.rail-seal {
+		width: 32px;
+		height: 32px;
+		margin-bottom: 2px;
+		font-size: var(--text-base);
+	}
+	body.has-rail {
+		padding-left: calc(48px + env(safe-area-inset-left));
+	}
+}
+
+/* The narrowest screens in use — a folded Galaxy cover display is 280px, and
+   a 56px labelled rail is a fifth of that. Icons only, and narrower. */
+@media (max-width: 360px) {
+	.study-rail {
+		width: 44px;
+		gap: 2px;
+	}
+	.rail-link {
+		width: 40px;
+		padding: 7px 2px;
+	}
+	.rail-link span {
+		display: none;
+	}
+	.rail-link svg {
+		width: 20px;
+		height: 20px;
+	}
+	.rail-seal {
+		width: 32px;
+		height: 32px;
+		font-size: var(--text-base);
+	}
+	body.has-rail {
+		padding-left: calc(44px + env(safe-area-inset-left));
 	}
 }

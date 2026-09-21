@@ -131,10 +131,20 @@
 
 <style>
 	.login-page {
+		/* border-box or the padding is added on top of the full-viewport
+		   min-height and the page scrolls by exactly the padding. This screen
+		   sits outside .study-app, so it does not inherit that reset. */
+		box-sizing: border-box;
 		min-height: calc(100vh / var(--app-zoom));
+		min-height: calc(100dvh / var(--app-zoom));
 		display: grid;
 		place-items: center;
 		padding: 1.5rem;
+	}
+	.login-page *,
+	.login-page *::before,
+	.login-page *::after {
+		box-sizing: border-box;
 	}
 
 	.login-shell {
@@ -321,39 +331,184 @@
 		text-decoration: underline;
 	}
 
+	/* ============================================================
+	   PHONE AND SMALL TABLET: log in without scrolling.
+
+	   On a wide screen the rank panel sits beside the form and costs
+	   nothing. Stacked on a phone it is a 400px advertisement above the
+	   two fields someone came here to fill in, which is what pushed the
+	   button off screen. So on a phone it stops being a panel and becomes
+	   a title band, and the form takes the rest of the screen.
+	   ============================================================ */
 	@media (max-width: 760px) {
 		.login-page {
-			padding: 0.85rem;
-			place-items: start center;
+			min-height: calc(100dvh / var(--app-zoom));
+			height: calc(100dvh / var(--app-zoom));
+			padding: 0;
+			place-items: stretch;
+		}
+
+		.login-shell {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			border-radius: 0;
+			box-shadow: none;
+		}
+
+		.site-header {
+			flex-shrink: 0;
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		/* The tagline repeats what the band below already says. */
+		.site-header p {
+			display: none;
 		}
 
 		.login-layout {
+			flex: 1 1 auto;
+			min-height: 0;
 			grid-template-columns: 1fr;
+			grid-template-rows: auto minmax(0, 1fr);
 		}
 
+		/* Band, not panel: the scenery is the first thing to go. */
 		.rank-panel {
-			padding: 1.6rem;
+			gap: 0;
+			padding: var(--spacing-md);
+		}
+
+		.panel-scene {
+			display: none;
+		}
+
+		.starter-rank {
+			grid-template-columns: auto minmax(0, 1fr);
+			align-items: center;
+			gap: var(--spacing-md);
+		}
+
+		.rank-emblem {
+			width: 3rem;
+			height: 3rem;
+		}
+
+		.rank-emblem span {
+			font-size: 1.4rem;
+		}
+
+		.intro {
+			display: none;
 		}
 
 		h1 {
-			font-size: 2.05rem;
+			margin: 0;
+			font-size: 1.4rem;
+		}
+
+		/* Top aligned, not centred. Centring inside a tall phone column leaves
+		   a void above and below the two fields and reads as a broken screen;
+		   sitting under the band with one consistent gap does not. */
+		.login-form {
+			justify-content: flex-start;
+			min-height: 0;
+			gap: var(--spacing-md);
+			padding: clamp(16px, 4dvh, 40px) var(--spacing-md) var(--spacing-md);
+			/* Only if a translation or a validation message genuinely needs it. */
+			overflow-y: auto;
 		}
 	}
 
 	@media (max-width: 420px) {
-		.login-page {
-			padding: 0;
-		}
-
 		.login-shell {
-			min-height: calc(100vh / var(--app-zoom));
 			border: 0;
-			border-radius: 0;
 		}
-
-		.site-header {
-			align-items: flex-start;
+	}
+	/* Phone on its side: 375px of height leaves no room for a title band at
+	   all, so the form is the whole screen. */
+	@media (max-height: 520px) and (orientation: landscape) {
+		/* A landscape phone is wider than the 760px phone breakpoint, so it
+		   never picked up the fixed shell and scrolled instead. */
+		.login-page {
+			height: calc(100dvh / var(--app-zoom));
+			padding: 0;
+			place-items: stretch;
+		}
+		.login-shell {
+			display: flex;
 			flex-direction: column;
+			width: 100%;
+			border-radius: 0;
+			box-shadow: none;
+		}
+		.login-layout {
+			flex: 1 1 auto;
+			min-height: 0;
+			grid-template-columns: 1fr;
+		}
+		.login-form {
+			min-height: 0;
+			overflow-y: auto;
+		}
+		.site-header p {
+			display: none;
+		}
+		.rank-panel {
+			display: none;
+		}
+		.site-header {
+			padding: 4px var(--spacing-md);
+		}
+		.login-layout {
+			grid-template-rows: minmax(0, 1fr);
+		}
+		.login-form {
+			gap: var(--spacing-sm);
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.form-title {
+			margin: 0;
+		}
+		.form-title h2 {
+			font-size: 1.1rem;
+			margin: 0;
+		}
+		.login-form .caption {
+			display: none;
+		}
+	}
+	/* Short screens — small phones and any phone on its side. Everything that
+	   is decoration rather than the two fields and the button gives up room. */
+	@media (max-height: 620px) {
+		.rank-panel {
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.rank-emblem {
+			width: 2.2rem;
+			height: 2.2rem;
+		}
+		.rank-emblem span {
+			font-size: 1rem;
+		}
+		h1 {
+			font-size: 1.1rem;
+		}
+		.rank-panel .caption {
+			display: none;
+		}
+		.login-form {
+			gap: var(--spacing-sm);
+			padding: var(--spacing-sm) var(--spacing-md);
+		}
+		.login-form :global(input) {
+			min-height: 2.6rem;
+		}
+		.login-form button[type='submit'] {
+			min-height: 2.6rem;
+		}
+		.register-link {
+			margin: 0;
+			font-size: var(--text-xs);
 		}
 	}
 </style>

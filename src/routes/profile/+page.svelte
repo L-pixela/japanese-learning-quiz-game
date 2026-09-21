@@ -675,14 +675,76 @@
 		color: var(--color-text-faint);
 		font-size: var(--text-sm);
 	}
+	/* The shared heading turns into a column at 820px, and in a column
+	   flex-basis is a HEIGHT. The 320px basis written for the desktop row then
+	   forces this block 320px tall and leaves a void under the name. */
+	@media (max-width: 820px) {
+		.identity {
+			flex: 0 0 auto;
+			width: 100%;
+		}
+		.profile-heading {
+			gap: var(--spacing-md);
+		}
+	}
+
 	@media (max-width: 900px) {
 		.profile-grid {
 			grid-template-columns: 1fr;
 		}
 	}
 	@media (max-width: 540px) {
+		/* Label over value is six full-width blocks on a phone. Label left,
+		   value right reads the same and costs a third of the height. */
 		.details {
 			grid-template-columns: 1fr;
+			gap: 0;
+		}
+		.details > div {
+			display: grid;
+			grid-template-columns: auto minmax(0, 1fr);
+			align-items: baseline;
+			gap: var(--spacing-md);
+			padding: var(--spacing-sm) 0;
+			border-bottom: 1px solid var(--color-border-subtle);
+		}
+		.details > div:last-child {
+			border-bottom: 0;
+		}
+		.details dt {
+			margin-bottom: 0;
+			font-size: var(--text-xs);
+		}
+		.details dd {
+			font-size: var(--text-sm);
+			text-align: right;
+		}
+		/* The bio is a paragraph, not a value: it keeps its own line. */
+		.details .wide {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 2px;
+		}
+		.details .wide dd {
+			text-align: left;
+		}
+		/* Title and its button share the line: the button is an affordance on
+		   the panel, not a banner across it. */
+		.panel-head {
+			flex-wrap: wrap;
+			gap: var(--spacing-sm);
+			margin-bottom: var(--spacing-md);
+		}
+		.panel-head :global(.study-button) {
+			width: auto;
+			min-height: 36px;
+			padding: 6px 14px;
+			font-size: var(--text-xs);
+		}
+		.profile-heading :global(.study-button.danger) {
+			width: auto;
+			min-height: 38px;
+			padding: 7px 16px;
+			font-size: var(--text-xs);
 		}
 		.avatar {
 			width: 64px;
@@ -691,8 +753,13 @@
 		.identity-text h1 {
 			font-size: var(--text-xl);
 		}
+		/* Secondary actions size to their label. Full width makes "View
+		   leaderboard" read as the main thing on the screen, which it is not. */
 		.climb :global(.study-button) {
-			width: 100%;
+			width: auto;
+			min-height: 40px;
+			padding: 8px 18px;
+			font-size: var(--text-sm);
 		}
 	}
 </style>
