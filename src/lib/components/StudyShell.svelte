@@ -38,15 +38,6 @@
 		isMenuOpen = false
 	}
 
-	// The rail is fixed, so something has to hold a column open for it. The
-	// marker goes on <body> rather than .study-app because the per-page app
-	// shells set `padding` shorthand on .study-app, which would wipe a
-	// padding-left set there.
-	$effect(() => {
-		document.body.classList.add('has-rail')
-		return () => document.body.classList.remove('has-rail')
-	})
-
 	async function confirmPendingNavigation() {
 		if (!pendingNavigation) return
 		const href = pendingNavigation
@@ -56,30 +47,6 @@
 </script>
 
 <div class="study-app">
-	<!-- Navigation on phones and tablets: always on screen, one tap per
-	     destination, no menu to open first. The header keeps the same links as
-	     text for desktop, and the rail hides there. -->
-	<nav class="study-rail" aria-label={t('a11y.mainNav')}>
-		<a
-			class="rail-seal"
-			href={resolve('/dashboard', {})}
-			onclick={(event) => navigate(event, resolve('/dashboard', {}))}
-			aria-label="TanTore"><span lang="ja">単</span></a
-		>
-		{#each links as link (link.href)}
-			<a
-				class="rail-link"
-				class:current={page.url.pathname.startsWith(link.href)}
-				href={resolve(link.href, {})}
-				aria-current={page.url.pathname.startsWith(link.href) ? 'page' : undefined}
-				title={t(link.key)}
-				onclick={(event) => navigate(event, resolve(link.href, {}))}
-			>
-				<svg viewBox="0 0 24 24" aria-hidden="true"><path d={link.icon} /></svg>
-				<span>{t(link.key)}</span>
-			</a>
-		{/each}
-	</nav>
 	<header class="study-nav">
 		<a
 			class="study-brand"
