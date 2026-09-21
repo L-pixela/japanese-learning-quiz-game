@@ -7,7 +7,7 @@
 	// Both preferences live in localStorage, so they can only be read once the
 	// component is in the browser.
 	let systemIsDark = $state(false)
-	
+
 	onMount(() => {
 		i18n.hydrate()
 		theme.hydrate()
