@@ -61,11 +61,28 @@
 		await start()
 	}
 
+	let showLeaveConfirm = $state(false)
+
 	function backToStudy() {
 		result = null
 		started = false
 		quiz = null
 		error = ''
+		showLeaveConfirm = false
+	}
+	function requestBackToStudy() {
+		if (started && quiz && result === null) {
+			showLeaveConfirm = true
+		} else {
+			backToStudy()
+		}
+	}
+	function confirmLeaveQuiz() {
+		showLeaveConfirm = false
+		backToStudy()
+	}
+	function cancelLeaveQuiz() {
+		showLeaveConfirm = false
 	}
 	async function continueStudy() {
 		backToStudy()
@@ -221,23 +238,10 @@
 <svelte:head><title>Level {data.level.level} · TanTore</title></svelte:head>
 <svelte:window onkeydown={handleKey} />
 <StudyShell confirmNavigation={started && result === null}>
-	<div class="quiz-top">
-		<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
-		{#if started}
-			<div class="quiz-top-title">
-				<span class="quiz-top-level"
-					>{t('deck.level')}
-					{String(data.level.level).padStart(2, '0')} ·
-					{difficultyLabel(data.level.difficulty)}</span
-				>
-				<span class="quiz-top-name" lang="ja"
-					>{levelName(data.level.level)} / {data.level.japanese}</span
-				>
-			</div>
-		{/if}
-	</div>
-
 	{#if !started}
+		<div class="quiz-top">
+			<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
+		</div>
 		<!-- Step 1. The words, and the decision to be tested on them. -->
 		<section class="level-intro" id="words" tabindex="-1">
 			<div class="intro-copy">
@@ -324,6 +328,19 @@
 		</nav>
 	{:else}
 		<section class="quiz-sheet">
+			<div class="quiz-top">
+				<a class="quiz-top-back" href={resolve('/quiz', {})}>← {t('level.allLevels')}</a>
+				<div class="quiz-top-title">
+					<span class="quiz-top-level"
+						>{t('deck.level')}
+						{String(data.level.level).padStart(2, '0')} ·
+						{difficultyLabel(data.level.difficulty)}</span
+					>
+					<span class="quiz-top-name" lang="ja"
+						>{levelName(data.level.level)} / {data.level.japanese}</span
+					>
+				</div>
+			</div>
 			{#if quiz && question}
 				<div class="question-meta">
 					<span>{t('quiz.question')} {String(current + 1).padStart(2, '0')} / 10</span>
@@ -332,11 +349,15 @@
 				<div class="word-prompt" aria-live="polite">
 					<span class="ask-type">{t(`ask.${question.type}`)}</span>
 					{#if question.type === 'word'}
+						<p class="invisible" aria-hidden="true">&nbsp;</p>
 						<h1 class="prompt-en">{question.meaning}</h1>
 					{:else}
-						{#if question.reading && question.reading !== question.japanese}
-							<p lang="ja">{question.reading}</p>
-						{/if}
+						<p
+							lang="ja"
+							class:invisible={!question.reading || question.reading === question.japanese}
+						>
+							{question.reading && question.reading !== question.japanese ? question.reading : ' '}
+						</p>
 						<h1 lang="ja">{question.japanese}</h1>
 					{/if}
 					<span>{t(`ask.${question.type}Hint`)}</span>
@@ -370,7 +391,7 @@
 						}}>← {t('quiz.back')}</button
 					>
 					<div class="quiz-controls-end">
-						<button class="study-button secondary" onclick={backToStudy} disabled={busy}
+						<button class="study-button secondary" onclick={requestBackToStudy} disabled={busy}
 							>← {t('level.backToStudy')}</button
 						>{#if current < 9}<button
 								class="study-button"
@@ -393,6 +414,31 @@
 				</div>{/if}
 			{#if error}<p class="study-error" role="alert">{error}</p>{/if}
 		</section>
+	{/if}
+
+	{#if showLeaveConfirm}
+		<div
+			class="navigation-backdrop"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="leave-dialog-title"
+			aria-describedby="leave-dialog-description"
+		>
+			<div class="navigation-dialog">
+				<strong id="leave-dialog-title" class="navigation-dialog-title"
+					>{t('nav.leaveQuizTitle')}</strong
+				>
+				<p id="leave-dialog-description">{t('nav.leaveQuizMessage')}</p>
+				<div class="dialog-actions">
+					<button class="study-button secondary" type="button" onclick={cancelLeaveQuiz}>
+						{t('nav.cancel')}
+					</button>
+					<button class="study-button danger" type="button" onclick={confirmLeaveQuiz}>
+						{t('nav.confirm')}
+					</button>
+				</div>
+			</div>
+		</div>
 	{/if}
 
 	{#if result}
@@ -498,7 +544,13 @@
 		text-decoration: none;
 	}
 	.quiz-sheet {
-		width: min(820px, 100%);
+		/* Fixed size on every screen. The width is the card's, never the viewport's.
+		   The height is locked so questions with or without hiragana furigana
+		   or long text never cause card resizing or layout shifting. */
+		width: min(800px, 92vw);
+		height: clamp(520px, 76vh, 720px);
+		max-height: calc(100vh / var(--app-zoom));
+		max-height: calc(100dvh / var(--app-zoom));
 		margin: auto;
 		padding: var(--spacing-lg);
 		border-radius: var(--radius-xl);
@@ -506,34 +558,45 @@
 		box-shadow: var(--shadow-md);
 		display: flex;
 		flex-direction: column;
-		/* Never shorter than the question it holds. */
-		min-height: min-content;
+		justify-content: space-between;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		box-sizing: border-box;
 	}
-	/* Quiz phase: the card aims to fill the viewport so the whole question is
-	   visible without scrolling — but it is a target, not a cage. Heights are
-	   minimums and overflow stays visible, so when a long prompt or a short
-	   screen needs more room the page simply scrolls. Capping the height here
-	   instead is what made the answers and the prompt paint over each other. */
+	/* Quiz phase: the card fills the frame and the shared chrome flexes to give
+	   it room. The main panel centres the card both ways; the card itself keeps
+	   its fixed size and scrolls if its contents ever exceed it. */
 	:global(body.quiz-active .study-app) {
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
 		min-height: calc(100vh / var(--app-zoom));
 		min-height: calc(100dvh / var(--app-zoom));
+		height: 100dvh;
 	}
 	:global(body.quiz-active .study-footer) {
 		display: none;
 	}
 	:global(body.quiz-active .study-main) {
-		flex: 1 1 auto;
 		display: flex;
-		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex: 1;
+		min-height: 0;
+		width: 100%;
+		position: relative;
 	}
-	/* Keep the card's padding identical to the words page so the breadcrumb and
-	   level sit in the same place. */
+	:global(body.quiz-active .quiz-top) {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%) translateY(-100%);
+		margin-bottom: 10px;
+		z-index: 10;
+		white-space: nowrap;
+	}
 	:global(body.quiz-active .quiz-sheet) {
-		flex: 1 1 auto;
-		padding: var(--spacing-lg);
+		position: relative;
 	}
 	.question-meta {
 		display: flex;
@@ -560,62 +623,55 @@
 		background: var(--color-primary);
 	}
 	.word-prompt {
-		flex: 1 1 auto;
-		/* The word being asked about is the one thing on this screen that must
-		   never be squeezed away. A min-height of 0 let the flex row collapse the
-		   band to nothing on a short viewport, which hid the prompt entirely once
-		   the card became a scroll container. */
-		min-height: min-content;
+		flex: 0 0 200px;
+		height: 200px;
+		min-height: 200px;
 		display: grid;
 		justify-items: center;
-		/* "safe" is what stops the overlap: a plain centre keeps centring even
-		   once the content is taller than the band, so it spills equally over
-		   the question counter above and the answers below. Safe centring falls
-		   back to start in that case, and the card scrolls instead. */
-		align-content: safe center;
-		--prompt-reading: clamp(1.2em, 4vh, 1.7em);
-		--prompt-word: clamp(44px, 11vh, 84px);
-		/* No uniform row gap — the furigana hugs the kanji, while the tag and hint
-		   carry their own spacing (see below). */
-		row-gap: 0;
-		column-gap: var(--spacing-md);
-		/* Reserved tracks: each band keeps its space even when a question has no
-		   furigana or a shorter word, so the prompt never shifts the options. The
-		   minmax(0, …) lets a band compress under pressure instead of spilling its
-		   kanji up over the answer buttons when the viewport is short. */
-		/* The word band may grow past its reserved height for a long phrase. A
-		   capped track would not shrink the text, only let it paint over the
-		   answers below. */
-		grid-template-rows: auto minmax(0, var(--prompt-reading)) minmax(var(--prompt-word), auto) auto;
-		padding: var(--spacing-md);
+		align-content: center;
+		grid-template-rows: 28px 24px 80px 24px;
+		row-gap: var(--spacing-xs);
+		padding: var(--spacing-xs) var(--spacing-md);
+		box-sizing: border-box;
 	}
 	.word-prompt .ask-type {
 		grid-row: 1;
-		margin-bottom: var(--spacing-lg);
+		margin: 0;
 	}
 	.word-prompt p {
 		grid-row: 2;
-		align-self: end;
+		height: 24px;
+		line-height: 24px;
 		margin: 0;
-		padding-bottom: var(--spacing-sm);
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		font-size: var(--font-size-body);
 		letter-spacing: 3px;
 		color: var(--color-text-secondary);
 	}
+	.word-prompt p.invisible {
+		visibility: hidden;
+	}
 	.word-prompt h1 {
 		grid-row: 3;
-		display: grid;
-		place-content: safe center;
+		height: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
 		margin: 0;
 		max-width: 100%;
 		font-family: var(--font-display);
-		font-size: clamp(30px, min(8vh, 13vw), 64px);
-		letter-spacing: 4px;
+		font-size: clamp(24px, 5vh, 48px);
+		letter-spacing: 2px;
+		text-wrap: balance;
 		overflow-wrap: anywhere;
 	}
 	.word-prompt > span {
 		grid-row: 4;
-		margin-top: var(--spacing-lg);
+		margin: 0;
 		font-size: var(--font-size-caption);
 		color: var(--color-text-secondary);
 	}
@@ -1235,107 +1291,88 @@
 			display: none;
 		}
 		:global(body.quiz-active .quiz-sheet) {
-			/* The card is as tall as the question, no taller. Stretching it to
-			   the full frame and centring the contents put an empty band above
-			   the counter and below the buttons; hugging the content puts that
-			   space outside the card, where it reads as margin instead of as a
-			   hole in the middle of the screen. */
+			/* Fits completely inside 100dvh without vertical scrolling even on an iPhone SE screen */
 			flex: 0 1 auto;
-			height: auto;
+			width: min(800px, 94vw);
+			height: clamp(400px, 72vh, 640px);
 			max-height: 100%;
 			margin: auto;
 			min-height: 0;
-			padding: 10px;
-			/* One rhythm throughout: counter to bar, bar to word, word to
-			   answers, answers to buttons are all this same gap. */
-			justify-content: flex-start;
-			gap: clamp(8px, 2.2dvh, 22px);
-			/* The bands above are budgeted to fit every phone we support. This
-			   only ever engages for a freak combination — four maximum-length
-			   answers on a 320px screen — and when it does, reaching the content
-			   by scrolling beats having it clipped away unreachable. */
-			overflow-y: auto;
+			padding: clamp(10px, 2vw, 16px);
+			justify-content: space-between;
+			gap: clamp(6px, 1.5dvh, 12px);
+			overflow: hidden;
 			overscroll-behavior: contain;
 		}
 		.question-meta {
 			margin: 0;
 		}
 		progress {
-			height: 8px;
+			height: 6px;
 		}
-		/* Absorbs the slack so the answers keep their footing, but never
-		   collapses to nothing: min-content keeps the word itself on screen. */
-		/* Sized by what is in it, not by what is left over. The reserved bands
-		   are what made the gap above the word differ from the gap below it. */
 		.word-prompt {
 			flex: 0 0 auto;
+			height: auto;
 			min-height: 0;
 			padding: 0;
-			grid-template-rows: auto auto auto auto;
-			row-gap: clamp(3px, 0.8dvh, 8px);
+			grid-template-rows: auto 20px minmax(40px, auto) 0px;
+			row-gap: clamp(2px, 0.5dvh, 6px);
 		}
 		.word-prompt .ask-type {
-			/* Both sides explicitly, so the pill sits on the card's rhythm
-			   rather than carrying a stray inherited margin above it. */
 			margin-top: 0;
 			margin-bottom: 0;
-			padding: 4px 10px;
+			padding: 3px 8px;
 			font-size: 11px;
 		}
-		/* The hint under the word says the same thing as the pill above it and
-		   the counter line. On a phone that is 38px of the height budget spent
-		   saying it three times, so the phone keeps the pill only. */
 		.word-prompt > span:last-child {
 			display: none;
 		}
-		/* One line, always: wrapped to two it costs more than it tells you. */
 		.question-meta {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 		.word-prompt h1 {
-			font-size: clamp(22px, min(6.4dvh, 11vw), 52px);
+			height: auto;
+			font-size: clamp(20px, min(5.5dvh, 9vw), 44px);
 			letter-spacing: 2px;
 		}
 		.word-prompt p {
-			font-size: clamp(11px, 1.7dvh, 15px);
+			height: 20px;
+			line-height: 20px;
+			font-size: clamp(11px, 1.6dvh, 14px);
 			letter-spacing: 2px;
 			padding-bottom: 0;
 		}
-		/* An English phrase runs to 60 characters in this deck, so it is capped
-		   by width as well as height and allowed to wrap to two lines. */
 		.prompt-en {
-			font-size: clamp(16px, min(4.2dvh, 5.4vw), 34px) !important;
+			font-size: clamp(15px, min(4dvh, 4.8vw), 30px) !important;
 		}
 		.options {
-			gap: clamp(5px, 1.2dvh, 12px);
+			gap: clamp(5px, 1dvh, 10px);
 		}
 		.options label {
-			min-height: clamp(34px, 6dvh, 60px);
-			gap: 10px;
-			padding: clamp(6px, 1dvh, 12px) clamp(8px, 2vw, 14px);
-			font-size: clamp(13px, 1.75dvh, 16px);
+			min-height: clamp(34px, 5.5dvh, 52px);
+			gap: 8px;
+			padding: clamp(4px, 0.8dvh, 10px) clamp(8px, 2vw, 12px);
+			font-size: clamp(12px, 1.6dvh, 15px);
 			line-height: var(--line-height-snug);
 		}
 		.option-letter {
-			width: 26px;
-			height: 26px;
+			width: 24px;
+			height: 24px;
 			font-size: var(--text-xs);
 		}
 		.quiz-controls {
 			margin-top: 0;
-			gap: 6px;
+			gap: 4px;
 		}
 		.quiz-controls .study-button {
-			min-height: clamp(40px, 6dvh, 52px);
-			padding: 6px 10px;
+			min-height: clamp(36px, 5dvh, 46px);
+			padding: 4px 10px;
 			font-size: var(--text-xs);
 		}
-		/* Leaving mid-quiz is a rare choice: a quiet full-width link rather than
-		   a third pill competing with Back and Next. */
 		.quiz-controls-end > .study-button:first-child {
-			min-height: 30px;
+			min-height: 28px;
 			background: transparent;
 			box-shadow: none;
 			font-size: var(--text-xs);

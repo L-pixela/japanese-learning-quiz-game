@@ -843,3 +843,49 @@
 		padding-left: calc(44px + env(safe-area-inset-left));
 	}
 }
+
+/* ---------- Shared Dialog Modals ---------- */
+.navigation-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: var(--z-modal, 1000);
+	display: grid;
+	place-items: center;
+	padding: var(--spacing-lg);
+	background: rgba(38, 48, 29, 0.52);
+	backdrop-filter: blur(4px);
+}
+.navigation-dialog {
+	width: min(440px, 90vw);
+	padding: clamp(24px, 5vw, 36px);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-xl);
+	background: var(--color-surface);
+	box-shadow: var(--shadow-lg);
+	text-align: center;
+}
+.navigation-dialog-title {
+	display: block;
+	margin: 0 0 10px;
+	font-family: var(--font-display);
+	font-weight: var(--font-weight-bold);
+	font-size: var(--text-lg);
+	color: var(--color-text);
+}
+.navigation-dialog p {
+	margin: 0 0 20px;
+	color: var(--color-text-secondary);
+	line-height: var(--line-height-normal);
+	font-size: var(--text-base);
+}
+.dialog-actions {
+	display: flex;
+	justify-content: center;
+	gap: var(--spacing-md);
+	margin-top: 20px;
+}
+@media (max-width: 480px) {
+	.dialog-actions {
+		flex-direction: column-reverse;
+	}
+}
