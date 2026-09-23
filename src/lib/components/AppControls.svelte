@@ -114,17 +114,18 @@
 	.app-controls {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: var(--spacing-sm);
 		flex-wrap: wrap;
 		flex-shrink: 0;
 	}
 	.switch {
 		position: relative;
-		display: grid;
+		display: inline-grid;
 		grid-auto-flow: column;
-		justify-items: center;
 		align-items: center;
-		padding: var(--spacing-sm);
+		height: 40px;
+		padding: 4px;
 		border: 0;
 		border-radius: var(--radius-full);
 		background: var(--color-surface-sunken);
@@ -133,23 +134,33 @@
 		cursor: pointer;
 		white-space: nowrap;
 		user-select: none;
+		box-sizing: border-box;
 	}
 	.lang {
-		grid-template-columns: 48px 62px;
+		grid-template-columns: 44px 58px;
 	}
 	.theme,
 	.sound {
-		grid-template-columns: 40px 40px;
+		grid-template-columns: 36px 36px;
 	}
 	.face {
 		position: relative;
 		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 32px;
+		width: 100%;
+		margin: 0;
+		padding: 0;
 		color: var(--color-text-secondary);
+		font-family: var(--font-body), system-ui, sans-serif;
 		font-size: var(--text-sm);
 		font-weight: var(--font-weight-bold);
-		line-height: 32px;
+		line-height: 1;
 		text-align: center;
 		transition: color var(--duration-base) var(--ease-standard);
+		box-sizing: border-box;
 	}
 	/* Whichever side the thumb covers gets the on-primary ink. The other side
 	   stays muted. (The thumb is itself a span, so :first-of-type would match
@@ -160,32 +171,33 @@
 	}
 	.thumb {
 		position: absolute;
-		top: var(--spacing-sm);
-		left: var(--spacing-sm);
-		bottom: var(--spacing-sm);
-		width: 48px;
+		top: 4px;
+		left: 4px;
+		height: 32px;
 		border-radius: var(--radius-full);
 		background: var(--color-primary);
 		transition: transform var(--duration-base) var(--ease-standard);
 	}
 	.lang .thumb {
-		width: 48px;
+		width: 44px;
 	}
 	.lang.on .thumb {
-		width: 62px;
-		transform: translateX(48px);
+		width: 58px;
+		transform: translateX(44px);
 	}
 	.theme .thumb,
 	.sound .thumb {
-		width: 40px;
+		width: 36px;
 	}
 	.theme.on .thumb,
 	.sound.on .thumb {
-		transform: translateX(40px);
+		transform: translateX(36px);
 	}
 	/* Emoji ignore `color`, so the covered side is marked by weight instead. */
-	.sound .face {
-		font-size: var(--text-sm);
+	.sound .face,
+	.theme .face {
+		font-size: 14px;
+		line-height: 1;
 	}
 	.switch:focus-visible {
 		outline: 3px solid var(--color-focus-ring);
@@ -200,43 +212,46 @@
 	@media (max-width: 540px) {
 		.app-controls {
 			gap: 4px;
-			width: 100%;
+			justify-content: center;
 		}
 		.switch {
-			padding: 4px;
+			height: 32px;
+			padding: 3px;
 		}
 		.lang {
-			grid-template-columns: 36px 46px;
+			grid-template-columns: 34px 44px;
 		}
 		.theme,
 		.sound {
-			grid-template-columns: 30px 30px;
+			grid-template-columns: 28px 28px;
 		}
 		.face {
-			font-size: 12px;
-			line-height: 24px;
+			font-size: 11px;
+			height: 26px;
+			line-height: 1;
 		}
 		.thumb {
-			top: 4px;
-			bottom: 4px;
-			width: 36px;
+			top: 3px;
+			left: 3px;
+			height: 26px;
 		}
 		.lang .thumb {
-			width: 36px;
+			width: 34px;
 		}
 		.lang.on .thumb {
-			width: 46px;
-			transform: translateX(36px);
+			width: 44px;
+			transform: translateX(34px);
 		}
 		.theme .thumb,
 		.sound .thumb {
-			width: 30px;
+			width: 28px;
 		}
 		.theme.on .thumb,
 		.sound.on .thumb {
-			transform: translateX(30px);
+			transform: translateX(28px);
 		}
-		.sound .face {
+		.sound .face,
+		.theme .face {
 			font-size: 11px;
 		}
 	}
